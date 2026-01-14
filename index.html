@@ -27,6 +27,10 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
         /* ==================== ROOT VARIABLES ==================== */
         :root {
@@ -897,6 +901,90 @@
                 display: none !important;
             }
         }
+        
+        /* ==================== PDF PREVIEW ==================== */
+        #pdfPreview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 2000;
+            padding: 20px;
+            overflow: auto;
+            display: none;
+        }
+        
+        #pdfPreview.active {
+            display: block;
+        }
+        
+        .pdf-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            color: black;
+            padding: 40px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .pdf-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1E3A8A;
+        }
+        
+        .pdf-invoice-number {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .pdf-section {
+            margin-bottom: 30px;
+        }
+        
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .pdf-table th {
+            background: #f5f5f5;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-weight: bold;
+        }
+        
+        .pdf-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .pdf-total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .pdf-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -913,6 +1001,21 @@
         <p>Ajoutez Financia Pro à votre écran d'accueil</p>
         <button id="installBtn" class="btn btn-block">Installer</button>
         <button id="cancelInstall" class="btn btn-outline btn-block btn-sm">Plus tard</button>
+    </div>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreview" class="hidden">
+        <div style="position: fixed; top: 20px; right: 20px; z-index: 2001;">
+            <button onclick="closePDFPreview()" class="btn btn-danger">
+                <i class="fas fa-times"></i> Fermer
+            </button>
+            <button onclick="downloadPDF()" class="btn btn-success">
+                <i class="fas fa-download"></i> Télécharger PDF
+            </button>
+        </div>
+        <div id="pdfContent" class="pdf-content">
+            <!-- PDF content will be generated here -->
+        </div>
     </div>
 
     <!-- Main App -->
@@ -1511,18 +1614,6 @@
 
     <!-- JavaScript -->
     <script>
-         // Déjà présent dans votre code
-         window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-        appState.deferredPrompt = e;
-  showInstallPrompt();
-});
-
-window.addEventListener('appinstalled', () => {
-  appState.deferredPrompt = null;
-  hideInstallPrompt();
-  showNotification('Application installée avec succès !', 'success');
-});
         // Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1554,7 +1645,8 @@ window.addEventListener('appinstalled', () => {
             ecritures: [],
             comptes: [],
             settings: {},
-            deferredPrompt: null
+            deferredPrompt: null,
+            currentInvoicePDF: null
         };
 
         // ==================== PWA INSTALLATION ====================
@@ -1636,7 +1728,7 @@ window.addEventListener('appinstalled', () => {
             showNotification('Application Financia Pro Gabon prête', 'success');
         }
 
-        //==== DATA MANAGEMENT ====================
+        // ==================== DATA MANAGEMENT ====================
         function loadData() {
             const saved = localStorage.getItem('financia_gabon_data');
             
@@ -1655,28 +1747,28 @@ window.addEventListener('appinstalled', () => {
 
         function initializeDefaultData() {
             appState.clients = [
-               // {
-                  //  id: 1,
-                 //   type: 'client',
-                   // name: 'Ministère des Finances',
-                  // nif: 'GAB123456789',
-                    //address: 'Libreville, Gabon',
-                  //  phone: '+241 01 23 45 67',
-                  //  email: 'contact@finances.gouv.ga',
-                  //  balance: 0,
-                   // createdAt: new Date().toISOString()
-               // },
-                //{
-                  //  id: 2,
-                   // type: 'fournisseur',
-                   // name: 'SOGARA',
-                    //nif: 'GAB987654321',
-                 //   address: 'Port-Gentil, Gabon',
-                 //   phone: '+241 04 56 78 90',
-                  //  email: 'contact@sogara.ga',
-                   // balance: 0,
-                   // createdAt: new Date().toISOString()
-                // }
+                {
+                    id: 1,
+                    type: 'client',
+                    name: 'Ministère des Finances',
+                    nif: 'GAB123456789',
+                    address: 'Libreville, Gabon',
+                    phone: '+241 01 23 45 67',
+                    email: 'contact@finances.gouv.ga',
+                    balance: 0,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    type: 'fournisseur',
+                    name: 'SOGARA',
+                    nif: 'GAB987654321',
+                    address: 'Port-Gentil, Gabon',
+                    phone: '+241 04 56 78 90',
+                    email: 'contact@sogara.ga',
+                    balance: 0,
+                    createdAt: new Date().toISOString()
+                }
             ];
 
             appState.invoices = [];
@@ -1687,6 +1779,8 @@ window.addEventListener('appinstalled', () => {
                 companyName: 'Mon Entreprise Gabon',
                 companyAddress: 'Libreville, Gabon',
                 companyNIF: 'VOTRENIFICI',
+                companyPhone: '+241 00 00 00 00',
+                companyEmail: 'contact@entreprise.ga',
                 currency: CONFIG.CURRENCY,
                 taxTVA: CONFIG.TVA_RATE,
                 taxCSS: CONFIG.CSS_RATE,
@@ -2150,6 +2244,10 @@ window.addEventListener('appinstalled', () => {
                 number: invoiceNumber,
                 clientId: clientId,
                 clientName: client.name,
+                clientAddress: client.address || '',
+                clientNIF: client.nif || '',
+                clientPhone: client.phone || '',
+                clientEmail: client.email || '',
                 date: invoiceDate,
                 dueDate: invoiceDueDate,
                 status: 'en attente',
@@ -2569,6 +2667,9 @@ window.addEventListener('appinstalled', () => {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button class="btn btn-outline" onclick="generatePDF(${invoice.id})">
+                            <i class="fas fa-file-pdf"></i> Télécharger PDF
+                        </button>
                         <button class="btn btn-outline" onclick="markInvoiceAsPaid(${invoice.id})">
                             <i class="fas fa-check"></i> Marquer Payée
                         </button>
@@ -2716,6 +2817,258 @@ window.addEventListener('appinstalled', () => {
                     document.querySelector('.modal-overlay.active').remove();
                 }
             }
+        }
+
+        // ==================== PDF GENERATION ====================
+        function generatePDF(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (!invoice) {
+                showNotification('Facture introuvable', 'error');
+                return;
+            }
+            
+            appState.currentInvoicePDF = invoice;
+            
+            const pdfContent = document.getElementById('pdfContent');
+            const settings = appState.settings;
+            
+            const htmlContent = `
+                <div class="pdf-header">
+                    <div>
+                        <div class="pdf-title">${settings.companyName || 'Financia Pro Gabon'}</div>
+                        <div>${settings.companyAddress || 'Libreville, Gabon'}</div>
+                        <div>NIF: ${settings.companyNIF || 'Non spécifié'}</div>
+                        <div>Tél: ${settings.companyPhone || ''} | Email: ${settings.companyEmail || ''}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: bold; color: #1E3A8A;">FACTURE</div>
+                        <div class="pdf-invoice-number">${invoice.number}</div>
+                        <div>Date: ${formatDate(invoice.date)}</div>
+                        <div>Échéance: ${formatDate(invoice.dueDate)}</div>
+                    </div>
+                </div>
+                
+                <div class="pdf-section">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #1E3A8A; margin-bottom: 10px;">CLIENT</h3>
+                        <div><strong>${invoice.clientName}</strong></div>
+                        ${invoice.clientAddress ? `<div>${invoice.clientAddress}</div>` : ''}
+                        ${invoice.clientNIF ? `<div>NIF: ${invoice.clientNIF}</div>` : ''}
+                        ${invoice.clientPhone ? `<div>Tél: ${invoice.clientPhone}</div>` : ''}
+                        ${invoice.clientEmail ? `<div>Email: ${invoice.clientEmail}</div>` : ''}
+                    </div>
+                </div>
+                
+                <div class="pdf-section">
+                    <h3 style="color: #1E3A8A; margin-bottom: 15px;">DÉTAILS DE LA FACTURE</h3>
+                    <table class="pdf-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: center;">Qté</th>
+                                <th style="text-align: right;">Prix HT</th>
+                                <th style="text-align: right;">Total HT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${invoice.lines.map((line, index) => `
+                                <tr>
+                                    <td>${line.description}</td>
+                                    <td style="text-align: center;">${line.quantity}</td>
+                                    <td style="text-align: right;">${formatCurrency(line.price)}</td>
+                                    <td style="text-align: right;">${formatCurrency(line.totalHT)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pdf-section" style="max-width: 300px; margin-left: auto;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Total HT:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalHT)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #0EA5E9;">
+                            <span>TVA 18%:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalTVA)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #F59E0B;">
+                            <span>CSS 1%:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalCSS)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 10px; border-top: 2px solid #1E3A8A; font-size: 18px;">
+                            <span><strong>TOTAL TTC:</strong></span>
+                            <span style="font-weight: bold; color: #1E3A8A;">${formatCurrency(invoice.totalTTC)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${invoice.notes ? `
+                <div class="pdf-section">
+                    <h3 style="color: #1E3A8A; margin-bottom: 10px;">NOTES</h3>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        ${invoice.notes}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="pdf-footer">
+                    <div style="text-align: center; margin-top: 30px;">
+                        <div><strong>${settings.companyName || 'Financia Pro Gabon'}</strong></div>
+                        <div>Logiciel de gestion Financia Pro Gabon | www.financiapro.ga</div>
+                        <div style="margin-top: 20px; font-size: 10px; color: #999;">
+                            Facture générée le ${formatDate(new Date().toISOString())}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            pdfContent.innerHTML = htmlContent;
+            showPDFPreview();
+        }
+
+        function showPDFPreview() {
+            document.getElementById('pdfPreview').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePDFPreview() {
+            document.getElementById('pdfPreview').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const invoice = appState.currentInvoicePDF;
+            const settings = appState.settings;
+            
+            // En-tête
+            doc.setFontSize(20);
+            doc.setTextColor(30, 58, 138);
+            doc.text(settings.companyName || 'Financia Pro Gabon', 20, 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(settings.companyAddress || 'Libreville, Gabon', 20, 28);
+            doc.text(`NIF: ${settings.companyNIF || 'Non spécifié'}`, 20, 32);
+            
+            // Titre facture
+            doc.setFontSize(24);
+            doc.setTextColor(30, 58, 138);
+            doc.text('FACTURE', 150, 20, { align: 'right' });
+            
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`N°: ${invoice.number}`, 150, 28, { align: 'right' });
+            doc.text(`Date: ${formatDate(invoice.date)}`, 150, 32, { align: 'right' });
+            doc.text(`Échéance: ${formatDate(invoice.dueDate)}`, 150, 36, { align: 'right' });
+            
+            // Client
+            doc.setFontSize(12);
+            doc.setTextColor(30, 58, 138);
+            doc.text('CLIENT', 20, 50);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(invoice.clientName, 20, 58);
+            
+            let clientY = 62;
+            if (invoice.clientAddress) {
+                doc.text(invoice.clientAddress, 20, clientY);
+                clientY += 4;
+            }
+            if (invoice.clientNIF) {
+                doc.text(`NIF: ${invoice.clientNIF}`, 20, clientY);
+                clientY += 4;
+            }
+            
+            // Ligne séparatrice
+            doc.setDrawColor(200, 200, 200);
+            doc.line(20, clientY + 4, 190, clientY + 4);
+            
+            // Tableau des produits
+            const tableTop = clientY + 10;
+            doc.setFontSize(12);
+            doc.setTextColor(30, 58, 138);
+            doc.text('DÉTAILS DE LA FACTURE', 20, tableTop);
+            
+            // En-têtes du tableau
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Description', 20, tableTop + 10);
+            doc.text('Qté', 120, tableTop + 10, { align: 'center' });
+            doc.text('Prix HT', 140, tableTop + 10, { align: 'right' });
+            doc.text('Total HT', 170, tableTop + 10, { align: 'right' });
+            
+            // Ligne
+            doc.line(20, tableTop + 12, 190, tableTop + 12);
+            
+            // Produits
+            let productY = tableTop + 20;
+            invoice.lines.forEach((line, index) => {
+                if (productY > 250) {
+                    doc.addPage();
+                    productY = 20;
+                }
+                
+                doc.text(line.description, 20, productY);
+                doc.text(line.quantity.toString(), 120, productY, { align: 'center' });
+                doc.text(formatCurrency(line.price), 140, productY, { align: 'right' });
+                doc.text(formatCurrency(line.totalHT), 170, productY, { align: 'right' });
+                productY += 8;
+            });
+            
+            // Totaux
+            const totalsY = Math.max(productY + 10, 180);
+            
+            doc.setDrawColor(200, 200, 200);
+            doc.line(120, totalsY - 5, 190, totalsY - 5);
+            
+            doc.text('Total HT:', 120, totalsY, { align: 'right' });
+            doc.text(formatCurrency(invoice.totalHT), 190, totalsY, { align: 'right' });
+            
+            doc.setTextColor(14, 165, 233);
+            doc.text('TVA 18%:', 120, totalsY + 6, { align: 'right' });
+            doc.text(formatCurrency(invoice.totalTVA), 190, totalsY + 6, { align: 'right' });
+            
+            doc.setTextColor(245, 158, 11);
+            doc.text('CSS 1%:', 120, totalsY + 12, { align: 'right' });
+            doc.text(formatCurrency(invoice.totalCSS), 190, totalsY + 12, { align: 'right' });
+            
+            doc.setDrawColor(30, 58, 138);
+            doc.line(120, totalsY + 18, 190, totalsY + 18);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(30, 58, 138);
+            doc.text('TOTAL TTC:', 120, totalsY + 26, { align: 'right' });
+            doc.text(formatCurrency(invoice.totalTTC), 190, totalsY + 26, { align: 'right' });
+            
+            // Notes
+            if (invoice.notes && invoice.notes.trim() !== '') {
+                const notesY = totalsY + 40;
+                doc.setFontSize(11);
+                doc.setTextColor(30, 58, 138);
+                doc.text('NOTES:', 20, notesY);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                const splitNotes = doc.splitTextToSize(invoice.notes, 170);
+                doc.text(splitNotes, 20, notesY + 6);
+            }
+            
+            // Pied de page
+            const pageHeight = doc.internal.pageSize.height;
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Financia Pro Gabon - Logiciel de gestion comptable`, 105, pageHeight - 20, { align: 'center' });
+            doc.text(`Facture générée le ${formatDate(new Date().toISOString())}`, 105, pageHeight - 15, { align: 'center' });
+            
+            // Sauvegarder le PDF
+            doc.save(`${invoice.number}.pdf`);
+            showNotification('PDF téléchargé avec succès', 'success');
+            closePDFPreview();
         }
 
         // ==================== DASHBOARD ====================
