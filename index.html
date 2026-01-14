@@ -29,6 +29,7 @@
     
     <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
@@ -238,6 +239,9 @@
             font-size: 0.75rem;
             transition: var(--transition);
             flex: 1;
+            border: none;
+            background: none;
+            cursor: pointer;
         }
         
         .nav-item i {
@@ -494,6 +498,7 @@
             justify-content: space-between;
             align-items: center;
             transition: var(--transition);
+            background: var(--bg-card);
         }
         
         .list-item:hover {
@@ -653,6 +658,7 @@
             color: var(--text-primary);
             transition: var(--transition);
             min-height: 7rem;
+            cursor: pointer;
         }
         
         .action-btn:hover {
@@ -909,15 +915,29 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: white;
+            background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
-            padding: 20px;
-            overflow: auto;
             display: none;
+            flex-direction: column;
         }
         
         #pdfPreview.active {
-            display: block;
+            display: flex;
+        }
+        
+        .pdf-toolbar {
+            background: var(--bg-card);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .pdf-content-container {
+            flex: 1;
+            overflow: auto;
+            padding: 1rem;
         }
         
         .pdf-content {
@@ -927,6 +947,7 @@
             color: black;
             padding: 40px;
             font-family: Arial, sans-serif;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
         
         .pdf-header {
@@ -985,6 +1006,32 @@
             font-size: 12px;
             color: #666;
         }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 1rem;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            max-width: 300px;
+            border-left: 4px solid var(--success);
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+        
+        .toast.info {
+            border-left-color: var(--info);
+        }
     </style>
 </head>
 <body>
@@ -1004,17 +1051,27 @@
     </div>
 
     <!-- PDF Preview Modal -->
-    <div id="pdfPreview" class="hidden">
-        <div style="position: fixed; top: 20px; right: 20px; z-index: 2001;">
-            <button onclick="closePDFPreview()" class="btn btn-danger">
-                <i class="fas fa-times"></i> Fermer
-            </button>
-            <button onclick="downloadPDF()" class="btn btn-success">
-                <i class="fas fa-download"></i> Télécharger PDF
-            </button>
+    <div id="pdfPreview">
+        <div class="pdf-toolbar">
+            <div>
+                <button onclick="closePDFPreview()" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+                <button onclick="generatePDFFromPreview()" class="btn btn-success">
+                    <i class="fas fa-download"></i> Télécharger PDF
+                </button>
+                <button onclick="printPDF()" class="btn btn-primary">
+                    <i class="fas fa-print"></i> Imprimer
+                </button>
+            </div>
+            <div class="text-muted">
+                Prévisualisation de la facture
+            </div>
         </div>
-        <div id="pdfContent" class="pdf-content">
-            <!-- PDF content will be generated here -->
+        <div class="pdf-content-container">
+            <div id="pdfContent" class="pdf-content">
+                <!-- PDF content will be generated here -->
+            </div>
         </div>
     </div>
 
@@ -1364,11 +1421,11 @@
                                 <div class="grid-2">
                                     <div class="form-group">
                                         <label class="form-label">Quantité</label>
-                                        <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                                        <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateInvoiceTotals()">
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Prix unitaire HT</label>
-                                        <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required>
+                                        <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required oninput="updateInvoiceTotals()">
                                     </div>
                                 </div>
                                 <div class="tax-display">
@@ -1413,7 +1470,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" onclick="hideModal('newInvoiceModal')">Annuler</button>
+                <button class="btn btn-outline" type="button" onclick="hideModal('newInvoiceModal')">Annuler</button>
                 <button type="submit" form="invoiceForm" class="btn btn-primary">Créer la facture</button>
             </div>
         </div>
@@ -1503,11 +1560,11 @@
                                 <div class="grid-2">
                                     <div class="form-group">
                                         <label class="form-label">Quantité</label>
-                                        <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                                        <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateDepenseTotals()">
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Prix unitaire TTC</label>
-                                        <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required>
+                                        <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required oninput="updateDepenseTotals()">
                                     </div>
                                 </div>
                                 <div class="tax-display">
@@ -1552,7 +1609,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" onclick="hideModal('newDepenseModal')">Annuler</button>
+                <button class="btn btn-outline" type="button" onclick="hideModal('newDepenseModal')">Annuler</button>
                 <button type="submit" form="depenseForm" class="btn btn-primary">Enregistrer la dépense</button>
             </div>
         </div>
@@ -1606,7 +1663,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" onclick="hideModal('newClientModal')">Annuler</button>
+                <button class="btn btn-outline" type="button" onclick="hideModal('newClientModal')">Annuler</button>
                 <button type="submit" form="clientForm" class="btn btn-primary">Enregistrer</button>
             </div>
         </div>
@@ -1614,26 +1671,13 @@
 
     <!-- JavaScript -->
     <script>
-        // Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('Service Worker enregistré:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Erreur Service Worker:', error);
-                    });
-            });
-        }
-
         // ==================== CONFIGURATION ====================
         const CONFIG = {
             TVA_RATE: 18,    // Taux TVA Gabon
             CSS_RATE: 1,     // Taux CSS Gabon
             CURRENCY: 'FCFA',
-            APP_NAME: 'Financia Pro Gabon',
-            VERSION: '1.0.0'
+            APP_NAME: 'Finance Elite Prestations',
+            VERSION: '2.0.0'
         };
 
         // ==================== STATE MANAGEMENT ====================
@@ -1747,28 +1791,7 @@
 
         function initializeDefaultData() {
             appState.clients = [
-                {
-                    id: 1,
-                    type: 'client',
-                    name: 'Ministère des Finances',
-                    nif: 'GAB123456789',
-                    address: 'Libreville, Gabon',
-                    phone: '+241 01 23 45 67',
-                    email: 'contact@finances.gouv.ga',
-                    balance: 0,
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    type: 'fournisseur',
-                    name: 'SOGARA',
-                    nif: 'GAB987654321',
-                    address: 'Port-Gentil, Gabon',
-                    phone: '+241 04 56 78 90',
-                    email: 'contact@sogara.ga',
-                    balance: 0,
-                    createdAt: new Date().toISOString()
-                }
+                
             ];
 
             appState.invoices = [];
@@ -1776,11 +1799,11 @@
             appState.ecritures = [];
             
             appState.settings = {
-                companyName: 'Mon Entreprise Gabon',
+                companyName: 'Elite Prestations',
                 companyAddress: 'Libreville, Gabon',
-                companyNIF: 'VOTRENIFICI',
-                companyPhone: '+241 00 00 00 00',
-                companyEmail: 'contact@entreprise.ga',
+                companyNIF: 'NIF 299086A RCCM: RG LBV2018A4570',
+                companyPhone: '+241 62 39 11 21/ 77 02 30 04',
+                companyEmail: 'eliteprestationspourvous@gmail.com',
                 currency: CONFIG.CURRENCY,
                 taxTVA: CONFIG.TVA_RATE,
                 taxCSS: CONFIG.CSS_RATE,
@@ -1813,6 +1836,7 @@
                     { id: 18, numero: '70', libelle: 'Ventes', type: 'produit' },
                     { id: 19, numero: '71', libelle: 'Production vendue', type: 'produit' }
                 ];
+                saveData();
             }
         }
 
@@ -1912,6 +1936,8 @@
         // ==================== CLIENTS MANAGEMENT ====================
         function loadClientsForSelect() {
             const select = document.getElementById('invoiceClient');
+            if (!select) return;
+            
             select.innerHTML = '<option value="">Sélectionner un client</option>';
             
             appState.clients
@@ -1955,10 +1981,6 @@
             }
         }
 
-        function loadComptesForSelect() {
-            // À implémenter si nécessaire
-        }
-
         function saveClient(event) {
             event.preventDefault();
             
@@ -1989,6 +2011,8 @@
 
         function renderClientsList(filter = '') {
             const container = document.getElementById('clientsList');
+            if (!container) return;
+            
             const filtered = appState.clients.filter(client => 
                 client.name.toLowerCase().includes(filter.toLowerCase()) ||
                 (client.nif && client.nif.toLowerCase().includes(filter.toLowerCase())) ||
@@ -2039,7 +2063,8 @@
             ).length + 1;
             
             const number = `FACT-${year}${month}-${count.toString().padStart(3, '0')}`;
-            document.getElementById('invoiceNumber').value = number;
+            const input = document.getElementById('invoiceNumber');
+            if (input) input.value = number;
             return number;
         }
 
@@ -2051,14 +2076,15 @@
             ).length + 1;
             
             const number = `DEP-${year}${month}-${count.toString().padStart(3, '0')}`;
-            if (document.getElementById('depenseNumber')) {
-                document.getElementById('depenseNumber').value = number;
-            }
+            const input = document.getElementById('depenseNumber');
+            if (input) input.value = number;
             return number;
         }
 
         function addLine() {
             const container = document.getElementById('invoiceLines');
+            if (!container) return;
+            
             const line = document.createElement('div');
             line.className = 'invoice-line';
             line.innerHTML = `
@@ -2070,11 +2096,11 @@
                     <div class="grid-2">
                         <div class="form-group">
                             <label class="form-label">Quantité</label>
-                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateInvoiceTotals()">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Prix unitaire HT</label>
-                            <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required>
+                            <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required oninput="updateInvoiceTotals()">
                         </div>
                     </div>
                     <div class="tax-display">
@@ -2098,6 +2124,8 @@
 
         function addDepenseLine() {
             const container = document.getElementById('depenseLines');
+            if (!container) return;
+            
             const line = document.createElement('div');
             line.className = 'depense-line';
             line.innerHTML = `
@@ -2109,11 +2137,11 @@
                     <div class="grid-2">
                         <div class="form-group">
                             <label class="form-label">Quantité</label>
-                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateDepenseTotals()">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Prix unitaire TTC</label>
-                            <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required>
+                            <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required oninput="updateDepenseTotals()">
                         </div>
                     </div>
                     <div class="tax-display">
@@ -2155,40 +2183,58 @@
             let totalHT = 0;
             
             document.querySelectorAll('.invoice-line').forEach(line => {
-                const qty = parseFloat(line.querySelector('input[placeholder="Qté"]').value) || 0;
-                const price = parseFloat(line.querySelector('input[placeholder="Prix HT"]').value) || 0;
-                totalHT += qty * price;
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix HT"]');
+                
+                if (qtyInput && priceInput) {
+                    const qty = parseFloat(qtyInput.value) || 0;
+                    const price = parseFloat(priceInput.value) || 0;
+                    totalHT += qty * price;
+                }
             });
             
             const tva = totalHT * (CONFIG.TVA_RATE / 100);
             const css = totalHT * (CONFIG.CSS_RATE / 100);
             const totalTTC = totalHT + tva + css;
             
-            document.getElementById('totalHT').textContent = formatCurrency(totalHT);
-            document.getElementById('totalTVA').textContent = formatCurrency(tva);
-            document.getElementById('totalCSS').textContent = formatCurrency(css);
-            document.getElementById('totalTTC').textContent = formatCurrency(totalTTC);
+            const totalHTEl = document.getElementById('totalHT');
+            const totalTVAEl = document.getElementById('totalTVA');
+            const totalCSSEl = document.getElementById('totalCSS');
+            const totalTTCEl = document.getElementById('totalTTC');
+            
+            if (totalHTEl) totalHTEl.textContent = formatCurrency(totalHT);
+            if (totalTVAEl) totalTVAEl.textContent = formatCurrency(tva);
+            if (totalCSSEl) totalCSSEl.textContent = formatCurrency(css);
+            if (totalTTCEl) totalTTCEl.textContent = formatCurrency(totalTTC);
         }
 
         function updateDepenseTotals() {
             let totalTTC = 0;
             
             document.querySelectorAll('.depense-line').forEach(line => {
-                const qty = parseFloat(line.querySelector('input[placeholder="Qté"]').value) || 0;
-                const price = parseFloat(line.querySelector('input[placeholder="Prix TTC"]').value) || 0;
-                totalTTC += qty * price;
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix TTC"]');
+                
+                if (qtyInput && priceInput) {
+                    const qty = parseFloat(qtyInput.value) || 0;
+                    const price = parseFloat(priceInput.value) || 0;
+                    totalTTC += qty * price;
+                }
             });
             
             const totalHT = totalTTC / (1 + (CONFIG.TVA_RATE + CONFIG.CSS_RATE) / 100);
             const tva = totalHT * (CONFIG.TVA_RATE / 100);
             const css = totalHT * (CONFIG.CSS_RATE / 100);
             
-            if (document.getElementById('depenseTotalTTC')) {
-                document.getElementById('depenseTotalTTC').textContent = formatCurrency(totalTTC);
-                document.getElementById('depenseTotalHT').textContent = formatCurrency(totalHT);
-                document.getElementById('depenseTotalTVA').textContent = formatCurrency(tva);
-                document.getElementById('depenseTotalCSS').textContent = formatCurrency(css);
-            }
+            const depenseTotalTTCEl = document.getElementById('depenseTotalTTC');
+            const depenseTotalHTEl = document.getElementById('depenseTotalHT');
+            const depenseTotalTVAEl = document.getElementById('depenseTotalTVA');
+            const depenseTotalCSSEl = document.getElementById('depenseTotalCSS');
+            
+            if (depenseTotalTTCEl) depenseTotalTTCEl.textContent = formatCurrency(totalTTC);
+            if (depenseTotalHTEl) depenseTotalHTEl.textContent = formatCurrency(totalHT);
+            if (depenseTotalTVAEl) depenseTotalTVAEl.textContent = formatCurrency(tva);
+            if (depenseTotalCSSEl) depenseTotalCSSEl.textContent = formatCurrency(css);
         }
 
         function saveInvoice(event) {
@@ -2209,8 +2255,11 @@
             const lines = [];
             document.querySelectorAll('.invoice-line').forEach(line => {
                 const description = line.querySelector('input[placeholder="Produit ou service"]').value;
-                const quantity = parseFloat(line.querySelector('input[placeholder="Qté"]').value);
-                const price = parseFloat(line.querySelector('input[placeholder="Prix HT"]').value);
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix HT"]');
+                
+                const quantity = parseFloat(qtyInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
                 
                 if (description && quantity > 0 && price > 0) {
                     const lineHT = quantity * price;
@@ -2268,10 +2317,16 @@
             renderRecentInvoices();
             updateDashboard();
             
-            document.getElementById('invoiceForm').reset();
+            // Reset form
+            const invoiceForm = document.getElementById('invoiceForm');
+            if (invoiceForm) invoiceForm.reset();
+            
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('invoiceDate').value = today;
-            document.getElementById('invoiceDueDate').value = addDays(today, 30);
+            const invoiceDateInput = document.getElementById('invoiceDate');
+            const invoiceDueDateInput = document.getElementById('invoiceDueDate');
+            if (invoiceDateInput) invoiceDateInput.value = today;
+            if (invoiceDueDateInput) invoiceDueDateInput.value = addDays(today, 30);
+            
             generateInvoiceNumber();
             
             showNotification('Facture créée avec succès', 'success');
@@ -2311,8 +2366,11 @@
             const lines = [];
             document.querySelectorAll('.depense-line').forEach(line => {
                 const description = line.querySelector('input[placeholder="Description de la dépense"]').value;
-                const quantity = parseFloat(line.querySelector('input[placeholder="Qté"]').value);
-                const price = parseFloat(line.querySelector('input[placeholder="Prix TTC"]').value);
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix TTC"]');
+                
+                const quantity = parseFloat(qtyInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
                 
                 if (description && quantity > 0 && price > 0) {
                     const lineTTC = quantity * price;
@@ -2373,12 +2431,16 @@
             renderRecentDepenses();
             updateDashboard();
             
-            document.getElementById('depenseForm').reset();
+            // Reset form
+            const depenseForm = document.getElementById('depenseForm');
+            if (depenseForm) depenseForm.reset();
+            
             const today = new Date().toISOString().split('T')[0];
-            if (document.getElementById('depenseDate')) {
-                document.getElementById('depenseDate').value = today;
-                document.getElementById('depensePaymentDate').value = today;
-            }
+            const depenseDateInput = document.getElementById('depenseDate');
+            const depensePaymentDateInput = document.getElementById('depensePaymentDate');
+            if (depenseDateInput) depenseDateInput.value = today;
+            if (depensePaymentDateInput) depensePaymentDateInput.value = today;
+            
             generateDepenseNumber();
             
             showNotification('Dépense enregistrée avec succès', 'success');
@@ -2406,6 +2468,8 @@
 
         function renderInvoicesList(filter = '') {
             const container = document.getElementById('invoicesList');
+            if (!container) return;
+            
             const filtered = appState.invoices.filter(invoice => 
                 invoice.number.toLowerCase().includes(filter.toLowerCase()) ||
                 invoice.clientName.toLowerCase().includes(filter.toLowerCase())
@@ -2418,7 +2482,7 @@
                 return;
             }
             
-            filtered.forEach(invoice => {
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(invoice => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
                 item.innerHTML = `
@@ -2477,7 +2541,7 @@
                 return;
             }
             
-            filtered.forEach(depense => {
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(depense => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
                 item.innerHTML = `
@@ -2521,7 +2585,11 @@
 
         function renderRecentInvoices() {
             const container = document.getElementById('recentInvoices');
-            const recent = appState.invoices.slice(-5).reverse();
+            if (!container) return;
+            
+            const recent = appState.invoices
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
             
             container.innerHTML = '';
             
@@ -2554,7 +2622,11 @@
 
         function renderRecentDepenses() {
             const container = document.getElementById('recentDepenses');
-            const recent = appState.depenses.slice(-5).reverse();
+            if (!container) return;
+            
+            const recent = appState.depenses
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
             
             container.innerHTML = '';
             
@@ -2667,10 +2739,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-outline" onclick="generatePDF(${invoice.id})">
+                        <button class="btn btn-primary" onclick="generatePDF(${invoice.id})">
                             <i class="fas fa-file-pdf"></i> Télécharger PDF
                         </button>
-                        <button class="btn btn-outline" onclick="markInvoiceAsPaid(${invoice.id})">
+                        <button class="btn btn-success" onclick="markInvoiceAsPaid(${invoice.id})">
                             <i class="fas fa-check"></i> Marquer Payée
                         </button>
                         <button class="btn btn-danger" onclick="deleteInvoice(${invoice.id})">
@@ -2791,7 +2863,8 @@
                     renderRecentInvoices();
                     updateDashboard();
                     showNotification('Facture supprimée', 'success');
-                    document.querySelector('.modal-overlay.active').remove();
+                    const modal = document.querySelector('.modal-overlay.active');
+                    if (modal) modal.remove();
                 }
             }
         }
@@ -2814,7 +2887,8 @@
                     renderRecentDepenses();
                     updateDashboard();
                     showNotification('Dépense supprimée', 'success');
-                    document.querySelector('.modal-overlay.active').remove();
+                    const modal = document.querySelector('.modal-overlay.active');
+                    if (modal) modal.remove();
                 }
             }
         }
@@ -2835,7 +2909,7 @@
             const htmlContent = `
                 <div class="pdf-header">
                     <div>
-                        <div class="pdf-title">${settings.companyName || 'Financia Pro Gabon'}</div>
+                        <div class="pdf-title">${settings.companyName || 'Finance Elite Prestations'}</div>
                         <div>${settings.companyAddress || 'Libreville, Gabon'}</div>
                         <div>NIF: ${settings.companyNIF || 'Non spécifié'}</div>
                         <div>Tél: ${settings.companyPhone || ''} | Email: ${settings.companyEmail || ''}</div>
@@ -2915,8 +2989,8 @@
                 
                 <div class="pdf-footer">
                     <div style="text-align: center; margin-top: 30px;">
-                        <div><strong>${settings.companyName || 'Financia Pro Gabon'}</strong></div>
-                        <div>Logiciel de gestion Financia Pro Gabon | www.financiapro.ga</div>
+                        <div><strong>${settings.companyName || 'Finance Elite Prestations'}</strong></div>
+                        <div>Logiciel de gestion Finance Elite Prestations | https://nemesis1empire.github.io/FinanceElite/</div>
                         <div style="margin-top: 20px; font-size: 10px; color: #999;">
                             Facture générée le ${formatDate(new Date().toISOString())}
                         </div>
@@ -2938,137 +3012,181 @@
             document.body.style.overflow = 'auto';
         }
 
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
+        function generatePDFFromPreview() {
             const invoice = appState.currentInvoicePDF;
-            const settings = appState.settings;
-            
-            // En-tête
-            doc.setFontSize(20);
-            doc.setTextColor(30, 58, 138);
-            doc.text(settings.companyName || 'Financia Pro Gabon', 20, 20);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text(settings.companyAddress || 'Libreville, Gabon', 20, 28);
-            doc.text(`NIF: ${settings.companyNIF || 'Non spécifié'}`, 20, 32);
-            
-            // Titre facture
-            doc.setFontSize(24);
-            doc.setTextColor(30, 58, 138);
-            doc.text('FACTURE', 150, 20, { align: 'right' });
-            
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`N°: ${invoice.number}`, 150, 28, { align: 'right' });
-            doc.text(`Date: ${formatDate(invoice.date)}`, 150, 32, { align: 'right' });
-            doc.text(`Échéance: ${formatDate(invoice.dueDate)}`, 150, 36, { align: 'right' });
-            
-            // Client
-            doc.setFontSize(12);
-            doc.setTextColor(30, 58, 138);
-            doc.text('CLIENT', 20, 50);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text(invoice.clientName, 20, 58);
-            
-            let clientY = 62;
-            if (invoice.clientAddress) {
-                doc.text(invoice.clientAddress, 20, clientY);
-                clientY += 4;
-            }
-            if (invoice.clientNIF) {
-                doc.text(`NIF: ${invoice.clientNIF}`, 20, clientY);
-                clientY += 4;
+            if (!invoice) {
+                showNotification('Aucune facture à télécharger', 'error');
+                return;
             }
             
-            // Ligne séparatrice
-            doc.setDrawColor(200, 200, 200);
-            doc.line(20, clientY + 4, 190, clientY + 4);
+            // Vérifier si jsPDF est disponible
+            if (typeof window.jspdf === 'undefined') {
+                showNotification('Erreur: jsPDF non chargé. Veuillez vérifier votre connexion internet.', 'error');
+                return;
+            }
             
-            // Tableau des produits
-            const tableTop = clientY + 10;
-            doc.setFontSize(12);
-            doc.setTextColor(30, 58, 138);
-            doc.text('DÉTAILS DE LA FACTURE', 20, tableTop);
-            
-            // En-têtes du tableau
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text('Description', 20, tableTop + 10);
-            doc.text('Qté', 120, tableTop + 10, { align: 'center' });
-            doc.text('Prix HT', 140, tableTop + 10, { align: 'right' });
-            doc.text('Total HT', 170, tableTop + 10, { align: 'right' });
-            
-            // Ligne
-            doc.line(20, tableTop + 12, 190, tableTop + 12);
-            
-            // Produits
-            let productY = tableTop + 20;
-            invoice.lines.forEach((line, index) => {
-                if (productY > 250) {
-                    doc.addPage();
-                    productY = 20;
-                }
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const settings = appState.settings;
                 
-                doc.text(line.description, 20, productY);
-                doc.text(line.quantity.toString(), 120, productY, { align: 'center' });
-                doc.text(formatCurrency(line.price), 140, productY, { align: 'right' });
-                doc.text(formatCurrency(line.totalHT), 170, productY, { align: 'right' });
-                productY += 8;
-            });
-            
-            // Totaux
-            const totalsY = Math.max(productY + 10, 180);
-            
-            doc.setDrawColor(200, 200, 200);
-            doc.line(120, totalsY - 5, 190, totalsY - 5);
-            
-            doc.text('Total HT:', 120, totalsY, { align: 'right' });
-            doc.text(formatCurrency(invoice.totalHT), 190, totalsY, { align: 'right' });
-            
-            doc.setTextColor(14, 165, 233);
-            doc.text('TVA 18%:', 120, totalsY + 6, { align: 'right' });
-            doc.text(formatCurrency(invoice.totalTVA), 190, totalsY + 6, { align: 'right' });
-            
-            doc.setTextColor(245, 158, 11);
-            doc.text('CSS 1%:', 120, totalsY + 12, { align: 'right' });
-            doc.text(formatCurrency(invoice.totalCSS), 190, totalsY + 12, { align: 'right' });
-            
-            doc.setDrawColor(30, 58, 138);
-            doc.line(120, totalsY + 18, 190, totalsY + 18);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(30, 58, 138);
-            doc.text('TOTAL TTC:', 120, totalsY + 26, { align: 'right' });
-            doc.text(formatCurrency(invoice.totalTTC), 190, totalsY + 26, { align: 'right' });
-            
-            // Notes
-            if (invoice.notes && invoice.notes.trim() !== '') {
-                const notesY = totalsY + 40;
-                doc.setFontSize(11);
+                // En-tête
+                doc.setFontSize(20);
                 doc.setTextColor(30, 58, 138);
-                doc.text('NOTES:', 20, notesY);
+                doc.text(settings.companyName || 'Financia Elite Prestations', 20, 20);
                 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
-                const splitNotes = doc.splitTextToSize(invoice.notes, 170);
-                doc.text(splitNotes, 20, notesY + 6);
+                doc.text(settings.companyAddress || 'Libreville, Gabon', 20, 28);
+                doc.text(`NIF: ${settings.companyNIF || 'Non spécifié'}`, 20, 32);
+                
+                // Titre facture
+                doc.setFontSize(24);
+                doc.setTextColor(30, 58, 138);
+                doc.text('FACTURE', 150, 20, { align: 'right' });
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`N°: ${invoice.number}`, 150, 28, { align: 'right' });
+                doc.text(`Date: ${formatDate(invoice.date)}`, 150, 32, { align: 'right' });
+                doc.text(`Échéance: ${formatDate(invoice.dueDate)}`, 150, 36, { align: 'right' });
+                
+                // Client
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('CLIENT', 20, 50);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(invoice.clientName, 20, 58);
+                
+                let clientY = 62;
+                if (invoice.clientAddress) {
+                    doc.text(invoice.clientAddress, 20, clientY);
+                    clientY += 4;
+                }
+                if (invoice.clientNIF) {
+                    doc.text(`NIF: ${invoice.clientNIF}`, 20, clientY);
+                    clientY += 4;
+                }
+                
+                // Ligne séparatrice
+                doc.setDrawColor(200, 200, 200);
+                doc.line(20, clientY + 4, 190, clientY + 4);
+                
+                // Tableau des produits
+                const tableTop = clientY + 10;
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('DÉTAILS DE LA FACTURE', 20, tableTop);
+                
+                // En-têtes du tableau
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Description', 20, tableTop + 10);
+                doc.text('Qté', 120, tableTop + 10, { align: 'center' });
+                doc.text('Prix HT', 140, tableTop + 10, { align: 'right' });
+                doc.text('Total HT', 170, tableTop + 10, { align: 'right' });
+                
+                // Ligne
+                doc.line(20, tableTop + 12, 190, tableTop + 12);
+                
+                // Produits
+                let productY = tableTop + 20;
+                invoice.lines.forEach((line, index) => {
+                    if (productY > 250) {
+                        doc.addPage();
+                        productY = 20;
+                    }
+                    
+                    doc.text(line.description, 20, productY);
+                    doc.text(line.quantity.toString(), 120, productY, { align: 'center' });
+                    doc.text(formatCurrency(line.price), 140, productY, { align: 'right' });
+                    doc.text(formatCurrency(line.totalHT), 170, productY, { align: 'right' });
+                    productY += 8;
+                });
+                
+                // Totaux
+                const totalsY = Math.max(productY + 10, 180);
+                
+                doc.setDrawColor(200, 200, 200);
+                doc.line(120, totalsY - 5, 190, totalsY - 5);
+                
+                doc.text('Total HT:', 120, totalsY, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalHT), 190, totalsY, { align: 'right' });
+                
+                doc.setTextColor(14, 165, 233);
+                doc.text('TVA 18%:', 120, totalsY + 6, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalTVA), 190, totalsY + 6, { align: 'right' });
+                
+                doc.setTextColor(245, 158, 11);
+                doc.text('CSS 1%:', 120, totalsY + 12, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalCSS), 190, totalsY + 12, { align: 'right' });
+                
+                doc.setDrawColor(30, 58, 138);
+                doc.line(120, totalsY + 18, 190, totalsY + 18);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('TOTAL TTC:', 120, totalsY + 26, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalTTC), 190, totalsY + 26, { align: 'right' });
+                
+                // Notes
+                if (invoice.notes && invoice.notes.trim() !== '') {
+                    const notesY = totalsY + 40;
+                    doc.setFontSize(11);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('NOTES:', 20, notesY);
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    const splitNotes = doc.splitTextToSize(invoice.notes, 170);
+                    doc.text(splitNotes, 20, notesY + 6);
+                }
+                
+                // Pied de page
+                const pageHeight = doc.internal.pageSize.height;
+                doc.setFontSize(8);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Financia Elite Prestations - Logiciel de gestion comptable, développé par INSOMNIA, contact: +241 62127708`, 105, pageHeight - 20, { align: 'center' });
+                doc.text(`Facture générée le ${formatDate(new Date().toISOString())}`, 105, pageHeight - 15, { align: 'center' });
+                
+                // Sauvegarder le PDF
+                doc.save(`${invoice.number}.pdf`);
+                showNotification('PDF téléchargé avec succès', 'success');
+            } catch (error) {
+                console.error('Erreur lors de la génération du PDF:', error);
+                showNotification('Erreur lors de la génération du PDF', 'error');
             }
-            
-            // Pied de page
-            const pageHeight = doc.internal.pageSize.height;
-            doc.setFontSize(8);
-            doc.setTextColor(100, 100, 100);
-            doc.text(`Financia Pro Gabon - Logiciel de gestion comptable`, 105, pageHeight - 20, { align: 'center' });
-            doc.text(`Facture générée le ${formatDate(new Date().toISOString())}`, 105, pageHeight - 15, { align: 'center' });
-            
-            // Sauvegarder le PDF
-            doc.save(`${invoice.number}.pdf`);
-            showNotification('PDF téléchargé avec succès', 'success');
-            closePDFPreview();
+        }
+
+        function printPDF() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${appState.currentInvoicePDF?.number || 'Facture'}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 40px; }
+                            .header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+                            .title { font-size: 28px; font-weight: bold; color: #1E3A8A; }
+                            .client-info { margin-bottom: 30px; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                            th { background: #f5f5f5; font-weight: bold; }
+                            .totals { max-width: 300px; margin-left: auto; }
+                            .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        ${document.getElementById('pdfContent').innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
         }
 
         // ==================== DASHBOARD ====================
@@ -3077,11 +3195,13 @@
             const totalCA = appState.invoices
                 .filter(inv => inv.status === 'payée')
                 .reduce((sum, inv) => sum + inv.totalTTC, 0);
-            document.getElementById('totalCA').textContent = formatCurrency(totalCA);
+            const totalCAEl = document.getElementById('totalCA');
+            if (totalCAEl) totalCAEl.textContent = formatCurrency(totalCA);
             
             // Nombre de clients
             const clientCount = appState.clients.filter(c => c.type === 'client').length;
-            document.getElementById('totalClients').textContent = clientCount;
+            const totalClientsEl = document.getElementById('totalClients');
+            if (totalClientsEl) totalClientsEl.textContent = clientCount;
             
             // Totaux recettes/dépenses
             const totalRecettes = appState.invoices
@@ -3091,14 +3211,15 @@
             const totalDepenses = appState.depenses
                 .reduce((sum, dep) => sum + dep.totalTTC, 0);
             
-            if (document.getElementById('totalRecettes')) {
-                document.getElementById('totalRecettes').textContent = formatCurrency(totalRecettes);
-                document.getElementById('totalDepenses').textContent = formatCurrency(totalDepenses);
-            }
+            const totalRecettesEl = document.getElementById('totalRecettes');
+            const totalDepensesEl = document.getElementById('totalDepenses');
+            if (totalRecettesEl) totalRecettesEl.textContent = formatCurrency(totalRecettes);
+            if (totalDepensesEl) totalDepensesEl.textContent = formatCurrency(totalDepenses);
             
             // Trésorerie
             const solde = totalRecettes - totalDepenses;
-            document.getElementById('soldeTresorerie').textContent = formatCurrency(solde);
+            const soldeTresorerieEl = document.getElementById('soldeTresorerie');
+            if (soldeTresorerieEl) soldeTresorerieEl.textContent = formatCurrency(solde);
             
             // Entrées/sorties du mois
             const currentMonth = new Date().getMonth();
@@ -3121,8 +3242,10 @@
                 })
                 .reduce((sum, dep) => sum + dep.totalTTC, 0);
             
-            document.getElementById('entreesMois').textContent = formatCurrency(entreesMois);
-            document.getElementById('sortiesMois').textContent = formatCurrency(sortiesMois);
+            const entreesMoisEl = document.getElementById('entreesMois');
+            const sortiesMoisEl = document.getElementById('sortiesMois');
+            if (entreesMoisEl) entreesMoisEl.textContent = formatCurrency(entreesMois);
+            if (sortiesMoisEl) sortiesMoisEl.textContent = formatCurrency(sortiesMois);
             
             // Mettre à jour les statistiques des dépenses
             updateDashboardDepenses();
@@ -3156,30 +3279,40 @@
                 })
                 .reduce((sum, dep) => sum + dep.totalCSS, 0);
             
-            if (document.getElementById('totalDepensesMois')) {
-                document.getElementById('totalDepensesMois').textContent = formatCurrency(depensesMois);
-                document.getElementById('totalTVADeductible').textContent = formatCurrency(tvaDeductible);
-                document.getElementById('totalCSSDeductible').textContent = formatCurrency(cssDeductible);
-            }
+            const totalDepensesMoisEl = document.getElementById('totalDepensesMois');
+            const totalTVADeductibleEl = document.getElementById('totalTVADeductible');
+            const totalCSSDeductibleEl = document.getElementById('totalCSSDeductible');
+            
+            if (totalDepensesMoisEl) totalDepensesMoisEl.textContent = formatCurrency(depensesMois);
+            if (totalTVADeductibleEl) totalTVADeductibleEl.textContent = formatCurrency(tvaDeductible);
+            if (totalCSSDeductibleEl) totalCSSDeductibleEl.textContent = formatCurrency(cssDeductible);
         }
 
         // ==================== UTILITIES ====================
         function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('fr-GA', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('fr-GA', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
         }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('fr-GA', {
-                style: 'currency',
-                currency: 'XAF',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount).replace('XAF', 'FCFA');
+            try {
+                return new Intl.NumberFormat('fr-GA', {
+                    style: 'currency',
+                    currency: 'XAF',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(amount).replace('XAF', 'FCFA');
+            } catch (e) {
+                return amount + ' FCFA';
+            }
         }
 
         function getStatusBadgeClass(status) {
@@ -3234,35 +3367,26 @@
             return result.toISOString().split('T')[0];
         }
 
-        function showNotification(message, type = 'info') {
+        function showNotification(message, type = 'success') {
+            // Supprimer les notifications existantes
+            document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            
             const notification = document.createElement('div');
-            notification.className = 'card';
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 1rem;
-                z-index: 1000;
-                animation: slideInRight 0.3s ease, fadeIn 0.3s ease;
-                max-width: 300px;
-                border-left: 4px solid ${type === 'success' ? 'var(--success)' : 
-                                      type === 'error' ? 'var(--danger)' : 
-                                      'var(--primary)'};
-            `;
+            notification.className = `toast ${type}`;
             
             const icon = type === 'success' ? 'fa-check-circle' : 
                         type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
             
             notification.innerHTML = `
-                <div class="d-flex align-center gap-1">
-                    <i class="fas ${icon}"></i>
-                    <div>${message}</div>
-                </div>
+                <i class="fas ${icon}"></i>
+                <div>${message}</div>
             `;
             
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.style.animation = 'fadeIn 0.3s ease reverse';
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
@@ -3272,37 +3396,66 @@
         }
 
         function setupEventListeners() {
-            // Mettre à jour les totaux des factures
-            document.addEventListener('input', function(e) {
-                if (e.target.closest('#invoiceLines')) {
-                    updateInvoiceTotals();
-                }
-                if (e.target.closest('#depenseLines')) {
-                    updateDepenseTotals();
-                }
-            });
-            
             // Mettre à jour la date d'échéance
             const dateInput = document.getElementById('invoiceDate');
-            dateInput.addEventListener('change', function() {
-                const dueDate = addDays(this.value, 30);
-                document.getElementById('invoiceDueDate').value = dueDate;
-            });
+            if (dateInput) {
+                dateInput.addEventListener('change', function() {
+                    const dueDateInput = document.getElementById('invoiceDueDate');
+                    if (dueDateInput) {
+                        dueDateInput.value = addDays(this.value, 30);
+                    }
+                });
+            }
             
             // Dates par défaut pour dépenses
             const depenseDate = document.getElementById('depenseDate');
             if (depenseDate) {
                 depenseDate.addEventListener('change', function() {
-                    const paymentDate = this.value;
-                    document.getElementById('depensePaymentDate').value = paymentDate;
+                    const paymentDateInput = document.getElementById('depensePaymentDate');
+                    if (paymentDateInput) {
+                        paymentDateInput.value = this.value;
+                    }
                 });
             }
             
             // Gérer le service worker
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    window.location.reload();
-                });
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré avec succès:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
+                    });
+            }
+        }
+
+        // ==================== SERVICE WORKER ====================
+        // Créer un service worker basique si non existant
+        function createServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    self.addEventListener('install', event => {
+                        console.log('Service Worker installé');
+                        self.skipWaiting();
+                    });
+                    
+                    self.addEventListener('activate', event => {
+                        console.log('Service Worker activé');
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        // Gestion basique du cache
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swURL)
+                    .then(registration => {
+                        console.log('Service Worker enregistré');
+                    });
             }
         }
     </script>
