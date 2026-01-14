@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Finance Elite Prestations</title>
+    <title>Financia Pro Gabon</title>
     
     <!-- PWA Configuration -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -1032,20 +1032,41 @@
         .toast.info {
             border-left-color: var(--info);
         }
+        
+        /* Company Info */
+        .company-info {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .company-details {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
     <!-- Loading Screen -->
     <div id="loading" class="loading">
         <div class="loading-spinner"></div>
-        <h2>Finance Elite Prestations</h2>
+        <h2>Financia Pro Gabon</h2>
         <p>Chargement de l'application...</p>
     </div>
 
     <!-- Install Prompt -->
     <div id="installPrompt" class="hidden">
         <p>📱 <strong>Installer l'application</strong></p>
-        <p>Ajoutez Finance Elite Prestations à votre écran d'accueil</p>
+        <p>Ajoutez Financia Pro à votre écran d'accueil</p>
         <button id="installBtn" class="btn btn-block">Installer</button>
         <button id="cancelInstall" class="btn btn-outline btn-block btn-sm">Plus tard</button>
     </div>
@@ -1080,8 +1101,15 @@
         <!-- Top Navigation -->
         <nav class="navbar">
             <div class="navbar-header">
-                <h1 id="pageTitle" class="navbar-title">Finance Elite Prestations</h1>
-                
+                <h1 id="pageTitle" class="navbar-title">Tableau de Bord</h1>
+                <div class="navbar-actions">
+                    <button class="btn btn-icon" onclick="showNotifications()">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="btn btn-icon" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
             </div>
         </nav>
 
@@ -1089,8 +1117,18 @@
         <div class="content">
             <!-- Dashboard -->
             <div id="dashboardPage" class="page active">
+                <div class="company-info">
+                    <div class="company-name">Elite Prestations</div>
+                    <div class="company-details">
+                        Libreville, Gabon<br>
+                        NIF 299086A RCCM: RG LBV2018A4570<br>
+                        Tél: +241 62 39 11 21 / 77 02 30 04<br>
+                        Email: eliteprestationspourvous@gmail.com
+                    </div>
+                </div>
+
                 <div class="section">
-                    <h2>Vue d'ensemble</h2>
+                    <h2>Actions Rapides</h2>
                     <div class="quick-actions">
                         <button class="action-btn" onclick="showPage('factures')">
                             <i class="fas fa-file-invoice-dollar"></i>
@@ -1119,8 +1157,8 @@
                             <div>Chiffre d'Affaires</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalClients">0</div>
-                            <div>Clients</div>
+                            <div class="kpi-value" id="totalFactures">0</div>
+                            <div>Factures</div>
                         </div>
                     </div>
                     <div class="grid-2 mt-2">
@@ -1170,11 +1208,18 @@
 
             <!-- Factures -->
             <div id="facturesPage" class="page">
+                <div class="company-info mb-2">
+                    <div class="company-name">Elite Prestations</div>
+                    <div class="company-details">
+                        NIF 299086A RCCM: RG LBV2018A4570
+                    </div>
+                </div>
+
                 <div class="section">
                     <div class="d-flex justify-between align-center mb-2">
                         <h2>Factures</h2>
                         <button class="btn btn-primary" onclick="showModal('newInvoiceModal')">
-                            <i class="fas fa-plus"></i> Nouvelle
+                            <i class="fas fa-plus"></i> Nouvelle Facture
                         </button>
                     </div>
                     
@@ -1202,6 +1247,13 @@
 
             <!-- Dépenses -->
             <div id="depensesPage" class="page">
+                <div class="company-info mb-2">
+                    <div class="company-name">Elite Prestations</div>
+                    <div class="company-details">
+                        Dépenses & Achats
+                    </div>
+                </div>
+
                 <div class="section">
                     <div class="d-flex justify-between align-center mb-2">
                         <h2>Dépenses & Achats</h2>
@@ -1247,29 +1299,15 @@
                 </div>
             </div>
 
-            <!-- Clients -->
-            <div id="clientsPage" class="page">
-                <div class="section">
-                    <div class="d-flex justify-between align-center mb-2">
-                        <h2>Clients & Fournisseurs</h2>
-                        <button class="btn btn-primary" onclick="showModal('newClientModal')">
-                            <i class="fas fa-plus"></i> Nouveau
-                        </button>
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Rechercher..." 
-                               oninput="filterClients(this.value)">
-                    </div>
-                    
-                    <div id="clientsList" class="list">
-                        <!-- Liste clients -->
-                    </div>
-                </div>
-            </div>
-
             <!-- Comptabilité -->
             <div id="comptabilitePage" class="page">
+                <div class="company-info mb-2">
+                    <div class="company-name">Elite Prestations</div>
+                    <div class="company-details">
+                        Comptabilité
+                    </div>
+                </div>
+
                 <div class="section">
                     <h2>Comptabilité</h2>
                     
@@ -1311,6 +1349,13 @@
 
             <!-- Trésorerie -->
             <div id="tresoreriePage" class="page">
+                <div class="company-info mb-2">
+                    <div class="company-name">Elite Prestations</div>
+                    <div class="company-details">
+                        Trésorerie
+                    </div>
+                </div>
+
                 <div class="section">
                     <h2>Trésorerie</h2>
                     
@@ -1327,7 +1372,7 @@
                         <div class="card text-center">
                             <div class="kpi-value text-danger" id="sortiesMois">0 FCFA</div>
                             <div class="text-muted">Sorties ce mois</div>
-                        </div>
+                    </div>
                     </div>
                     
                     <div id="previsionsTresorerie" class="list">
@@ -1351,10 +1396,6 @@
                 <i class="fas fa-money-bill-wave"></i>
                 <span>Dépenses</span>
             </button>
-            <button class="nav-item" onclick="showPage('clients')">
-                <i class="fas fa-users"></i>
-                <span>Clients</span>
-            </button>
             <button class="nav-item" onclick="showPage('comptabilite')">
                 <i class="fas fa-book"></i>
                 <span>Compta</span>
@@ -1376,26 +1417,34 @@
             <div class="modal-body vertical-form">
                 <form id="invoiceForm" onsubmit="saveInvoice(event)">
                     <div class="form-group">
-                        <label class="form-label">Client</label>
-                        <select class="form-control" id="invoiceClient" required>
-                            <option value="">Sélectionner un client</option>
-                        </select>
+                        <label class="form-label">Nom du Client</label>
+                        <input type="text" class="form-control" id="clientName" placeholder="Nom du client" required>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Numéro de facture</label>
-                        <input type="text" class="form-control" id="invoiceNumber" required>
+                        <label class="form-label">NIF Client (Optionnel)</label>
+                        <input type="text" class="form-control" id="clientNIF" placeholder="NIF du client">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Adresse Client (Optionnel)</label>
+                        <textarea class="form-control" id="clientAddress" rows="2" placeholder="Adresse du client"></textarea>
                     </div>
                     
                     <div class="grid-2">
                         <div class="form-group">
+                            <label class="form-label">Numéro de facture</label>
+                            <input type="text" class="form-control" id="invoiceNumber" required>
+                        </div>
+                        <div class="form-group">
                             <label class="form-label">Date d'émission</label>
                             <input type="date" class="form-control" id="invoiceDate" required>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Date d'échéance</label>
-                            <input type="date" class="form-control" id="invoiceDueDate" required>
-                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Date d'échéance</label>
+                        <input type="date" class="form-control" id="invoiceDueDate" required>
                     </div>
                     
                     <div class="form-group">
@@ -1481,10 +1530,8 @@
             <div class="modal-body vertical-form">
                 <form id="depenseForm" onsubmit="saveDepense(event)">
                     <div class="form-group">
-                        <label class="form-label">Fournisseur</label>
-                        <select class="form-control" id="depenseFournisseur" required>
-                            <option value="">Sélectionner un fournisseur</option>
-                        </select>
+                        <label class="form-label">Nom du Bénéficiaire</label>
+                        <input type="text" class="form-control" id="depenseBeneficiaire" placeholder="Nom du bénéficiaire" required>
                     </div>
                     
                     <div class="grid-2">
@@ -1608,60 +1655,6 @@
         </div>
     </div>
 
-    <!-- New Client Modal -->
-    <div id="newClientModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Nouveau Client/Fournisseur</h3>
-                <button class="btn btn-icon" onclick="hideModal('newClientModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body vertical-form">
-                <form id="clientForm" onsubmit="saveClient(event)">
-                    <div class="form-group">
-                        <label class="form-label">Type *</label>
-                        <select class="form-control" id="clientType" required>
-                            <option value="">Sélectionner</option>
-                            <option value="client">Client</option>
-                            <option value="fournisseur">Fournisseur</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Nom/Raison sociale *</label>
-                        <input type="text" class="form-control" id="clientName" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">NIF (Identifiant fiscal)</label>
-                        <input type="text" class="form-control" id="clientNIF" placeholder="Numéro d'Identification Fiscale">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Adresse</label>
-                        <textarea class="form-control" id="clientAddress" rows="2" placeholder="Adresse complète"></textarea>
-                    </div>
-                    
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Téléphone</label>
-                            <input type="tel" class="form-control" id="clientPhone" placeholder="+241 XX XX XX XX">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" id="clientEmail" placeholder="email@exemple.ga">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" type="button" onclick="hideModal('newClientModal')">Annuler</button>
-                <button type="submit" form="clientForm" class="btn btn-primary">Enregistrer</button>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript -->
     <script>
         // ==================== CONFIGURATION ====================
@@ -1669,14 +1662,13 @@
             TVA_RATE: 18,    // Taux TVA Gabon
             CSS_RATE: 1,     // Taux CSS Gabon
             CURRENCY: 'FCFA',
-            APP_NAME: 'Finance Elite Prestations',
+            APP_NAME: 'Financia Pro Gabon',
             VERSION: '2.0.0'
         };
 
         // ==================== STATE MANAGEMENT ====================
         let appState = {
             currentPage: 'dashboard',
-            clients: [],
             invoices: [],
             depenses: [],
             ecritures: [],
@@ -1744,11 +1736,8 @@
             updateDashboard();
             renderRecentInvoices();
             renderRecentDepenses();
-            renderClientsList();
             renderInvoicesList();
             renderDepensesList();
-            loadClientsForSelect();
-            loadFournisseursForSelect();
             loadComptesForSelect();
             
             // Dates par défaut
@@ -1771,7 +1760,6 @@
             
             if (saved) {
                 const data = JSON.parse(saved);
-                appState.clients = data.clients || [];
                 appState.invoices = data.invoices || [];
                 appState.depenses = data.depenses || [];
                 appState.ecritures = data.ecritures || [];
@@ -1783,10 +1771,6 @@
         }
 
         function initializeDefaultData() {
-            appState.clients = [
-                
-            ];
-
             appState.invoices = [];
             appState.depenses = [];
             appState.ecritures = [];
@@ -1835,7 +1819,6 @@
 
         function saveData() {
             const data = {
-                clients: appState.clients,
                 invoices: appState.invoices,
                 depenses: appState.depenses,
                 ecritures: appState.ecritures,
@@ -1849,7 +1832,6 @@
 
         function exportData() {
             const data = {
-                clients: appState.clients,
                 invoices: appState.invoices,
                 depenses: appState.depenses,
                 ecritures: appState.ecritures,
@@ -1887,14 +1869,13 @@
             if (navItem) navItem.classList.add('active');
             
             const titles = {
-                dashboard: 'Finance Elite Prestations',
+                dashboard: 'Tableau de Bord',
                 factures: 'Factures',
                 depenses: 'Dépenses',
-                clients: 'Clients & Fournisseurs',
                 comptabilite: 'Comptabilité',
                 tresorerie: 'Trésorerie'
             };
-            document.getElementById('pageTitle').textContent = titles[page] || 'Finance Elite Prestations';
+            document.getElementById('pageTitle').textContent = titles[page] || 'Financia Pro Gabon';
             
             if (page === 'dashboard') {
                 updateDashboard();
@@ -1905,8 +1886,6 @@
             } else if (page === 'depenses') {
                 renderDepensesList();
                 updateDashboardDepenses();
-            } else if (page === 'clients') {
-                renderClientsList();
             }
         }
 
@@ -1926,40 +1905,9 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // ==================== CLIENTS MANAGEMENT ====================
-        function loadClientsForSelect() {
-            const select = document.getElementById('invoiceClient');
-            if (!select) return;
-            
-            select.innerHTML = '<option value="">Sélectionner un client</option>';
-            
-            appState.clients
-                .filter(c => c.type === 'client')
-                .forEach(client => {
-                    const option = document.createElement('option');
-                    option.value = client.id;
-                    option.textContent = client.name;
-                    select.appendChild(option);
-                });
-        }
-
-        function loadFournisseursForSelect() {
-            const select = document.getElementById('depenseFournisseur');
+        // ==================== COMPTES MANAGEMENT ====================
+        function loadComptesForSelect() {
             const compteSelect = document.getElementById('depenseCompte');
-            
-            if (select) {
-                select.innerHTML = '<option value="">Sélectionner un fournisseur</option>';
-                select.innerHTML += '<option value="0">Autre (saisir manuellement)</option>';
-                
-                appState.clients
-                    .filter(c => c.type === 'fournisseur')
-                    .forEach(fournisseur => {
-                        const option = document.createElement('option');
-                        option.value = fournisseur.id;
-                        option.textContent = fournisseur.name;
-                        select.appendChild(option);
-                    });
-            }
             
             if (compteSelect) {
                 compteSelect.innerHTML = '<option value="">Sélectionner un compte</option>';
@@ -1972,79 +1920,6 @@
                         compteSelect.appendChild(option);
                     });
             }
-        }
-
-        function saveClient(event) {
-            event.preventDefault();
-            
-            const client = {
-                id: appState.clients.length > 0 ? Math.max(...appState.clients.map(c => c.id)) + 1 : 1,
-                type: document.getElementById('clientType').value,
-                name: document.getElementById('clientName').value,
-                nif: document.getElementById('clientNIF').value,
-                address: document.getElementById('clientAddress').value,
-                phone: document.getElementById('clientPhone').value,
-                email: document.getElementById('clientEmail').value,
-                balance: 0,
-                createdAt: new Date().toISOString()
-            };
-            
-            appState.clients.push(client);
-            saveData();
-            
-            loadClientsForSelect();
-            loadFournisseursForSelect();
-            renderClientsList();
-            hideModal('newClientModal');
-            document.getElementById('clientForm').reset();
-            
-            const typeText = client.type === 'client' ? 'Client' : 'Fournisseur';
-            showNotification(`${typeText} ajouté avec succès`, 'success');
-        }
-
-        function renderClientsList(filter = '') {
-            const container = document.getElementById('clientsList');
-            if (!container) return;
-            
-            const filtered = appState.clients.filter(client => 
-                client.name.toLowerCase().includes(filter.toLowerCase()) ||
-                (client.nif && client.nif.toLowerCase().includes(filter.toLowerCase())) ||
-                (client.email && client.email.toLowerCase().includes(filter.toLowerCase()))
-            );
-            
-            container.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center p-3">Aucun client/fournisseur trouvé</div>';
-                return;
-            }
-            
-            filtered.forEach(client => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.innerHTML = `
-                    <div class="list-item-content">
-                        <div class="d-flex justify-between align-center mb-1">
-                            <span class="badge ${client.type === 'client' ? 'badge-primary' : 'badge-warning'}">
-                                ${client.type === 'client' ? 'CLIENT' : 'FOURNISSEUR'}
-                            </span>
-                            <span class="text-muted">${client.nif || 'Sans NIF'}</span>
-                        </div>
-                        <div class="list-item-title">${client.name}</div>
-                        <div class="list-item-subtitle">
-                            ${client.email || ''} ${client.phone ? '• ' + client.phone : ''}
-                        </div>
-                        <div class="list-item-subtitle">
-                            ${client.address || ''}
-                        </div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function filterClients(query) {
-            renderClientsList(query);
         }
 
         // ==================== INVOICES MANAGEMENT ====================
@@ -2233,13 +2108,9 @@
         function saveInvoice(event) {
             event.preventDefault();
             
-            const clientId = parseInt(document.getElementById('invoiceClient').value);
-            const client = appState.clients.find(c => c.id === clientId);
-            if (!client) {
-                showNotification('Veuillez sélectionner un client', 'error');
-                return;
-            }
-            
+            const clientName = document.getElementById('clientName').value;
+            const clientNIF = document.getElementById('clientNIF').value;
+            const clientAddress = document.getElementById('clientAddress').value;
             const invoiceNumber = document.getElementById('invoiceNumber').value;
             const invoiceDate = document.getElementById('invoiceDate').value;
             const invoiceDueDate = document.getElementById('invoiceDueDate').value;
@@ -2284,12 +2155,9 @@
             const invoice = {
                 id: appState.invoices.length > 0 ? Math.max(...appState.invoices.map(i => i.id)) + 1 : 1,
                 number: invoiceNumber,
-                clientId: clientId,
-                clientName: client.name,
-                clientAddress: client.address || '',
-                clientNIF: client.nif || '',
-                clientPhone: client.phone || '',
-                clientEmail: client.email || '',
+                clientName: clientName,
+                clientAddress: clientAddress || '',
+                clientNIF: clientNIF || '',
                 date: invoiceDate,
                 dueDate: invoiceDueDate,
                 status: 'en attente',
@@ -2328,20 +2196,7 @@
         function saveDepense(event) {
             event.preventDefault();
             
-            const fournisseurId = parseInt(document.getElementById('depenseFournisseur').value);
-            let fournisseurName = '';
-            
-            if (fournisseurId === 0) {
-                fournisseurName = prompt("Nom du fournisseur :") || "Autre";
-            } else {
-                const fournisseur = appState.clients.find(c => c.id === fournisseurId);
-                if (!fournisseur) {
-                    showNotification('Veuillez sélectionner un fournisseur', 'error');
-                    return;
-                }
-                fournisseurName = fournisseur.name;
-            }
-            
+            const beneficiaire = document.getElementById('depenseBeneficiaire').value;
             const depenseNumber = document.getElementById('depenseNumber').value;
             const depenseType = document.getElementById('depenseType').value;
             const depenseDate = document.getElementById('depenseDate').value;
@@ -2396,8 +2251,7 @@
             const depense = {
                 id: appState.depenses.length > 0 ? Math.max(...appState.depenses.map(d => d.id)) + 1 : 1,
                 number: depenseNumber,
-                fournisseurId: fournisseurId,
-                fournisseurName: fournisseurName,
+                beneficiaire: beneficiaire,
                 type: depenseType,
                 date: depenseDate,
                 paymentDate: depensePaymentDate,
@@ -2444,7 +2298,7 @@
                 id: appState.ecritures.length > 0 ? Math.max(...appState.ecritures.map(e => e.id)) + 1 : 1,
                 date: depense.date,
                 reference: depense.number,
-                libelle: `Dépense: ${depense.fournisseurName}`,
+                libelle: `Dépense: ${depense.beneficiaire}`,
                 compteDebit: depense.compteId,
                 compteCredit: null,
                 montant: depense.totalHT,
@@ -2523,7 +2377,7 @@
             
             const filtered = appState.depenses.filter(depense => 
                 depense.number.toLowerCase().includes(filter.toLowerCase()) ||
-                depense.fournisseurName.toLowerCase().includes(filter.toLowerCase()) ||
+                depense.beneficiaire.toLowerCase().includes(filter.toLowerCase()) ||
                 depense.type.toLowerCase().includes(filter.toLowerCase())
             );
             
@@ -2540,7 +2394,7 @@
                 item.innerHTML = `
                     <div class="list-item-content">
                         <div class="list-item-title">${depense.number}</div>
-                        <div class="list-item-subtitle">${depense.fournisseurName} • ${formatDate(depense.date)}</div>
+                        <div class="list-item-subtitle">${depense.beneficiaire} • ${formatDate(depense.date)}</div>
                         <div class="d-flex align-center gap-1 mt-1">
                             <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">
                                 ${getDepenseTypeLabel(depense.type)}
@@ -2634,7 +2488,7 @@
                 item.innerHTML = `
                     <div class="list-item-content">
                         <div class="list-item-title">${depense.number}</div>
-                        <div class="list-item-subtitle">${depense.fournisseurName}</div>
+                        <div class="list-item-subtitle">${depense.beneficiaire}</div>
                         <div class="d-flex align-center gap-1 mt-1">
                             <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">
                                 ${getDepenseTypeLabel(depense.type)}
@@ -2678,6 +2532,7 @@
                                 <strong>Informations</strong>
                                 <div class="mt-1">
                                     <div><strong>Client:</strong> ${invoice.clientName}</div>
+                                    ${invoice.clientNIF ? `<div><strong>NIF:</strong> ${invoice.clientNIF}</div>` : ''}
                                     <div><strong>Date:</strong> ${formatDate(invoice.date)}</div>
                                     <div><strong>Échéance:</strong> ${formatDate(invoice.dueDate)}</div>
                                     <div><strong>Statut:</strong> <span class="badge ${getStatusBadgeClass(invoice.status)}">${invoice.status}</span></div>
@@ -2767,7 +2622,7 @@
                             <div class="mb-2">
                                 <strong>Informations</strong>
                                 <div class="mt-1">
-                                    <div><strong>Fournisseur:</strong> ${depense.fournisseurName}</div>
+                                    <div><strong>Bénéficiaire:</strong> ${depense.beneficiaire}</div>
                                     <div><strong>Type:</strong> <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">${getDepenseTypeLabel(depense.type)}</span></div>
                                     <div><strong>Date:</strong> ${formatDate(depense.date)}</div>
                                     <div><strong>Paiement:</strong> ${formatDate(depense.paymentDate)} (${getPaymentModeLabel(depense.paymentMode)})</div>
@@ -2887,308 +2742,301 @@
         }
 
         // ==================== PDF GENERATION ====================
-function generatePDF(invoiceId) {
-    const invoice = appState.invoices.find(i => i.id === invoiceId);
-    if (!invoice) {
-        showNotification('Facture introuvable', 'error');
-        return;
-    }
-    
-    appState.currentInvoicePDF = invoice;
-    
-    const pdfContent = document.getElementById('pdfContent');
-    const settings = appState.settings;
-    
-    const htmlContent = `
-        <div class="pdf-header">
-            <div>
-                <div style="font-size: 28px; font-weight: bold; color: #1E3A8A;">ELITE PRESTATIONS</div>
-                <div style="font-size: 12px; color: #666; margin-top: 5px;">PRESTATIONS MULTISERVICES & LOCATION DE MATERIELS</div>
-                <div style="margin-top: 10px;">
-                    <div><strong>Siège social:</strong> Libreville, Gabon</div>
-                    <div><strong>NIF:</strong> 299086A</div>
-                    <div><strong>RCCM:</strong> RG LBV2018A4570</div>
-                    <div><strong>Tél:</strong> +241 62 39 11 21 / +241 77 02 30 04</div>
-                    <div><strong>Email:</strong> eliteprestationspourvous@gmail.com</div>
-                </div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-size: 24px; font-weight: bold; color: #1E3A8A;">FACTURE</div>
-                <div class="pdf-invoice-number">${invoice.number}</div>
-                <div><strong>Date:</strong> ${formatDate(invoice.date)}</div>
-                <div><strong>Échéance:</strong> ${formatDate(invoice.dueDate)}</div>
-            </div>
-        </div>
-        
-        <div class="pdf-section">
-            <div style="margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                <h3 style="color: #1E3A8A; margin-bottom: 10px; border-bottom: 2px solid #1E3A8A; padding-bottom: 5px;">CLIENT</h3>
-                <div><strong>${invoice.clientName}</strong></div>
-                ${invoice.clientAddress ? `<div><strong>Adresse:</strong> ${invoice.clientAddress}</div>` : ''}
-                ${invoice.clientNIF ? `<div><strong>NIF:</strong> ${invoice.clientNIF}</div>` : ''}
-            </div>
-        </div>
-        
-        <div class="pdf-section">
-            <h3 style="color: #1E3A8A; margin-bottom: 15px; border-bottom: 2px solid #1E3A8A; padding-bottom: 5px;">DÉTAILS DE LA FACTURE</h3>
-            <table class="pdf-table">
-                <thead>
-                    <tr>
-                        <th style="background: #1E3A8A; color: white;">Description</th>
-                        <th style="background: #1E3A8A; color: white; text-align: center;">Qté</th>
-                        <th style="background: #1E3A8A; color: white; text-align: right;">Prix HT</th>
-                        <th style="background: #1E3A8A; color: white; text-align: right;">Total HT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${invoice.lines.map((line, index) => `
-                        <tr>
-                            <td>${line.description}</td>
-                            <td style="text-align: center;">${line.quantity}</td>
-                            <td style="text-align: right;">${formatCurrency(line.price)}</td>
-                            <td style="text-align: right;">${formatCurrency(line.totalHT)}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="pdf-section" style="max-width: 300px; margin-left: auto;">
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #1E3A8A;">
-                <h4 style="color: #1E3A8A; margin-bottom: 15px; text-align: center;">TOTAL DE LA FACTURE</h4>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Total HT:</span>
-                    <span style="font-weight: bold;">${formatCurrency(invoice.totalHT)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #0EA5E9;">
-                    <span>TVA 18%:</span>
-                    <span style="font-weight: bold;">${formatCurrency(invoice.totalTVA)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #F59E0B;">
-                    <span>CSS 1%:</span>
-                    <span style="font-weight: bold;">${formatCurrency(invoice.totalCSS)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 10px; border-top: 2px solid #1E3A8A; font-size: 18px; font-weight: bold;">
-                    <span>TOTAL TTC:</span>
-                    <span style="color: #1E3A8A;">${formatCurrency(invoice.totalTTC)}</span>
-                </div>
-            </div>
-        </div>
-        
-        ${invoice.notes ? `
-        <div class="pdf-section">
-            <h3 style="color: #1E3A8A; margin-bottom: 10px; border-bottom: 2px solid #1E3A8A; padding-bottom: 5px;">NOTES</h3>
-            <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #1E3A8A;">
-                ${invoice.notes}
-            </div>
-        </div>
-        ` : ''}
-        
-        <div class="pdf-footer">
-            <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #1E3A8A;">
-                <div style="font-weight: bold; color: #1E3A8A; margin-bottom: 10px;">ELITE PRESTATIONS</div>
-                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Prestations multiservices & Location de matériels</div>
-                <div style="font-size: 11px; color: #888;">
-                    Libreville, Gabon | NIF: 299086A | RCCM: RG LBV2018A4570<br>
-                    Tél: +241 62 39 11 21 / +241 77 02 30 04 | Email: eliteprestationspourvous@gmail.com
-                </div>
-                <div style="margin-top: 15px; font-size: 10px; color: #999;">
-                    Facture générée le ${formatDate(new Date().toISOString())} avec Financia Pro Gabon
-                </div>
-            </div>
-        </div>
-    `;
-    
-    pdfContent.innerHTML = htmlContent;
-    showPDFPreview();
-}
-
-function generatePDFFromPreview() {
-    const invoice = appState.currentInvoicePDF;
-    if (!invoice) {
-        showNotification('Aucune facture à télécharger', 'error');
-        return;
-    }
-    
-    // Vérifier si jsPDF est disponible
-    if (typeof window.jspdf === 'undefined') {
-        showNotification('Erreur: jsPDF non chargé. Veuillez vérifier votre connexion internet.', 'error');
-        return;
-    }
-    
-    try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        
-        // En-tête
-        doc.setFontSize(22);
-        doc.setTextColor(30, 58, 138);
-        doc.text('ELITE PRESTATIONS', 20, 20);
-        
-        doc.setFontSize(10);
-        doc.setTextColor(102, 102, 102);
-        doc.text('PRESTATIONS MULTISERVICES & LOCATION DE MATERIELS', 20, 28);
-        
-        doc.setFontSize(10);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Siège social: Libreville, Gabon', 20, 36);
-        doc.text('NIF: 299086A', 20, 40);
-        doc.text('RCCM: RG LBV2018A4570', 20, 44);
-        doc.text('Tél: +241 62 39 11 21 / +241 77 02 30 04', 20, 48);
-        doc.text('Email: eliteprestationspourvous@gmail.com', 20, 52);
-        
-        // Titre facture
-        doc.setFontSize(24);
-        doc.setTextColor(30, 58, 138);
-        doc.text('FACTURE', 150, 20, { align: 'right' });
-        
-        doc.setFontSize(10);
-        doc.setTextColor(0, 0, 0);
-        doc.text(`N°: ${invoice.number}`, 150, 30, { align: 'right' });
-        doc.text(`Date: ${formatDate(invoice.date)}`, 150, 34, { align: 'right' });
-        doc.text(`Échéance: ${formatDate(invoice.dueDate)}`, 150, 38, { align: 'right' });
-        
-        // Client
-        doc.setFontSize(12);
-        doc.setTextColor(30, 58, 138);
-        doc.text('CLIENT', 20, 65);
-        
-        doc.setDrawColor(30, 58, 138);
-        doc.line(20, 67, 50, 67);
-        
-        doc.setFontSize(10);
-        doc.setTextColor(0, 0, 0);
-        doc.text(invoice.clientName, 20, 75);
-        
-        let clientY = 79;
-        if (invoice.clientAddress) {
-            doc.text(`Adresse: ${invoice.clientAddress}`, 20, clientY);
-            clientY += 4;
-        }
-        if (invoice.clientNIF) {
-            doc.text(`NIF: ${invoice.clientNIF}`, 20, clientY);
-            clientY += 4;
-        }
-        
-        // Ligne séparatrice
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, clientY + 4, 190, clientY + 4);
-        
-        // Tableau des produits
-        const tableTop = clientY + 10;
-        doc.setFontSize(12);
-        doc.setTextColor(30, 58, 138);
-        doc.text('DÉTAILS DE LA FACTURE', 20, tableTop);
-        
-        doc.setDrawColor(30, 58, 138);
-        doc.line(20, tableTop + 2, 70, tableTop + 2);
-        
-        // En-têtes du tableau avec fond coloré
-        doc.setFillColor(30, 58, 138);
-        doc.rect(20, tableTop + 8, 170, 8, 'F');
-        
-        doc.setFontSize(10);
-        doc.setTextColor(255, 255, 255);
-        doc.text('Description', 22, tableTop + 13);
-        doc.text('Qté', 120, tableTop + 13, { align: 'center' });
-        doc.text('Prix HT', 140, tableTop + 13, { align: 'right' });
-        doc.text('Total HT', 170, tableTop + 13, { align: 'right' });
-        
-        // Ligne sous l'en-tête
-        doc.setDrawColor(255, 255, 255);
-        doc.line(20, tableTop + 16, 190, tableTop + 16);
-        
-        // Produits
-        let productY = tableTop + 23;
-        invoice.lines.forEach((line, index) => {
-            if (productY > 250) {
-                doc.addPage();
-                productY = 20;
+        function generatePDF(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (!invoice) {
+                showNotification('Facture introuvable', 'error');
+                return;
             }
             
-            doc.setTextColor(0, 0, 0);
-            doc.text(line.description, 22, productY);
-            doc.text(line.quantity.toString(), 120, productY, { align: 'center' });
-            doc.text(formatCurrency(line.price), 140, productY, { align: 'right' });
-            doc.text(formatCurrency(line.totalHT), 170, productY, { align: 'right' });
-            productY += 8;
-        });
-        
-        // Totaux
-        const totalsY = Math.max(productY + 10, 180);
-        
-        doc.setDrawColor(200, 200, 200);
-        doc.line(120, totalsY - 5, 190, totalsY - 5);
-        
-        doc.text('Total HT:', 120, totalsY, { align: 'right' });
-        doc.text(formatCurrency(invoice.totalHT), 190, totalsY, { align: 'right' });
-        
-        doc.setTextColor(14, 165, 233);
-        doc.text('TVA 18%:', 120, totalsY + 6, { align: 'right' });
-        doc.text(formatCurrency(invoice.totalTVA), 190, totalsY + 6, { align: 'right' });
-        
-        doc.setTextColor(245, 158, 11);
-        doc.text('CSS 1%:', 120, totalsY + 12, { align: 'right' });
-        doc.text(formatCurrency(invoice.totalCSS), 190, totalsY + 12, { align: 'right' });
-        
-        doc.setDrawColor(30, 58, 138);
-        doc.line(120, totalsY + 18, 190, totalsY + 18);
-        
-        doc.setFontSize(12);
-        doc.setTextColor(30, 58, 138);
-        doc.text('TOTAL TTC:', 120, totalsY + 26, { align: 'right' });
-        doc.text(formatCurrency(invoice.totalTTC), 190, totalsY + 26, { align: 'right' });
-        
-        // Notes
-        if (invoice.notes && invoice.notes.trim() !== '') {
-            const notesY = totalsY + 40;
-            doc.setFontSize(11);
-            doc.setTextColor(30, 58, 138);
-            doc.text('NOTES:', 20, notesY);
+            appState.currentInvoicePDF = invoice;
             
-            doc.setDrawColor(30, 58, 138);
-            doc.line(20, notesY + 2, 40, notesY + 2);
+            const pdfContent = document.getElementById('pdfContent');
+            const settings = appState.settings;
             
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            const splitNotes = doc.splitTextToSize(invoice.notes, 170);
-            doc.text(splitNotes, 20, notesY + 10);
+            const htmlContent = `
+                <div class="pdf-header">
+                    <div>
+                        <div class="pdf-title">${settings.companyName}</div>
+                        <div>${settings.companyAddress}</div>
+                        <div>${settings.companyNIF}</div>
+                        <div>Tél: ${settings.companyPhone}</div>
+                        <div>Email: ${settings.companyEmail}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: bold; color: #1E3A8A;">FACTURE</div>
+                        <div class="pdf-invoice-number">${invoice.number}</div>
+                        <div>Date: ${formatDate(invoice.date)}</div>
+                        <div>Échéance: ${formatDate(invoice.dueDate)}</div>
+                    </div>
+                </div>
+                
+                <div class="pdf-section">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #1E3A8A; margin-bottom: 10px;">CLIENT</h3>
+                        <div><strong>${invoice.clientName}</strong></div>
+                        ${invoice.clientAddress ? `<div>${invoice.clientAddress}</div>` : ''}
+                        ${invoice.clientNIF ? `<div>NIF: ${invoice.clientNIF}</div>` : ''}
+                    </div>
+                </div>
+                
+                <div class="pdf-section">
+                    <h3 style="color: #1E3A8A; margin-bottom: 15px;">DÉTAILS DE LA FACTURE</h3>
+                    <table class="pdf-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: center;">Qté</th>
+                                <th style="text-align: right;">Prix HT</th>
+                                <th style="text-align: right;">Total HT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${invoice.lines.map((line, index) => `
+                                <tr>
+                                    <td>${line.description}</td>
+                                    <td style="text-align: center;">${line.quantity}</td>
+                                    <td style="text-align: right;">${formatCurrency(line.price)}</td>
+                                    <td style="text-align: right;">${formatCurrency(line.totalHT)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pdf-section" style="max-width: 300px; margin-left: auto;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Total HT:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalHT)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #0EA5E9;">
+                            <span>TVA 18%:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalTVA)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #F59E0B;">
+                            <span>CSS 1%:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalCSS)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 10px; border-top: 2px solid #1E3A8A; font-size: 18px;">
+                            <span><strong>TOTAL TTC:</strong></span>
+                            <span style="font-weight: bold; color: #1E3A8A;">${formatCurrency(invoice.totalTTC)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${invoice.notes ? `
+                <div class="pdf-section">
+                    <h3 style="color: #1E3A8A; margin-bottom: 10px;">NOTES</h3>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        ${invoice.notes}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="pdf-footer">
+                    <div style="text-align: center; margin-top: 30px;">
+                        <div><strong>${settings.companyName}</strong></div>
+                        <div>${settings.companyAddress} | ${settings.companyPhone} | ${settings.companyEmail}</div>
+                        <div style="margin-top: 20px; font-size: 10px; color: #999;">
+                            Facture générée le ${formatDate(new Date().toISOString())} avec Financia Pro Gabon
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            pdfContent.innerHTML = htmlContent;
+            showPDFPreview();
         }
-        
-        // Pied de page
-        const pageHeight = doc.internal.pageSize.height;
-        
-        // Ligne de séparation
-        doc.setDrawColor(30, 58, 138);
-        doc.line(20, pageHeight - 40, 190, pageHeight - 40);
-        
-        // Informations de l'entreprise
-        doc.setFontSize(12);
-        doc.setTextColor(30, 58, 138);
-        doc.text('ELITE PRESTATIONS', 105, pageHeight - 35, { align: 'center' });
-        
-        doc.setFontSize(9);
-        doc.setTextColor(102, 102, 102);
-        doc.text('Prestations multiservices & Location de matériels', 105, pageHeight - 30, { align: 'center' });
-        
-        doc.setFontSize(8);
-        doc.setTextColor(136, 136, 136);
-        doc.text('Libreville, Gabon | NIF: 299086A | RCCM: RG LBV2018A4570', 105, pageHeight - 25, { align: 'center' });
-        doc.text('Tél: +241 62 39 11 21 / +241 77 02 30 04 | Email: eliteprestationspourvous@gmail.com', 105, pageHeight - 21, { align: 'center' });
-        
-        // Date de génération
-        doc.setFontSize(7);
-        doc.setTextColor(153, 153, 153);
-        doc.text(`Facture générée le ${formatDate(new Date().toISOString())} avec Financia Pro Gabon`, 105, pageHeight - 15, { align: 'center' });
-        
-        // Sauvegarder le PDF
-        doc.save(`${invoice.number}.pdf`);
-        showNotification('PDF téléchargé avec succès', 'success');
-    } catch (error) {
-        console.error('Erreur lors de la génération du PDF:', error);
-        showNotification('Erreur lors de la génération du PDF', 'error');
-    }
-}
+
+        function showPDFPreview() {
+            document.getElementById('pdfPreview').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePDFPreview() {
+            document.getElementById('pdfPreview').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function generatePDFFromPreview() {
+            const invoice = appState.currentInvoicePDF;
+            if (!invoice) {
+                showNotification('Aucune facture à télécharger', 'error');
+                return;
+            }
+            
+            // Vérifier si jsPDF est disponible
+            if (typeof window.jspdf === 'undefined') {
+                showNotification('Erreur: jsPDF non chargé. Veuillez vérifier votre connexion internet.', 'error');
+                return;
+            }
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const settings = appState.settings;
+                
+                // En-tête
+                doc.setFontSize(20);
+                doc.setTextColor(30, 58, 138);
+                doc.text(settings.companyName, 20, 20);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(settings.companyAddress, 20, 28);
+                doc.text(settings.companyNIF, 20, 32);
+                doc.text(`Tél: ${settings.companyPhone}`, 20, 36);
+                doc.text(`Email: ${settings.companyEmail}`, 20, 40);
+                
+                // Titre facture
+                doc.setFontSize(24);
+                doc.setTextColor(30, 58, 138);
+                doc.text('FACTURE', 150, 20, { align: 'right' });
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`N°: ${invoice.number}`, 150, 28, { align: 'right' });
+                doc.text(`Date: ${formatDate(invoice.date)}`, 150, 32, { align: 'right' });
+                doc.text(`Échéance: ${formatDate(invoice.dueDate)}`, 150, 36, { align: 'right' });
+                
+                // Client
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('CLIENT', 20, 55);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(invoice.clientName, 20, 63);
+                
+                let clientY = 67;
+                if (invoice.clientAddress) {
+                    doc.text(invoice.clientAddress, 20, clientY);
+                    clientY += 4;
+                }
+                if (invoice.clientNIF) {
+                    doc.text(`NIF: ${invoice.clientNIF}`, 20, clientY);
+                    clientY += 4;
+                }
+                
+                // Ligne séparatrice
+                doc.setDrawColor(200, 200, 200);
+                doc.line(20, clientY + 4, 190, clientY + 4);
+                
+                // Tableau des produits
+                const tableTop = clientY + 10;
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('DÉTAILS DE LA FACTURE', 20, tableTop);
+                
+                // En-têtes du tableau
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Description', 20, tableTop + 10);
+                doc.text('Qté', 120, tableTop + 10, { align: 'center' });
+                doc.text('Prix HT', 140, tableTop + 10, { align: 'right' });
+                doc.text('Total HT', 170, tableTop + 10, { align: 'right' });
+                
+                // Ligne
+                doc.line(20, tableTop + 12, 190, tableTop + 12);
+                
+                // Produits
+                let productY = tableTop + 20;
+                invoice.lines.forEach((line, index) => {
+                    if (productY > 250) {
+                        doc.addPage();
+                        productY = 20;
+                    }
+                    
+                    doc.text(line.description, 20, productY);
+                    doc.text(line.quantity.toString(), 120, productY, { align: 'center' });
+                    doc.text(formatCurrency(line.price), 140, productY, { align: 'right' });
+                    doc.text(formatCurrency(line.totalHT), 170, productY, { align: 'right' });
+                    productY += 8;
+                });
+                
+                // Totaux
+                const totalsY = Math.max(productY + 10, 180);
+                
+                doc.setDrawColor(200, 200, 200);
+                doc.line(120, totalsY - 5, 190, totalsY - 5);
+                
+                doc.text('Total HT:', 120, totalsY, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalHT), 190, totalsY, { align: 'right' });
+                
+                doc.setTextColor(14, 165, 233);
+                doc.text('TVA 18%:', 120, totalsY + 6, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalTVA), 190, totalsY + 6, { align: 'right' });
+                
+                doc.setTextColor(245, 158, 11);
+                doc.text('CSS 1%:', 120, totalsY + 12, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalCSS), 190, totalsY + 12, { align: 'right' });
+                
+                doc.setDrawColor(30, 58, 138);
+                doc.line(120, totalsY + 18, 190, totalsY + 18);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('TOTAL TTC:', 120, totalsY + 26, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalTTC), 190, totalsY + 26, { align: 'right' });
+                
+                // Notes
+                if (invoice.notes && invoice.notes.trim() !== '') {
+                    const notesY = totalsY + 40;
+                    doc.setFontSize(11);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('NOTES:', 20, notesY);
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    const splitNotes = doc.splitTextToSize(invoice.notes, 170);
+                    doc.text(splitNotes, 20, notesY + 6);
+                }
+                
+                // Pied de page
+                const pageHeight = doc.internal.pageSize.height;
+                doc.setFontSize(8);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Financia Pro Gabon - Logiciel de gestion comptable`, 105, pageHeight - 20, { align: 'center' });
+                doc.text(`Facture générée le ${formatDate(new Date().toISOString())}`, 105, pageHeight - 15, { align: 'center' });
+                
+                // Sauvegarder le PDF
+                doc.save(`${invoice.number}.pdf`);
+                showNotification('PDF téléchargé avec succès', 'success');
+            } catch (error) {
+                console.error('Erreur lors de la génération du PDF:', error);
+                showNotification('Erreur lors de la génération du PDF', 'error');
+            }
+        }
+
+        function printPDF() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${appState.currentInvoicePDF?.number || 'Facture'}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 40px; }
+                            .header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+                            .title { font-size: 28px; font-weight: bold; color: #1E3A8A; }
+                            .client-info { margin-bottom: 30px; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                            th { background: #f5f5f5; font-weight: bold; }
+                            .totals { max-width: 300px; margin-left: auto; }
+                            .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        ${document.getElementById('pdfContent').innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
 
         // ==================== DASHBOARD ====================
         function updateDashboard() {
@@ -3199,10 +3047,10 @@ function generatePDFFromPreview() {
             const totalCAEl = document.getElementById('totalCA');
             if (totalCAEl) totalCAEl.textContent = formatCurrency(totalCA);
             
-            // Nombre de clients
-            const clientCount = appState.clients.filter(c => c.type === 'client').length;
-            const totalClientsEl = document.getElementById('totalClients');
-            if (totalClientsEl) totalClientsEl.textContent = clientCount;
+            // Nombre de factures
+            const factureCount = appState.invoices.length;
+            const totalFacturesEl = document.getElementById('totalFactures');
+            if (totalFacturesEl) totalFacturesEl.textContent = factureCount;
             
             // Totaux recettes/dépenses
             const totalRecettes = appState.invoices
