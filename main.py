@@ -1,68 +1,89 @@
-from kivymd.app import MDApp
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.core.window import Window
-from kivy.properties import StringProperty, NumericProperty
-import json
-import os
-
-# Configuration
-CONFIG = {
-    'TVA_RATE': 18,
-    'CSS_RATE': 1,
-    'CURRENCY': 'FCFA'
+{
+  "name": "Financia Pro Gabon",
+  "short_name": "FinanciaPro",
+  "description": "Application de comptabilité et gestion financière pour le Gabon",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1E3A8A",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "fr-GA",
+  "icons": [
+    {
+      "src": "./icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "business", "productivity"],
+  "screenshots": [
+    {
+      "src": "./screenshot1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tableau de bord"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouvelle Facture",
+      "short_name": "Facture",
+      "description": "Créer une nouvelle facture",
+      "url": "./index.html?action=new-invoice",
+      "icons": [{ "src": "./shortcut-invoice.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Nouvelle Dépense",
+      "short_name": "Dépense",
+      "description": "Enregistrer une dépense",
+      "url": "./index.html?action=new-expense",
+      "icons": [{ "src": "./shortcut-expense.png", "sizes": "96x96" }]
+    }
+  ],
+  "prefer_related_applications": false
 }
-
-class DashboardScreen(Screen):
-    total_ca = StringProperty('0 FCFA')
-    total_clients = StringProperty('0')
-    
-    def update_stats(self):
-        # Logique similaire à votre JavaScript
-        pass
-
-class FacturesScreen(Screen):
-    def load_invoices(self):
-        # Charger les factures
-        pass
-
-class DepensesScreen(Screen):
-    def load_expenses(self):
-        # Charger les dépenses
-        pass
-
-class FinanciaApp(MDApp):
-    data_file = 'financia_data.json'
-    
-    def build(self):
-        self.theme_cls.primary_palette = "Blue"
-        self.theme_cls.theme_style = "Dark"
-        
-        # Créer le ScreenManager
-        sm = ScreenManager()
-        sm.add_widget(DashboardScreen(name='dashboard'))
-        sm.add_widget(FacturesScreen(name='factures'))
-        sm.add_widget(DepensesScreen(name='depenses'))
-        
-        return sm
-    
-    def on_start(self):
-        # Charger les données
-        self.load_data()
-        
-    def load_data(self):
-        if os.path.exists(self.data_file):
-            with open(self.data_file, 'r') as f:
-                return json.load(f)
-        return {}
-    
-    def save_data(self, data):
-        with open(self.data_file, 'w') as f:
-            json.dump(data, f, indent=2)
-    
-    def format_currency(self, amount):
-        return f"{amount:,.0f} FCFA"
-
-if __name__ == '__main__':
-    Window.size = (360, 640)  # Taille mobile
-    FinanciaApp().run()
