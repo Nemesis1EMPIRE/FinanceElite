@@ -1,0 +1,62 @@
+name: Build Kivy Android APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-pip \
+          git \
+          zip \
+          unzip \
+          openjdk-11-jdk \
+          autoconf \
+          libtool \
+          pkg-config \
+          zlib1g-dev \
+          libncurses5-dev \
+          libncursesw5-dev \
+          libtinfo5 \
+          cmake \
+          libffi-dev \
+          libssl-dev
+          
+    - name: Install Buildozer
+      run: |
+        pip install --user --upgrade buildozer cython virtualenv
+        export PATH="$HOME/.local/bin:$PATH"
+        
+    - name: Initialize Buildozer
+      run: |
+        buildozer init
+        # Mettez à jour votre buildozer.spec ici si nécessaire
+        # sed -i 's/your.app.id/com.example.myapp/' buildozer.spec
+        
+    - name: Build Android APK (debug)
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        buildozer -v android debug
+        
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: android-apk
+        path: bin/*.apk
