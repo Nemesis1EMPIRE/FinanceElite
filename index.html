@@ -1,0 +1,2957 @@
+<!DOCTYPE html>
+<html lang="fr-GA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Financia Pro Gabon</title>
+    
+    <!-- PWA Configuration -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Financia Pro Gabon">
+    <meta name="application-name" content="Financia Pro Gabon">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="msapplication-TileColor" content="#0f172a">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ==================== ROOT VARIABLES ==================== */
+        :root {
+            /* Couleurs thème sombre Gabon */
+            --primary: #1E3A8A;
+            --primary-light: #3B82F6;
+            --secondary: #10B981;
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #0EA5E9;
+            --tva-color: #0EA5E9;
+            --css-color: #F59E0B;
+            
+            /* Thème sombre */
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --border: #475569;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            
+            /* Ombres */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+            
+            /* Bordures */
+            --radius: 12px;
+            --radius-sm: 8px;
+            
+            /* Transitions */
+            --transition: all 0.3s ease;
+            
+            /* Safe areas pour PWA */
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+            overflow-x: hidden;
+        }
+        
+        /* ==================== TYPOGRAPHY ==================== */
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .text-muted {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .text-success {
+            color: var(--success);
+        }
+        
+        .text-danger {
+            color: var(--danger);
+        }
+        
+        .text-warning {
+            color: var(--warning);
+        }
+        
+        .text-tva {
+            color: var(--tva-color);
+        }
+        
+        .text-css {
+            color: var(--css-color);
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        /* ==================== LAYOUT ==================== */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 1rem;
+            padding-bottom: 5rem;
+            max-width: 768px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        /* ==================== NAVIGATION ==================== */
+        .navbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            padding-top: calc(1rem + var(--safe-top));
+        }
+        
+        .navbar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .navbar-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .nav-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            z-index: 100;
+            padding-bottom: calc(0.75rem + var(--safe-bottom));
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: var(--transition);
+            flex: 1;
+        }
+        
+        .nav-item i {
+            font-size: 1.25rem;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-light);
+        }
+        
+        /* ==================== CARDS ==================== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            text-align: center;
+        }
+        
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-light);
+            color: var(--primary-light);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: 50%;
+        }
+        
+        /* ==================== FORMS ==================== */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 6rem;
+            resize: vertical;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        /* Vertical form layout */
+        .vertical-form .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ==================== TAX DISPLAY ==================== */
+        .tax-display {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tax-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tax-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tax-item.total {
+            border-top: 2px solid var(--primary-light);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .tax-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .tax-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .tax-tva .tax-value {
+            color: var(--tva-color);
+        }
+        
+        .tax-css .tax-value {
+            color: var(--css-color);
+        }
+        
+        /* ==================== TABLES ==================== */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+        }
+        
+        .table th {
+            background: var(--bg-input);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .table tr:hover {
+            background: var(--bg-input);
+        }
+        
+        /* ==================== LISTS ==================== */
+        .list {
+            list-style: none;
+        }
+        
+        .list-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .list-item:hover {
+            background: var(--bg-input);
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item-content {
+            flex: 1;
+        }
+        
+        .list-item-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .list-item-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        /* ==================== BADGES ==================== */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .badge-primary {
+            background: rgba(30, 58, 138, 0.2);
+            color: var(--primary-light);
+            border: 1px solid rgba(30, 58, 138, 0.3);
+        }
+        
+        /* ==================== MODALS ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+            animation: slideUp 0.3s ease;
+            border: 1px solid var(--border);
+        }
+        
+        .modal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 1.25rem;
+        }
+        
+        .modal-footer {
+            padding: 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        /* ==================== GRID ==================== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        
+        /* ==================== QUICK ACTIONS ==================== */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 640px) {
+            .quick-actions {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .action-btn {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: var(--transition);
+            min-height: 7rem;
+        }
+        
+        .action-btn:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .action-btn i {
+            font-size: 1.75rem;
+            color: var(--primary-light);
+        }
+        
+        /* ==================== UTILITIES ==================== */
+        .d-flex {
+            display: flex;
+        }
+        
+        .flex-column {
+            flex-direction: column;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .align-center {
+            align-items: center;
+        }
+        
+        .gap-1 {
+            gap: 0.5rem;
+        }
+        
+        .gap-2 {
+            gap: 1rem;
+        }
+        
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+        
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+        
+        .mt-2 {
+            margin-top: 1rem;
+        }
+        
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+        
+        .p-2 {
+            padding: 1rem;
+        }
+        
+        .p-3 {
+            padding: 1.5rem;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* ==================== LOADING ==================== */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 2000;
+        }
+        
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* ==================== INSTALL PROMPT ==================== */
+        #installPrompt {
+            position: fixed;
+            bottom: 5rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            display: none;
+        }
+        
+        #installPrompt .btn {
+            margin-top: 0.5rem;
+            background: white;
+            color: var(--success);
+        }
+        
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-input);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+        
+        /* ==================== PRINT STYLES ==================== */
+        @media print {
+            .navbar,
+            .nav-bottom,
+            .btn,
+            .action-btn,
+            #installPrompt {
+                display: none !important;
+            }
+            
+            .content {
+                padding: 0;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+        }
+        
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 640px) {
+            .content {
+                padding: 0.75rem;
+                padding-bottom: 5rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            .tax-display {
+                padding: 0.75rem;
+            }
+            
+            .btn {
+                padding: 0.625rem 1.25rem;
+            }
+        }
+        
+        /* ==================== PWA STANDALONE MODE ==================== */
+        @media all and (display-mode: standalone) {
+            body {
+                padding-top: calc(var(--safe-top) + 1rem);
+            }
+            
+            .navbar {
+                padding-top: calc(1rem + var(--safe-top));
+            }
+            
+            .nav-bottom {
+                padding-bottom: calc(0.75rem + var(--safe-bottom));
+            }
+            
+            #installPrompt {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <h2>Financia Pro Gabon</h2>
+        <p>Chargement de l'application...</p>
+    </div>
+
+    <!-- Install Prompt -->
+    <div id="installPrompt" class="hidden">
+        <p>📱 <strong>Installer l'application</strong></p>
+        <p>Ajoutez Financia Pro à votre écran d'accueil</p>
+        <button id="installBtn" class="btn btn-block">Installer</button>
+        <button id="cancelInstall" class="btn btn-outline btn-block btn-sm">Plus tard</button>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app-container hidden">
+        <!-- Top Navigation -->
+        <nav class="navbar">
+            <div class="navbar-header">
+                <h1 id="pageTitle" class="navbar-title">Tableau de Bord</h1>
+                <div class="navbar-actions">
+                    <button class="btn btn-icon" onclick="showNotifications()">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="btn btn-icon" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Dashboard -->
+            <div id="dashboardPage" class="page active">
+                <div class="section">
+                    <h2>Vue d'ensemble</h2>
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="showPage('factures')">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Factures</span>
+                        </button>
+                        <button class="action-btn" onclick="showPage('depenses')">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Dépenses</span>
+                        </button>
+                        <button class="action-btn" onclick="showModal('newInvoiceModal')">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Nouvelle Facture</span>
+                        </button>
+                        <button class="action-btn" onclick="showPage('comptabilite')">
+                            <i class="fas fa-book"></i>
+                            <span>Comptabilité</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Statistiques</h2>
+                    <div class="grid-2">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="totalCA">0 FCFA</div>
+                            <div>Chiffre d'Affaires</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="totalClients">0</div>
+                            <div>Clients</div>
+                        </div>
+                    </div>
+                    <div class="grid-2 mt-2">
+                        <div class="card text-center">
+                            <div class="kpi-value text-success" id="totalRecettes">0 FCFA</div>
+                            <div class="text-muted">Recettes</div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="kpi-value text-danger" id="totalDepenses">0 FCFA</div>
+                            <div class="text-muted">Dépenses</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Taux Fiscaux Gabon</h2>
+                    <div class="tax-display">
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA (Taxe sur la Valeur Ajoutée)</span>
+                            <span class="tax-value">18%</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS (Contribution Sociale)</span>
+                            <span class="tax-value">1%</span>
+                        </div>
+                        <div class="tax-item total">
+                            <span class="tax-label">Total Taxes</span>
+                            <span class="tax-value">19%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Dernières Factures</h2>
+                    <div id="recentInvoices" class="list">
+                        <!-- Factures récentes -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Dernières Dépenses</h2>
+                    <div id="recentDepenses" class="list">
+                        <!-- Dépenses récentes -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Factures -->
+            <div id="facturesPage" class="page">
+                <div class="section">
+                    <div class="d-flex justify-between align-center mb-2">
+                        <h2>Factures</h2>
+                        <button class="btn btn-primary" onclick="showModal('newInvoiceModal')">
+                            <i class="fas fa-plus"></i> Nouvelle
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Rechercher une facture..." 
+                               oninput="filterInvoices(this.value)">
+                    </div>
+                    
+                    <div class="tax-display mb-2">
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA Gabon</span>
+                            <span class="tax-value">18%</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS Gabon</span>
+                            <span class="tax-value">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div id="invoicesList" class="list">
+                        <!-- Liste des factures -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dépenses -->
+            <div id="depensesPage" class="page">
+                <div class="section">
+                    <div class="d-flex justify-between align-center mb-2">
+                        <h2>Dépenses & Achats</h2>
+                        <button class="btn btn-primary" onclick="showModal('newDepenseModal')">
+                            <i class="fas fa-plus"></i> Nouvelle Dépense
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Rechercher une dépense..." 
+                               oninput="filterDepenses(this.value)">
+                    </div>
+                    
+                    <div class="tax-display mb-2">
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA Récupérable (Gabon)</span>
+                            <span class="tax-value">18%</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS Récupérable</span>
+                            <span class="tax-value">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-3 mb-2">
+                        <div class="card text-center">
+                            <div class="kpi-value text-danger" id="totalDepensesMois">0 FCFA</div>
+                            <div class="text-muted">Dépenses ce mois</div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="kpi-value text-tva" id="totalTVADeductible">0 FCFA</div>
+                            <div class="text-muted">TVA déductible</div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="kpi-value text-css" id="totalCSSDeductible">0 FCFA</div>
+                            <div class="text-muted">CSS déductible</div>
+                        </div>
+                    </div>
+                    
+                    <div id="depensesList" class="list">
+                        <!-- Liste des dépenses -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clients -->
+            <div id="clientsPage" class="page">
+                <div class="section">
+                    <div class="d-flex justify-between align-center mb-2">
+                        <h2>Clients & Fournisseurs</h2>
+                        <button class="btn btn-primary" onclick="showModal('newClientModal')">
+                            <i class="fas fa-plus"></i> Nouveau
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Rechercher..." 
+                               oninput="filterClients(this.value)">
+                    </div>
+                    
+                    <div id="clientsList" class="list">
+                        <!-- Liste clients -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comptabilité -->
+            <div id="comptabilitePage" class="page">
+                <div class="section">
+                    <h2>Comptabilité</h2>
+                    
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="showModal('newEcritureModal')">
+                            <i class="fas fa-plus"></i>
+                            <span>Nouvelle Écriture</span>
+                        </button>
+                        <button class="action-btn" onclick="showModal('balanceModal')">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>Balance</span>
+                        </button>
+                        <button class="action-btn" onclick="showModal('grandLivreModal')">
+                            <i class="fas fa-book"></i>
+                            <span>Grand Livre</span>
+                        </button>
+                        <button class="action-btn" onclick="showModal('tvaModal')">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Déclaration TVA</span>
+                        </button>
+                    </div>
+                    
+                    <div class="tax-display mb-2">
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA Standard Gabon</span>
+                            <span class="tax-value">18%</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS Gabon</span>
+                            <span class="tax-value">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div id="recentEcritures" class="list">
+                        <!-- Écritures récentes -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trésorerie -->
+            <div id="tresoreriePage" class="page">
+                <div class="section">
+                    <h2>Trésorerie</h2>
+                    
+                    <div class="kpi-card mb-2">
+                        <div class="kpi-value" id="soldeTresorerie">0 FCFA</div>
+                        <div>Solde Actuel</div>
+                    </div>
+                    
+                    <div class="grid-2 mb-3">
+                        <div class="card text-center">
+                            <div class="kpi-value text-success" id="entreesMois">0 FCFA</div>
+                            <div class="text-muted">Entrées ce mois</div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="kpi-value text-danger" id="sortiesMois">0 FCFA</div>
+                            <div class="text-muted">Sorties ce mois</div>
+                        </div>
+                    </div>
+                    
+                    <div id="previsionsTresorerie" class="list">
+                        <!-- Prévisions -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="nav-bottom">
+            <button class="nav-item active" onclick="showPage('dashboard')">
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </button>
+            <button class="nav-item" onclick="showPage('factures')">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Factures</span>
+            </button>
+            <button class="nav-item" onclick="showPage('depenses')">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Dépenses</span>
+            </button>
+            <button class="nav-item" onclick="showPage('clients')">
+                <i class="fas fa-users"></i>
+                <span>Clients</span>
+            </button>
+            <button class="nav-item" onclick="showPage('comptabilite')">
+                <i class="fas fa-book"></i>
+                <span>Compta</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- New Invoice Modal -->
+    <div id="newInvoiceModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Nouvelle Facture</h3>
+                <button class="btn btn-icon" onclick="hideModal('newInvoiceModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body vertical-form">
+                <form id="invoiceForm" onsubmit="saveInvoice(event)">
+                    <div class="form-group">
+                        <label class="form-label">Client</label>
+                        <select class="form-control" id="invoiceClient" required>
+                            <option value="">Sélectionner un client</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Numéro de facture</label>
+                        <input type="text" class="form-control" id="invoiceNumber" required>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Date d'émission</label>
+                            <input type="date" class="form-control" id="invoiceDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date d'échéance</label>
+                            <input type="date" class="form-control" id="invoiceDueDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notes (optionnel)</label>
+                        <textarea class="form-control" id="invoiceNotes" rows="2" placeholder="Notes additionnelles..."></textarea>
+                    </div>
+                    
+                    <h4 class="mt-2">Lignes de facture</h4>
+                    <div id="invoiceLines">
+                        <div class="invoice-line">
+                            <div class="d-flex flex-column gap-1">
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" placeholder="Produit ou service" required>
+                                </div>
+                                <div class="grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Quantité</label>
+                                        <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Prix unitaire HT</label>
+                                        <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="tax-display">
+                                    <div class="tax-item tax-tva">
+                                        <span class="tax-label">TVA 18%</span>
+                                        <span class="tax-value">Calcul automatique</span>
+                                    </div>
+                                    <div class="tax-item tax-css">
+                                        <span class="tax-label">CSS 1%</span>
+                                        <span class="tax-value">Calcul automatique</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
+                                    <i class="fas fa-times"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline btn-block mt-2" onclick="addLine()">
+                        <i class="fas fa-plus"></i> Ajouter une ligne
+                    </button>
+                    
+                    <div class="tax-display mt-2">
+                        <div class="tax-item">
+                            <span class="tax-label">Total HT:</span>
+                            <span class="tax-value" id="totalHT">0 FCFA</span>
+                        </div>
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA 18%:</span>
+                            <span class="tax-value" id="totalTVA">0 FCFA</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS 1%:</span>
+                            <span class="tax-value" id="totalCSS">0 FCFA</span>
+                        </div>
+                        <div class="tax-item total">
+                            <span class="tax-label">Total TTC:</span>
+                            <span class="tax-value" id="totalTTC">0 FCFA</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('newInvoiceModal')">Annuler</button>
+                <button type="submit" form="invoiceForm" class="btn btn-primary">Créer la facture</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Depense Modal -->
+    <div id="newDepenseModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Nouvelle Dépense</h3>
+                <button class="btn btn-icon" onclick="hideModal('newDepenseModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body vertical-form">
+                <form id="depenseForm" onsubmit="saveDepense(event)">
+                    <div class="form-group">
+                        <label class="form-label">Fournisseur</label>
+                        <select class="form-control" id="depenseFournisseur" required>
+                            <option value="">Sélectionner un fournisseur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Numéro de dépense</label>
+                            <input type="text" class="form-control" id="depenseNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Type de dépense</label>
+                            <select class="form-control" id="depenseType" required>
+                                <option value="">Sélectionner</option>
+                                <option value="achat">Achat marchandises</option>
+                                <option value="service">Services extérieurs</option>
+                                <option value="fonctionnement">Frais de fonctionnement</option>
+                                <option value="investissement">Investissement</option>
+                                <option value="personnel">Personnel</option>
+                                <option value="impot">Impôts et taxes</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Date de la dépense</label>
+                            <input type="date" class="form-control" id="depenseDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date de paiement</label>
+                            <input type="date" class="form-control" id="depensePaymentDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Mode de paiement</label>
+                            <select class="form-control" id="depensePaymentMode" required>
+                                <option value="especes">Espèces</option>
+                                <option value="banque">Banque</option>
+                                <option value="cheque">Chèque</option>
+                                <option value="mobile">Mobile Money</option>
+                                <option value="virement">Virement</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Compte affecté</label>
+                            <select class="form-control" id="depenseCompte" required>
+                                <option value="">Sélectionner un compte</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notes (optionnel)</label>
+                        <textarea class="form-control" id="depenseNotes" rows="2" placeholder="Notes additionnelles..."></textarea>
+                    </div>
+                    
+                    <h4 class="mt-2">Lignes de dépense</h4>
+                    <div id="depenseLines">
+                        <div class="depense-line">
+                            <div class="d-flex flex-column gap-1">
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" placeholder="Description de la dépense" required>
+                                </div>
+                                <div class="grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Quantité</label>
+                                        <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Prix unitaire TTC</label>
+                                        <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="tax-display">
+                                    <div class="tax-item tax-tva">
+                                        <span class="tax-label">TVA déductible 18%</span>
+                                        <span class="tax-value">Calcul automatique</span>
+                                    </div>
+                                    <div class="tax-item tax-css">
+                                        <span class="tax-label">CSS déductible 1%</span>
+                                        <span class="tax-value">Calcul automatique</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeDepenseLine(this)">
+                                    <i class="fas fa-times"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline btn-block mt-2" onclick="addDepenseLine()">
+                        <i class="fas fa-plus"></i> Ajouter une ligne
+                    </button>
+                    
+                    <div class="tax-display mt-2">
+                        <div class="tax-item">
+                            <span class="tax-label">Total TTC:</span>
+                            <span class="tax-value" id="depenseTotalTTC">0 FCFA</span>
+                        </div>
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA déductible 18%:</span>
+                            <span class="tax-value" id="depenseTotalTVA">0 FCFA</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS déductible 1%:</span>
+                            <span class="tax-value" id="depenseTotalCSS">0 FCFA</span>
+                        </div>
+                        <div class="tax-item">
+                            <span class="tax-label">Total HT:</span>
+                            <span class="tax-value" id="depenseTotalHT">0 FCFA</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('newDepenseModal')">Annuler</button>
+                <button type="submit" form="depenseForm" class="btn btn-primary">Enregistrer la dépense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Client Modal -->
+    <div id="newClientModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Nouveau Client/Fournisseur</h3>
+                <button class="btn btn-icon" onclick="hideModal('newClientModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body vertical-form">
+                <form id="clientForm" onsubmit="saveClient(event)">
+                    <div class="form-group">
+                        <label class="form-label">Type *</label>
+                        <select class="form-control" id="clientType" required>
+                            <option value="">Sélectionner</option>
+                            <option value="client">Client</option>
+                            <option value="fournisseur">Fournisseur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nom/Raison sociale *</label>
+                        <input type="text" class="form-control" id="clientName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">NIF (Identifiant fiscal)</label>
+                        <input type="text" class="form-control" id="clientNIF" placeholder="Numéro d'Identification Fiscale">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Adresse</label>
+                        <textarea class="form-control" id="clientAddress" rows="2" placeholder="Adresse complète"></textarea>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="clientPhone" placeholder="+241 XX XX XX XX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="clientEmail" placeholder="email@exemple.ga">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('newClientModal')">Annuler</button>
+                <button type="submit" form="clientForm" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+         // Déjà présent dans votre code
+         window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+        appState.deferredPrompt = e;
+  showInstallPrompt();
+});
+
+window.addEventListener('appinstalled', () => {
+  appState.deferredPrompt = null;
+  hideInstallPrompt();
+  showNotification('Application installée avec succès !', 'success');
+});
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Erreur Service Worker:', error);
+                    });
+            });
+        }
+
+        // ==================== CONFIGURATION ====================
+        const CONFIG = {
+            TVA_RATE: 18,    // Taux TVA Gabon
+            CSS_RATE: 1,     // Taux CSS Gabon
+            CURRENCY: 'FCFA',
+            APP_NAME: 'Financia Pro Gabon',
+            VERSION: '1.0.0'
+        };
+
+        // ==================== STATE MANAGEMENT ====================
+        let appState = {
+            currentPage: 'dashboard',
+            clients: [],
+            invoices: [],
+            depenses: [],
+            ecritures: [],
+            comptes: [],
+            settings: {},
+            deferredPrompt: null
+        };
+
+        // ==================== PWA INSTALLATION ====================
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            appState.deferredPrompt = e;
+            showInstallPrompt();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            appState.deferredPrompt = null;
+            hideInstallPrompt();
+            showNotification('Application installée avec succès !', 'success');
+        });
+
+        function showInstallPrompt() {
+            const prompt = document.getElementById('installPrompt');
+            prompt.classList.remove('hidden');
+            
+            document.getElementById('installBtn').onclick = installApp;
+            document.getElementById('cancelInstall').onclick = hideInstallPrompt;
+        }
+
+        function hideInstallPrompt() {
+            document.getElementById('installPrompt').classList.add('hidden');
+        }
+
+        function installApp() {
+            if (appState.deferredPrompt) {
+                appState.deferredPrompt.prompt();
+                appState.deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Utilisateur a installé l\'app');
+                    }
+                    appState.deferredPrompt = null;
+                });
+            }
+        }
+
+        // ==================== APP INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                
+                initApp();
+                setupEventListeners();
+                
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    console.log('App en mode standalone');
+                }
+            }, 1000);
+        });
+
+        function initApp() {
+            loadData();
+            initializeComptes();
+            updateDashboard();
+            renderRecentInvoices();
+            renderRecentDepenses();
+            renderClientsList();
+            renderInvoicesList();
+            renderDepensesList();
+            loadClientsForSelect();
+            loadFournisseursForSelect();
+            loadComptesForSelect();
+            
+            // Dates par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+            document.getElementById('invoiceDueDate').value = addDays(today, 30);
+            document.getElementById('depenseDate').value = today;
+            document.getElementById('depensePaymentDate').value = today;
+            
+            // Générer numéros
+            generateInvoiceNumber();
+            generateDepenseNumber();
+            
+            showNotification('Application Financia Pro Gabon prête', 'success');
+        }
+
+        //==== DATA MANAGEMENT ====================
+        function loadData() {
+            const saved = localStorage.getItem('financia_gabon_data');
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                appState.clients = data.clients || [];
+                appState.invoices = data.invoices || [];
+                appState.depenses = data.depenses || [];
+                appState.ecritures = data.ecritures || [];
+                appState.comptes = data.comptes || [];
+                appState.settings = data.settings || {};
+            } else {
+                initializeDefaultData();
+            }
+        }
+
+        function initializeDefaultData() {
+            appState.clients = [
+               // {
+                  //  id: 1,
+                 //   type: 'client',
+                   // name: 'Ministère des Finances',
+                  // nif: 'GAB123456789',
+                    //address: 'Libreville, Gabon',
+                  //  phone: '+241 01 23 45 67',
+                  //  email: 'contact@finances.gouv.ga',
+                  //  balance: 0,
+                   // createdAt: new Date().toISOString()
+               // },
+                //{
+                  //  id: 2,
+                   // type: 'fournisseur',
+                   // name: 'SOGARA',
+                    //nif: 'GAB987654321',
+                 //   address: 'Port-Gentil, Gabon',
+                 //   phone: '+241 04 56 78 90',
+                  //  email: 'contact@sogara.ga',
+                   // balance: 0,
+                   // createdAt: new Date().toISOString()
+                // }
+            ];
+
+            appState.invoices = [];
+            appState.depenses = [];
+            appState.ecritures = [];
+            
+            appState.settings = {
+                companyName: 'Mon Entreprise Gabon',
+                companyAddress: 'Libreville, Gabon',
+                companyNIF: 'VOTRENIFICI',
+                currency: CONFIG.CURRENCY,
+                taxTVA: CONFIG.TVA_RATE,
+                taxCSS: CONFIG.CSS_RATE,
+                createdAt: new Date().toISOString()
+            };
+
+            saveData();
+        }
+
+        function initializeComptes() {
+            if (appState.comptes.length === 0) {
+                appState.comptes = [
+                    { id: 1, numero: '101', libelle: 'Capital social', type: 'passif' },
+                    { id: 2, numero: '106', libelle: 'Report à nouveau', type: 'passif' },
+                    { id: 3, numero: '12', libelle: 'Résultat', type: 'passif' },
+                    { id: 4, numero: '21', libelle: 'Immobilisations', type: 'actif' },
+                    { id: 5, numero: '22', libelle: 'Immobilisations corporelles', type: 'actif' },
+                    { id: 6, numero: '31', libelle: 'Matières premières', type: 'actif' },
+                    { id: 7, numero: '37', libelle: 'Stocks', type: 'actif' },
+                    { id: 8, numero: '401', libelle: 'Fournisseurs', type: 'passif' },
+                    { id: 9, numero: '411', libelle: 'Clients', type: 'actif' },
+                    { id: 10, numero: '421', libelle: 'Personnel', type: 'passif' },
+                    { id: 11, numero: '4451', libelle: 'TVA collectée', type: 'passif' },
+                    { id: 12, numero: '4452', libelle: 'CSS collectée', type: 'passif' },
+                    { id: 13, numero: '4456', libelle: 'TVA déductible', type: 'actif' },
+                    { id: 14, numero: '51', libelle: 'Banque', type: 'actif' },
+                    { id: 15, numero: '53', libelle: 'Caisse', type: 'actif' },
+                    { id: 16, numero: '60', libelle: 'Achats', type: 'charge' },
+                    { id: 17, numero: '61', libelle: 'Services extérieurs', type: 'charge' },
+                    { id: 18, numero: '70', libelle: 'Ventes', type: 'produit' },
+                    { id: 19, numero: '71', libelle: 'Production vendue', type: 'produit' }
+                ];
+            }
+        }
+
+        function saveData() {
+            const data = {
+                clients: appState.clients,
+                invoices: appState.invoices,
+                depenses: appState.depenses,
+                ecritures: appState.ecritures,
+                comptes: appState.comptes,
+                settings: appState.settings,
+                lastSave: new Date().toISOString()
+            };
+            
+            localStorage.setItem('financia_gabon_data', JSON.stringify(data));
+        }
+
+        function exportData() {
+            const data = {
+                clients: appState.clients,
+                invoices: appState.invoices,
+                depenses: appState.depenses,
+                ecritures: appState.ecritures,
+                comptes: appState.comptes,
+                settings: appState.settings,
+                exportedAt: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `financia_gabon_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Données exportées avec succès', 'success');
+        }
+
+        // ==================== NAVIGATION ====================
+        function showPage(page) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            appState.currentPage = page;
+            document.getElementById(`${page}Page`).classList.add('active');
+            
+            const navItem = document.querySelector(`.nav-item[onclick*="${page}"]`);
+            if (navItem) navItem.classList.add('active');
+            
+            const titles = {
+                dashboard: 'Tableau de Bord',
+                factures: 'Factures',
+                depenses: 'Dépenses',
+                clients: 'Clients & Fournisseurs',
+                comptabilite: 'Comptabilité',
+                tresorerie: 'Trésorerie'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Financia Pro Gabon';
+            
+            if (page === 'dashboard') {
+                updateDashboard();
+                renderRecentInvoices();
+                renderRecentDepenses();
+            } else if (page === 'factures') {
+                renderInvoicesList();
+            } else if (page === 'depenses') {
+                renderDepensesList();
+                updateDashboardDepenses();
+            } else if (page === 'clients') {
+                renderClientsList();
+            }
+        }
+
+        // ==================== MODALS ====================
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if (modalId === 'newInvoiceModal') {
+                generateInvoiceNumber();
+                updateInvoiceTotals();
+            } else if (modalId === 'newDepenseModal') {
+                generateDepenseNumber();
+                updateDepenseTotals();
+            }
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // ==================== CLIENTS MANAGEMENT ====================
+        function loadClientsForSelect() {
+            const select = document.getElementById('invoiceClient');
+            select.innerHTML = '<option value="">Sélectionner un client</option>';
+            
+            appState.clients
+                .filter(c => c.type === 'client')
+                .forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.id;
+                    option.textContent = client.name;
+                    select.appendChild(option);
+                });
+        }
+
+        function loadFournisseursForSelect() {
+            const select = document.getElementById('depenseFournisseur');
+            const compteSelect = document.getElementById('depenseCompte');
+            
+            if (select) {
+                select.innerHTML = '<option value="">Sélectionner un fournisseur</option>';
+                select.innerHTML += '<option value="0">Autre (saisir manuellement)</option>';
+                
+                appState.clients
+                    .filter(c => c.type === 'fournisseur')
+                    .forEach(fournisseur => {
+                        const option = document.createElement('option');
+                        option.value = fournisseur.id;
+                        option.textContent = fournisseur.name;
+                        select.appendChild(option);
+                    });
+            }
+            
+            if (compteSelect) {
+                compteSelect.innerHTML = '<option value="">Sélectionner un compte</option>';
+                appState.comptes
+                    .filter(c => ['60', '61', '62', '63', '64', '65', '66', '67', '68'].includes(c.numero.substr(0,2)))
+                    .forEach(compte => {
+                        const option = document.createElement('option');
+                        option.value = compte.id;
+                        option.textContent = `${compte.numero} - ${compte.libelle}`;
+                        compteSelect.appendChild(option);
+                    });
+            }
+        }
+
+        function loadComptesForSelect() {
+            // À implémenter si nécessaire
+        }
+
+        function saveClient(event) {
+            event.preventDefault();
+            
+            const client = {
+                id: appState.clients.length > 0 ? Math.max(...appState.clients.map(c => c.id)) + 1 : 1,
+                type: document.getElementById('clientType').value,
+                name: document.getElementById('clientName').value,
+                nif: document.getElementById('clientNIF').value,
+                address: document.getElementById('clientAddress').value,
+                phone: document.getElementById('clientPhone').value,
+                email: document.getElementById('clientEmail').value,
+                balance: 0,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.clients.push(client);
+            saveData();
+            
+            loadClientsForSelect();
+            loadFournisseursForSelect();
+            renderClientsList();
+            hideModal('newClientModal');
+            document.getElementById('clientForm').reset();
+            
+            const typeText = client.type === 'client' ? 'Client' : 'Fournisseur';
+            showNotification(`${typeText} ajouté avec succès`, 'success');
+        }
+
+        function renderClientsList(filter = '') {
+            const container = document.getElementById('clientsList');
+            const filtered = appState.clients.filter(client => 
+                client.name.toLowerCase().includes(filter.toLowerCase()) ||
+                (client.nif && client.nif.toLowerCase().includes(filter.toLowerCase())) ||
+                (client.email && client.email.toLowerCase().includes(filter.toLowerCase()))
+            );
+            
+            container.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucun client/fournisseur trouvé</div>';
+                return;
+            }
+            
+            filtered.forEach(client => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="d-flex justify-between align-center mb-1">
+                            <span class="badge ${client.type === 'client' ? 'badge-primary' : 'badge-warning'}">
+                                ${client.type === 'client' ? 'CLIENT' : 'FOURNISSEUR'}
+                            </span>
+                            <span class="text-muted">${client.nif || 'Sans NIF'}</span>
+                        </div>
+                        <div class="list-item-title">${client.name}</div>
+                        <div class="list-item-subtitle">
+                            ${client.email || ''} ${client.phone ? '• ' + client.phone : ''}
+                        </div>
+                        <div class="list-item-subtitle">
+                            ${client.address || ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterClients(query) {
+            renderClientsList(query);
+        }
+
+        // ==================== INVOICES MANAGEMENT ====================
+        function generateInvoiceNumber() {
+            const year = new Date().getFullYear();
+            const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
+            const count = appState.invoices.filter(inv => 
+                new Date(inv.date).getFullYear() === year
+            ).length + 1;
+            
+            const number = `FACT-${year}${month}-${count.toString().padStart(3, '0')}`;
+            document.getElementById('invoiceNumber').value = number;
+            return number;
+        }
+
+        function generateDepenseNumber() {
+            const year = new Date().getFullYear();
+            const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
+            const count = appState.depenses.filter(dep => 
+                new Date(dep.date).getFullYear() === year
+            ).length + 1;
+            
+            const number = `DEP-${year}${month}-${count.toString().padStart(3, '0')}`;
+            if (document.getElementById('depenseNumber')) {
+                document.getElementById('depenseNumber').value = number;
+            }
+            return number;
+        }
+
+        function addLine() {
+            const container = document.getElementById('invoiceLines');
+            const line = document.createElement('div');
+            line.className = 'invoice-line';
+            line.innerHTML = `
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" placeholder="Produit ou service" required>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Quantité</label>
+                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prix unitaire HT</label>
+                            <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="tax-display">
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA 18%</span>
+                            <span class="tax-value">Calcul automatique</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS 1%</span>
+                            <span class="tax-value">Calcul automatique</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
+                        <i class="fas fa-times"></i> Supprimer
+                    </button>
+                </div>
+            `;
+            container.appendChild(line);
+            updateInvoiceTotals();
+        }
+
+        function addDepenseLine() {
+            const container = document.getElementById('depenseLines');
+            const line = document.createElement('div');
+            line.className = 'depense-line';
+            line.innerHTML = `
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" placeholder="Description de la dépense" required>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Quantité</label>
+                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prix unitaire TTC</label>
+                            <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="tax-display">
+                        <div class="tax-item tax-tva">
+                            <span class="tax-label">TVA déductible 18%</span>
+                            <span class="tax-value">Calcul automatique</span>
+                        </div>
+                        <div class="tax-item tax-css">
+                            <span class="tax-label">CSS déductible 1%</span>
+                            <span class="tax-value">Calcul automatique</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeDepenseLine(this)">
+                        <i class="fas fa-times"></i> Supprimer
+                    </button>
+                </div>
+            `;
+            container.appendChild(line);
+            updateDepenseTotals();
+        }
+
+        function removeLine(button) {
+            const lines = document.querySelectorAll('.invoice-line');
+            if (lines.length > 1) {
+                button.closest('.invoice-line').remove();
+                updateInvoiceTotals();
+            }
+        }
+
+        function removeDepenseLine(button) {
+            const lines = document.querySelectorAll('.depense-line');
+            if (lines.length > 1) {
+                button.closest('.depense-line').remove();
+                updateDepenseTotals();
+            }
+        }
+
+        function updateInvoiceTotals() {
+            let totalHT = 0;
+            
+            document.querySelectorAll('.invoice-line').forEach(line => {
+                const qty = parseFloat(line.querySelector('input[placeholder="Qté"]').value) || 0;
+                const price = parseFloat(line.querySelector('input[placeholder="Prix HT"]').value) || 0;
+                totalHT += qty * price;
+            });
+            
+            const tva = totalHT * (CONFIG.TVA_RATE / 100);
+            const css = totalHT * (CONFIG.CSS_RATE / 100);
+            const totalTTC = totalHT + tva + css;
+            
+            document.getElementById('totalHT').textContent = formatCurrency(totalHT);
+            document.getElementById('totalTVA').textContent = formatCurrency(tva);
+            document.getElementById('totalCSS').textContent = formatCurrency(css);
+            document.getElementById('totalTTC').textContent = formatCurrency(totalTTC);
+        }
+
+        function updateDepenseTotals() {
+            let totalTTC = 0;
+            
+            document.querySelectorAll('.depense-line').forEach(line => {
+                const qty = parseFloat(line.querySelector('input[placeholder="Qté"]').value) || 0;
+                const price = parseFloat(line.querySelector('input[placeholder="Prix TTC"]').value) || 0;
+                totalTTC += qty * price;
+            });
+            
+            const totalHT = totalTTC / (1 + (CONFIG.TVA_RATE + CONFIG.CSS_RATE) / 100);
+            const tva = totalHT * (CONFIG.TVA_RATE / 100);
+            const css = totalHT * (CONFIG.CSS_RATE / 100);
+            
+            if (document.getElementById('depenseTotalTTC')) {
+                document.getElementById('depenseTotalTTC').textContent = formatCurrency(totalTTC);
+                document.getElementById('depenseTotalHT').textContent = formatCurrency(totalHT);
+                document.getElementById('depenseTotalTVA').textContent = formatCurrency(tva);
+                document.getElementById('depenseTotalCSS').textContent = formatCurrency(css);
+            }
+        }
+
+        function saveInvoice(event) {
+            event.preventDefault();
+            
+            const clientId = parseInt(document.getElementById('invoiceClient').value);
+            const client = appState.clients.find(c => c.id === clientId);
+            if (!client) {
+                showNotification('Veuillez sélectionner un client', 'error');
+                return;
+            }
+            
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const invoiceDate = document.getElementById('invoiceDate').value;
+            const invoiceDueDate = document.getElementById('invoiceDueDate').value;
+            const notes = document.getElementById('invoiceNotes').value;
+            
+            const lines = [];
+            document.querySelectorAll('.invoice-line').forEach(line => {
+                const description = line.querySelector('input[placeholder="Produit ou service"]').value;
+                const quantity = parseFloat(line.querySelector('input[placeholder="Qté"]').value);
+                const price = parseFloat(line.querySelector('input[placeholder="Prix HT"]').value);
+                
+                if (description && quantity > 0 && price > 0) {
+                    const lineHT = quantity * price;
+                    const lineTVA = lineHT * (CONFIG.TVA_RATE / 100);
+                    const lineCSS = lineHT * (CONFIG.CSS_RATE / 100);
+                    
+                    lines.push({
+                        description,
+                        quantity,
+                        price,
+                        totalHT: lineHT,
+                        tva: lineTVA,
+                        css: lineCSS,
+                        totalTTC: lineHT + lineTVA + lineCSS
+                    });
+                }
+            });
+            
+            if (lines.length === 0) {
+                showNotification('Ajoutez au moins une ligne', 'error');
+                return;
+            }
+            
+            const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
+            const totalTVA = lines.reduce((sum, line) => sum + line.tva, 0);
+            const totalCSS = lines.reduce((sum, line) => sum + line.css, 0);
+            const totalTTC = totalHT + totalTVA + totalCSS;
+            
+            const invoice = {
+                id: appState.invoices.length > 0 ? Math.max(...appState.invoices.map(i => i.id)) + 1 : 1,
+                number: invoiceNumber,
+                clientId: clientId,
+                clientName: client.name,
+                date: invoiceDate,
+                dueDate: invoiceDueDate,
+                status: 'en attente',
+                notes: notes,
+                totalHT: totalHT,
+                totalTVA: totalTVA,
+                totalCSS: totalCSS,
+                totalTTC: totalTTC,
+                lines: lines,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.invoices.push(invoice);
+            saveData();
+            
+            hideModal('newInvoiceModal');
+            renderInvoicesList();
+            renderRecentInvoices();
+            updateDashboard();
+            
+            document.getElementById('invoiceForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+            document.getElementById('invoiceDueDate').value = addDays(today, 30);
+            generateInvoiceNumber();
+            
+            showNotification('Facture créée avec succès', 'success');
+        }
+
+        function saveDepense(event) {
+            event.preventDefault();
+            
+            const fournisseurId = parseInt(document.getElementById('depenseFournisseur').value);
+            let fournisseurName = '';
+            
+            if (fournisseurId === 0) {
+                fournisseurName = prompt("Nom du fournisseur :") || "Autre";
+            } else {
+                const fournisseur = appState.clients.find(c => c.id === fournisseurId);
+                if (!fournisseur) {
+                    showNotification('Veuillez sélectionner un fournisseur', 'error');
+                    return;
+                }
+                fournisseurName = fournisseur.name;
+            }
+            
+            const depenseNumber = document.getElementById('depenseNumber').value;
+            const depenseType = document.getElementById('depenseType').value;
+            const depenseDate = document.getElementById('depenseDate').value;
+            const depensePaymentDate = document.getElementById('depensePaymentDate').value;
+            const paymentMode = document.getElementById('depensePaymentMode').value;
+            const compteId = parseInt(document.getElementById('depenseCompte').value);
+            const notes = document.getElementById('depenseNotes').value;
+            
+            const compte = appState.comptes.find(c => c.id === compteId);
+            if (!compte) {
+                showNotification('Veuillez sélectionner un compte', 'error');
+                return;
+            }
+            
+            const lines = [];
+            document.querySelectorAll('.depense-line').forEach(line => {
+                const description = line.querySelector('input[placeholder="Description de la dépense"]').value;
+                const quantity = parseFloat(line.querySelector('input[placeholder="Qté"]').value);
+                const price = parseFloat(line.querySelector('input[placeholder="Prix TTC"]').value);
+                
+                if (description && quantity > 0 && price > 0) {
+                    const lineTTC = quantity * price;
+                    const lineHT = lineTTC / (1 + (CONFIG.TVA_RATE + CONFIG.CSS_RATE) / 100);
+                    const lineTVA = lineHT * (CONFIG.TVA_RATE / 100);
+                    const lineCSS = lineHT * (CONFIG.CSS_RATE / 100);
+                    
+                    lines.push({
+                        description,
+                        quantity,
+                        price,
+                        totalTTC: lineTTC,
+                        totalHT: lineHT,
+                        tva: lineTVA,
+                        css: lineCSS
+                    });
+                }
+            });
+            
+            if (lines.length === 0) {
+                showNotification('Ajoutez au moins une ligne', 'error');
+                return;
+            }
+            
+            const totalTTC = lines.reduce((sum, line) => sum + line.totalTTC, 0);
+            const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
+            const totalTVA = lines.reduce((sum, line) => sum + line.tva, 0);
+            const totalCSS = lines.reduce((sum, line) => sum + line.css, 0);
+            
+            const depense = {
+                id: appState.depenses.length > 0 ? Math.max(...appState.depenses.map(d => d.id)) + 1 : 1,
+                number: depenseNumber,
+                fournisseurId: fournisseurId,
+                fournisseurName: fournisseurName,
+                type: depenseType,
+                date: depenseDate,
+                paymentDate: depensePaymentDate,
+                paymentMode: paymentMode,
+                compteId: compteId,
+                compteName: compte.libelle,
+                status: 'payée',
+                notes: notes,
+                totalHT: totalHT,
+                totalTVA: totalTVA,
+                totalCSS: totalCSS,
+                totalTTC: totalTTC,
+                lines: lines,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.depenses.push(depense);
+            saveData();
+            
+            createEcritureForDepense(depense);
+            
+            hideModal('newDepenseModal');
+            renderDepensesList();
+            renderRecentDepenses();
+            updateDashboard();
+            
+            document.getElementById('depenseForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            if (document.getElementById('depenseDate')) {
+                document.getElementById('depenseDate').value = today;
+                document.getElementById('depensePaymentDate').value = today;
+            }
+            generateDepenseNumber();
+            
+            showNotification('Dépense enregistrée avec succès', 'success');
+        }
+
+        function createEcritureForDepense(depense) {
+            const ecriture = {
+                id: appState.ecritures.length > 0 ? Math.max(...appState.ecritures.map(e => e.id)) + 1 : 1,
+                date: depense.date,
+                reference: depense.number,
+                libelle: `Dépense: ${depense.fournisseurName}`,
+                compteDebit: depense.compteId,
+                compteCredit: null,
+                montant: depense.totalHT,
+                tva: depense.totalTVA,
+                css: depense.totalCSS,
+                type: 'depense',
+                sourceId: depense.id,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.ecritures.push(ecriture);
+            saveData();
+        }
+
+        function renderInvoicesList(filter = '') {
+            const container = document.getElementById('invoicesList');
+            const filtered = appState.invoices.filter(invoice => 
+                invoice.number.toLowerCase().includes(filter.toLowerCase()) ||
+                invoice.clientName.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            container.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucune facture trouvée</div>';
+                return;
+            }
+            
+            filtered.forEach(invoice => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-title">${invoice.number}</div>
+                        <div class="list-item-subtitle">${invoice.clientName} • ${formatDate(invoice.date)}</div>
+                        <div class="d-flex align-center gap-1 mt-1">
+                            <span class="badge ${getStatusBadgeClass(invoice.status)}">
+                                ${invoice.status}
+                            </span>
+                            <span class="text-muted">Échéance: ${formatDate(invoice.dueDate)}</span>
+                        </div>
+                        <div class="tax-display mt-1">
+                            <div class="tax-item">
+                                <span class="tax-label">HT:</span>
+                                <span class="tax-value">${formatCurrency(invoice.totalHT)}</span>
+                            </div>
+                            <div class="tax-item tax-tva">
+                                <span class="tax-label">TVA:</span>
+                                <span class="tax-value">${formatCurrency(invoice.totalTVA)}</span>
+                            </div>
+                            <div class="tax-item tax-css">
+                                <span class="tax-label">CSS:</span>
+                                <span class="tax-value">${formatCurrency(invoice.totalCSS)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-center gap-1">
+                        <div class="text-center">
+                            <div class="list-item-title">${formatCurrency(invoice.totalTTC)}</div>
+                            <div class="list-item-subtitle">TTC</div>
+                        </div>
+                        <button class="btn btn-icon" onclick="viewInvoice(${invoice.id})">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderDepensesList(filter = '') {
+            const container = document.getElementById('depensesList');
+            if (!container) return;
+            
+            const filtered = appState.depenses.filter(depense => 
+                depense.number.toLowerCase().includes(filter.toLowerCase()) ||
+                depense.fournisseurName.toLowerCase().includes(filter.toLowerCase()) ||
+                depense.type.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            container.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucune dépense trouvée</div>';
+                return;
+            }
+            
+            filtered.forEach(depense => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-title">${depense.number}</div>
+                        <div class="list-item-subtitle">${depense.fournisseurName} • ${formatDate(depense.date)}</div>
+                        <div class="d-flex align-center gap-1 mt-1">
+                            <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">
+                                ${getDepenseTypeLabel(depense.type)}
+                            </span>
+                            <span class="text-muted">Mode: ${getPaymentModeLabel(depense.paymentMode)}</span>
+                        </div>
+                        <div class="tax-display mt-1">
+                            <div class="tax-item">
+                                <span class="tax-label">HT:</span>
+                                <span class="tax-value">${formatCurrency(depense.totalHT)}</span>
+                            </div>
+                            <div class="tax-item tax-tva">
+                                <span class="tax-label">TVA déd.:</span>
+                                <span class="tax-value">${formatCurrency(depense.totalTVA)}</span>
+                            </div>
+                            <div class="tax-item tax-css">
+                                <span class="tax-label">CSS déd.:</span>
+                                <span class="tax-value">${formatCurrency(depense.totalCSS)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-center gap-1">
+                        <div class="text-center">
+                            <div class="list-item-title text-danger">${formatCurrency(depense.totalTTC)}</div>
+                            <div class="list-item-subtitle">TTC</div>
+                        </div>
+                        <button class="btn btn-icon" onclick="viewDepense(${depense.id})">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderRecentInvoices() {
+            const container = document.getElementById('recentInvoices');
+            const recent = appState.invoices.slice(-5).reverse();
+            
+            container.innerHTML = '';
+            
+            if (recent.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucune facture récente</div>';
+                return;
+            }
+            
+            recent.forEach(invoice => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-title">${invoice.number}</div>
+                        <div class="list-item-subtitle">${invoice.clientName}</div>
+                        <div class="d-flex align-center gap-1 mt-1">
+                            <span class="badge ${getStatusBadgeClass(invoice.status)}">
+                                ${invoice.status}
+                            </span>
+                            <span class="text-muted">${formatDate(invoice.date)}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>${formatCurrency(invoice.totalTTC)}</strong>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderRecentDepenses() {
+            const container = document.getElementById('recentDepenses');
+            const recent = appState.depenses.slice(-5).reverse();
+            
+            container.innerHTML = '';
+            
+            if (recent.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucune dépense récente</div>';
+                return;
+            }
+            
+            recent.forEach(depense => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-title">${depense.number}</div>
+                        <div class="list-item-subtitle">${depense.fournisseurName}</div>
+                        <div class="d-flex align-center gap-1 mt-1">
+                            <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">
+                                ${getDepenseTypeLabel(depense.type)}
+                            </span>
+                            <span class="text-muted">${formatDate(depense.date)}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <strong class="text-danger">${formatCurrency(depense.totalTTC)}</strong>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterInvoices(query) {
+            renderInvoicesList(query);
+        }
+
+        function filterDepenses(query) {
+            renderDepensesList(query);
+        }
+
+        function viewInvoice(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (!invoice) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>${invoice.number}</h3>
+                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="mb-2">
+                                <strong>Informations</strong>
+                                <div class="mt-1">
+                                    <div><strong>Client:</strong> ${invoice.clientName}</div>
+                                    <div><strong>Date:</strong> ${formatDate(invoice.date)}</div>
+                                    <div><strong>Échéance:</strong> ${formatDate(invoice.dueDate)}</div>
+                                    <div><strong>Statut:</strong> <span class="badge ${getStatusBadgeClass(invoice.status)}">${invoice.status}</span></div>
+                                    ${invoice.notes ? `<div><strong>Notes:</strong> ${invoice.notes}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Détails</strong>
+                                <div class="table-responsive mt-1">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Qté</th>
+                                                <th>Prix HT</th>
+                                                <th>Total HT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${invoice.lines.map(line => `
+                                                <tr>
+                                                    <td>${line.description}</td>
+                                                    <td>${line.quantity}</td>
+                                                    <td>${formatCurrency(line.price)}</td>
+                                                    <td>${formatCurrency(line.totalHT)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tax-display">
+                                <div class="tax-item">
+                                    <span class="tax-label">Total HT:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalHT)}</span>
+                                </div>
+                                <div class="tax-item tax-tva">
+                                    <span class="tax-label">TVA 18%:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalTVA)}</span>
+                                </div>
+                                <div class="tax-item tax-css">
+                                    <span class="tax-label">CSS 1%:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalCSS)}</span>
+                                </div>
+                                <div class="tax-item total">
+                                    <span class="tax-label">Total TTC:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalTTC)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" onclick="markInvoiceAsPaid(${invoice.id})">
+                            <i class="fas fa-check"></i> Marquer Payée
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteInvoice(${invoice.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function viewDepense(depenseId) {
+            const depense = appState.depenses.find(d => d.id === depenseId);
+            if (!depense) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>${depense.number}</h3>
+                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="mb-2">
+                                <strong>Informations</strong>
+                                <div class="mt-1">
+                                    <div><strong>Fournisseur:</strong> ${depense.fournisseurName}</div>
+                                    <div><strong>Type:</strong> <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">${getDepenseTypeLabel(depense.type)}</span></div>
+                                    <div><strong>Date:</strong> ${formatDate(depense.date)}</div>
+                                    <div><strong>Paiement:</strong> ${formatDate(depense.paymentDate)} (${getPaymentModeLabel(depense.paymentMode)})</div>
+                                    <div><strong>Compte:</strong> ${depense.compteName}</div>
+                                    ${depense.notes ? `<div><strong>Notes:</strong> ${depense.notes}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Détails</strong>
+                                <div class="table-responsive mt-1">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Qté</th>
+                                                <th>Prix TTC</th>
+                                                <th>Total TTC</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${depense.lines.map(line => `
+                                                <tr>
+                                                    <td>${line.description}</td>
+                                                    <td>${line.quantity}</td>
+                                                    <td>${formatCurrency(line.price)}</td>
+                                                    <td>${formatCurrency(line.totalTTC)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tax-display">
+                                <div class="tax-item">
+                                    <span class="tax-label">Total TTC:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalTTC)}</span>
+                                </div>
+                                <div class="tax-item tax-tva">
+                                    <span class="tax-label">TVA déductible 18%:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalTVA)}</span>
+                                </div>
+                                <div class="tax-item tax-css">
+                                    <span class="tax-label">CSS déductible 1%:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalCSS)}</span>
+                                </div>
+                                <div class="tax-item total">
+                                    <span class="tax-label">Total HT:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalHT)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" onclick="deleteDepense(${depense.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function markInvoiceAsPaid(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (invoice) {
+                invoice.status = 'payée';
+                saveData();
+                renderInvoicesList();
+                renderRecentInvoices();
+                updateDashboard();
+                showNotification('Facture marquée comme payée', 'success');
+                document.querySelector('.modal-overlay.active').remove();
+            }
+        }
+
+        function deleteInvoice(invoiceId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) {
+                const index = appState.invoices.findIndex(i => i.id === invoiceId);
+                if (index !== -1) {
+                    appState.invoices.splice(index, 1);
+                    saveData();
+                    renderInvoicesList();
+                    renderRecentInvoices();
+                    updateDashboard();
+                    showNotification('Facture supprimée', 'success');
+                    document.querySelector('.modal-overlay.active').remove();
+                }
+            }
+        }
+
+        function deleteDepense(depenseId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
+                const index = appState.depenses.findIndex(d => d.id === depenseId);
+                if (index !== -1) {
+                    appState.depenses.splice(index, 1);
+                    
+                    const ecritureIndex = appState.ecritures.findIndex(e => 
+                        e.type === 'depense' && e.sourceId === depenseId
+                    );
+                    if (ecritureIndex !== -1) {
+                        appState.ecritures.splice(ecritureIndex, 1);
+                    }
+                    
+                    saveData();
+                    renderDepensesList();
+                    renderRecentDepenses();
+                    updateDashboard();
+                    showNotification('Dépense supprimée', 'success');
+                    document.querySelector('.modal-overlay.active').remove();
+                }
+            }
+        }
+
+        // ==================== DASHBOARD ====================
+        function updateDashboard() {
+            // Chiffre d'affaires
+            const totalCA = appState.invoices
+                .filter(inv => inv.status === 'payée')
+                .reduce((sum, inv) => sum + inv.totalTTC, 0);
+            document.getElementById('totalCA').textContent = formatCurrency(totalCA);
+            
+            // Nombre de clients
+            const clientCount = appState.clients.filter(c => c.type === 'client').length;
+            document.getElementById('totalClients').textContent = clientCount;
+            
+            // Totaux recettes/dépenses
+            const totalRecettes = appState.invoices
+                .filter(inv => inv.status === 'payée')
+                .reduce((sum, inv) => sum + inv.totalTTC, 0);
+            
+            const totalDepenses = appState.depenses
+                .reduce((sum, dep) => sum + dep.totalTTC, 0);
+            
+            if (document.getElementById('totalRecettes')) {
+                document.getElementById('totalRecettes').textContent = formatCurrency(totalRecettes);
+                document.getElementById('totalDepenses').textContent = formatCurrency(totalDepenses);
+            }
+            
+            // Trésorerie
+            const solde = totalRecettes - totalDepenses;
+            document.getElementById('soldeTresorerie').textContent = formatCurrency(solde);
+            
+            // Entrées/sorties du mois
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const entreesMois = appState.invoices
+                .filter(inv => {
+                    const invDate = new Date(inv.date);
+                    return inv.status === 'payée' && 
+                           invDate.getMonth() === currentMonth && 
+                           invDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, inv) => sum + inv.totalTTC, 0);
+            
+            const sortiesMois = appState.depenses
+                .filter(dep => {
+                    const depDate = new Date(dep.date);
+                    return depDate.getMonth() === currentMonth && 
+                           depDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, dep) => sum + dep.totalTTC, 0);
+            
+            document.getElementById('entreesMois').textContent = formatCurrency(entreesMois);
+            document.getElementById('sortiesMois').textContent = formatCurrency(sortiesMois);
+            
+            // Mettre à jour les statistiques des dépenses
+            updateDashboardDepenses();
+        }
+
+        function updateDashboardDepenses() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const depensesMois = appState.depenses
+                .filter(dep => {
+                    const depDate = new Date(dep.date);
+                    return depDate.getMonth() === currentMonth && 
+                           depDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, dep) => sum + dep.totalTTC, 0);
+            
+            const tvaDeductible = appState.depenses
+                .filter(dep => {
+                    const depDate = new Date(dep.date);
+                    return depDate.getMonth() === currentMonth && 
+                           depDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, dep) => sum + dep.totalTVA, 0);
+            
+            const cssDeductible = appState.depenses
+                .filter(dep => {
+                    const depDate = new Date(dep.date);
+                    return depDate.getMonth() === currentMonth && 
+                           depDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, dep) => sum + dep.totalCSS, 0);
+            
+            if (document.getElementById('totalDepensesMois')) {
+                document.getElementById('totalDepensesMois').textContent = formatCurrency(depensesMois);
+                document.getElementById('totalTVADeductible').textContent = formatCurrency(tvaDeductible);
+                document.getElementById('totalCSSDeductible').textContent = formatCurrency(cssDeductible);
+            }
+        }
+
+        // ==================== UTILITIES ====================
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-GA', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('fr-GA', {
+                style: 'currency',
+                currency: 'XAF',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount).replace('XAF', 'FCFA');
+        }
+
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'payée': return 'badge-success';
+                case 'en attente': return 'badge-warning';
+                case 'impayée': return 'badge-danger';
+                default: return 'badge-primary';
+            }
+        }
+
+        function getDepenseTypeLabel(type) {
+            const labels = {
+                'achat': 'Achat',
+                'service': 'Service',
+                'fonctionnement': 'Fonctionnement',
+                'investissement': 'Investissement',
+                'personnel': 'Personnel',
+                'impot': 'Impôt',
+                'autre': 'Autre'
+            };
+            return labels[type] || type;
+        }
+
+        function getDepenseTypeBadgeClass(type) {
+            const classes = {
+                'achat': 'badge-danger',
+                'service': 'badge-warning',
+                'fonctionnement': 'badge-primary',
+                'investissement': 'badge-success',
+                'personnel': 'badge-info',
+                'impot': 'badge-tva',
+                'autre': 'badge-muted'
+            };
+            return classes[type] || 'badge-primary';
+        }
+
+        function getPaymentModeLabel(mode) {
+            const labels = {
+                'especes': 'Espèces',
+                'banque': 'Banque',
+                'cheque': 'Chèque',
+                'mobile': 'Mobile Money',
+                'virement': 'Virement'
+            };
+            return labels[mode] || mode;
+        }
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.toISOString().split('T')[0];
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'card';
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 1rem;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease, fadeIn 0.3s ease;
+                max-width: 300px;
+                border-left: 4px solid ${type === 'success' ? 'var(--success)' : 
+                                      type === 'error' ? 'var(--danger)' : 
+                                      'var(--primary)'};
+            `;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 
+                        type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+            
+            notification.innerHTML = `
+                <div class="d-flex align-center gap-1">
+                    <i class="fas ${icon}"></i>
+                    <div>${message}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function showNotifications() {
+            showNotification('Aucune nouvelle notification', 'info');
+        }
+
+        function setupEventListeners() {
+            // Mettre à jour les totaux des factures
+            document.addEventListener('input', function(e) {
+                if (e.target.closest('#invoiceLines')) {
+                    updateInvoiceTotals();
+                }
+                if (e.target.closest('#depenseLines')) {
+                    updateDepenseTotals();
+                }
+            });
+            
+            // Mettre à jour la date d'échéance
+            const dateInput = document.getElementById('invoiceDate');
+            dateInput.addEventListener('change', function() {
+                const dueDate = addDays(this.value, 30);
+                document.getElementById('invoiceDueDate').value = dueDate;
+            });
+            
+            // Dates par défaut pour dépenses
+            const depenseDate = document.getElementById('depenseDate');
+            if (depenseDate) {
+                depenseDate.addEventListener('change', function() {
+                    const paymentDate = this.value;
+                    document.getElementById('depensePaymentDate').value = paymentDate;
+                });
+            }
+            
+            // Gérer le service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    window.location.reload();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
