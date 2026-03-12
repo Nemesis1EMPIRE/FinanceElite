@@ -44,8 +44,7 @@
             --danger: #EF4444;
             --warning: #F59E0B;
             --info: #0EA5E9;
-            --tva-color: #0EA5E9;
-            --css-color: #F59E0B;
+            --tps-color: #0EA5E9;
             --devis-color: #8B5CF6;
             
             /* Thème sombre */
@@ -145,12 +144,8 @@
             color: var(--warning);
         }
         
-        .text-tva {
-            color: var(--tva-color);
-        }
-        
-        .text-css {
-            color: var(--css-color);
+        .text-tps {
+            color: var(--tps-color);
         }
         
         .text-devis {
@@ -472,12 +467,8 @@
             color: var(--text-primary);
         }
         
-        .tax-tva .tax-value {
-            color: var(--tva-color);
-        }
-        
-        .tax-css .tax-value {
-            color: var(--css-color);
+        .tax-tps .tax-value {
+            color: var(--tps-color);
         }
         
         .tax-devis .tax-value {
@@ -601,6 +592,12 @@
         .badge-info {
             background: rgba(14, 165, 233, 0.2);
             color: var(--info);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+        }
+        
+        .badge-tps {
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--tps-color);
             border: 1px solid rgba(14, 165, 233, 0.3);
         }
         
@@ -1419,19 +1416,15 @@
                 </div>
 
                 <div class="section">
-                    <h2>Taux Fiscaux Gabon</h2>
+                    <h2>Taux Fiscal Gabon</h2>
                     <div class="tax-display">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA (Taxe sur la Valeur Ajoutée)</span>
-                            <span class="tax-value">18%</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS (Contribution Sociale)</span>
-                            <span class="tax-value">1%</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS (Taxe sur les Prestations de Services)</span>
+                            <span class="tax-value">9,5%</span>
                         </div>
                         <div class="tax-item total">
-                            <span class="tax-label">Total Taxes</span>
-                            <span class="tax-value">19%</span>
+                            <span class="tax-label">Total Taxe</span>
+                            <span class="tax-value">9,5%</span>
                         </div>
                     </div>
                 </div>
@@ -1475,13 +1468,9 @@
                     </div>
                     
                     <div class="tax-display mb-2">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA Gabon</span>
-                            <span class="tax-value">18%</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS Gabon</span>
-                            <span class="tax-value">1%</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS Gabon</span>
+                            <span class="tax-value">9,5%</span>
                         </div>
                     </div>
                     
@@ -1542,13 +1531,9 @@
                     </div>
                     
                     <div class="tax-display mb-2">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA Gabon</span>
-                            <span class="tax-value">18%</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS Gabon</span>
-                            <span class="tax-value">1%</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS Gabon</span>
+                            <span class="tax-value">9,5%</span>
                         </div>
                         <div class="tax-item tax-devis">
                             <span class="tax-label">Période validité</span>
@@ -1586,13 +1571,9 @@
                     </div>
                     
                     <div class="tax-display mb-2">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA Récupérable (Gabon)</span>
-                            <span class="tax-value">18%</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS Récupérable</span>
-                            <span class="tax-value">1%</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS Récupérable (Gabon)</span>
+                            <span class="tax-value">9,5%</span>
                         </div>
                     </div>
                     
@@ -1602,12 +1583,12 @@
                             <div class="text-muted">Dépenses ce mois</div>
                         </div>
                         <div class="card text-center">
-                            <div class="kpi-value text-tva" id="totalTVADeductible">0 FCFA</div>
-                            <div class="text-muted">TVA déductible</div>
+                            <div class="kpi-value text-tps" id="totalTPSDeductible">0 FCFA</div>
+                            <div class="text-muted">TPS déductible</div>
                         </div>
                         <div class="card text-center">
-                            <div class="kpi-value text-css" id="totalCSSDeductible">0 FCFA</div>
-                            <div class="text-muted">CSS déductible</div>
+                            <div class="kpi-value" id="depenseCount">0</div>
+                            <div class="text-muted">Nombre dépenses</div>
                         </div>
                     </div>
                     
@@ -1642,20 +1623,16 @@
                             <i class="fas fa-book"></i>
                             <span>Grand Livre</span>
                         </button>
-                        <button class="action-btn" onclick="showModal('tvaModal')">
+                        <button class="action-btn" onclick="showModal('tpsModal')">
                             <i class="fas fa-file-invoice"></i>
-                            <span>Déclaration TVA</span>
+                            <span>Déclaration TPS</span>
                         </button>
                     </div>
                     
                     <div class="tax-display mb-2">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA Standard Gabon</span>
-                            <span class="tax-value">18%</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS Gabon</span>
-                            <span class="tax-value">1%</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS Gabon</span>
+                            <span class="tax-value">9,5%</span>
                         </div>
                     </div>
                     
@@ -1755,12 +1732,8 @@
                                     </div>
                                 </div>
                                 <div class="tax-display">
-                                    <div class="tax-item tax-tva">
-                                        <span class="tax-label">TVA 18%</span>
-                                        <span class="tax-value">Calcul automatique</span>
-                                    </div>
-                                    <div class="tax-item tax-css">
-                                        <span class="tax-label">CSS 1%</span>
+                                    <div class="tax-item tax-tps">
+                                        <span class="tax-label">TPS 9,5%</span>
                                         <span class="tax-value">Calcul automatique</span>
                                     </div>
                                 </div>
@@ -1780,13 +1753,9 @@
                             <span class="tax-label">Total HT:</span>
                             <span class="tax-value" id="totalHT">0 FCFA</span>
                         </div>
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA 18%:</span>
-                            <span class="tax-value" id="totalTVA">0 FCFA</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS 1%:</span>
-                            <span class="tax-value" id="totalCSS">0 FCFA</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS 9,5%:</span>
+                            <span class="tax-value" id="totalTPS">0 FCFA</span>
                         </div>
                         <div class="tax-item total">
                             <span class="tax-label">Total TTC:</span>
@@ -1899,12 +1868,8 @@
                                     </div>
                                 </div>
                                 <div class="tax-display">
-                                    <div class="tax-item tax-tva">
-                                        <span class="tax-label">TVA 18%</span>
-                                        <span class="tax-value">Calcul automatique</span>
-                                    </div>
-                                    <div class="tax-item tax-css">
-                                        <span class="tax-label">CSS 1%</span>
+                                    <div class="tax-item tax-tps">
+                                        <span class="tax-label">TPS 9,5%</span>
                                         <span class="tax-value">Calcul automatique</span>
                                     </div>
                                 </div>
@@ -1924,13 +1889,9 @@
                             <span class="tax-label">Total HT:</span>
                             <span class="tax-value" id="devisTotalHT">0 FCFA</span>
                         </div>
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA 18%:</span>
-                            <span class="tax-value" id="devisTotalTVA">0 FCFA</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS 1%:</span>
-                            <span class="tax-value" id="devisTotalCSS">0 FCFA</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS 9,5%:</span>
+                            <span class="tax-value" id="devisTotalTPS">0 FCFA</span>
                         </div>
                         <div class="tax-item total devis-total">
                             <span class="tax-label">Total TTC:</span>
@@ -2036,12 +1997,8 @@
                                     </div>
                                 </div>
                                 <div class="tax-display">
-                                    <div class="tax-item tax-tva">
-                                        <span class="tax-label">TVA déductible 18%</span>
-                                        <span class="tax-value">Calcul automatique</span>
-                                    </div>
-                                    <div class="tax-item tax-css">
-                                        <span class="tax-label">CSS déductible 1%</span>
+                                    <div class="tax-item tax-tps">
+                                        <span class="tax-label">TPS déductible 9,5%</span>
                                         <span class="tax-value">Calcul automatique</span>
                                     </div>
                                 </div>
@@ -2061,13 +2018,9 @@
                             <span class="tax-label">Total TTC:</span>
                             <span class="tax-value" id="depenseTotalTTC">0 FCFA</span>
                         </div>
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA déductible 18%:</span>
-                            <span class="tax-value" id="depenseTotalTVA">0 FCFA</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS déductible 1%:</span>
-                            <span class="tax-value" id="depenseTotalCSS">0 FCFA</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS déductible 9,5%:</span>
+                            <span class="tax-value" id="depenseTotalTPS">0 FCFA</span>
                         </div>
                         <div class="tax-item">
                             <span class="tax-label">Total HT:</span>
@@ -2087,7 +2040,7 @@
     <script>
         // ==================== CONFIGURATION ====================
         const CONFIG = {
-            TPS_RATE: 9.5,    // Taux TVA Gabon
+            TPS_RATE: 9.5,    // Taux TPS Gabon (remplace TVA et CSS)
             CURRENCY: 'FCFA',
             APP_NAME: 'Financia Pro Gabon',
             VERSION: '2.0.0',
@@ -2221,7 +2174,7 @@
                 companyPhone: '+241 62 39 11 21 / +241 77 02 30 04',
                 companyEmail: 'eliteprestationspourvous@gmail.com',
                 currency: CONFIG.CURRENCY,
-                taxTVA: CONFIG.TPS_RATE,
+                tpsRate: CONFIG.TPS_RATE,
                 devisValidityDays: CONFIG.DEVIS_VALIDITY_DAYS,
                 createdAt: new Date().toISOString()
             };
@@ -2242,15 +2195,14 @@
                     { id: 8, numero: '401', libelle: 'Fournisseurs', type: 'passif' },
                     { id: 9, numero: '411', libelle: 'Clients', type: 'actif' },
                     { id: 10, numero: '421', libelle: 'Personnel', type: 'passif' },
-                    { id: 11, numero: '4451', libelle: 'TVA collectée', type: 'passif' },
-                    { id: 12, numero: '4452', libelle: 'CSS collectée', type: 'passif' },
-                    { id: 13, numero: '4456', libelle: 'TVA déductible', type: 'actif' },
-                    { id: 14, numero: '51', libelle: 'Banque', type: 'actif' },
-                    { id: 15, numero: '53', libelle: 'Caisse', type: 'actif' },
-                    { id: 16, numero: '60', libelle: 'Achats', type: 'charge' },
-                    { id: 17, numero: '61', libelle: 'Services extérieurs', type: 'charge' },
-                    { id: 18, numero: '70', libelle: 'Ventes', type: 'produit' },
-                    { id: 19, numero: '71', libelle: 'Production vendue', type: 'produit' }
+                    { id: 11, numero: '4451', libelle: 'TPS collectée', type: 'passif' },
+                    { id: 12, numero: '4456', libelle: 'TPS déductible', type: 'actif' },
+                    { id: 13, numero: '51', libelle: 'Banque', type: 'actif' },
+                    { id: 14, numero: '53', libelle: 'Caisse', type: 'actif' },
+                    { id: 15, numero: '60', libelle: 'Achats', type: 'charge' },
+                    { id: 16, numero: '61', libelle: 'Services extérieurs', type: 'charge' },
+                    { id: 17, numero: '70', libelle: 'Ventes', type: 'produit' },
+                    { id: 18, numero: '71', libelle: 'Production vendue', type: 'produit' }
                 ];
                 saveData();
             }
@@ -2314,8 +2266,7 @@
                 factures: 'Factures',
                 devis: 'Devis',
                 depenses: 'Dépenses',
-                comptabilite: 'Comptabilité',
-                tresorerie: 'Trésorerie'
+                comptabilite: 'Comptabilité'
             };
             document.getElementById('pageTitle').textContent = titles[page] || 'Financia Pro Gabon';
             
@@ -2410,7 +2361,44 @@
             return number;
         }
 
-        // ==================== DEVIS MANAGEMENT ====================
+        // ==================== LINES MANAGEMENT ====================
+        function addLine() {
+            const container = document.getElementById('invoiceLines');
+            if (!container) return;
+            
+            const line = document.createElement('div');
+            line.className = 'invoice-line';
+            line.innerHTML = `
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" placeholder="Produit ou service" required>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Quantité</label>
+                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateInvoiceTotals()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prix unitaire HT</label>
+                            <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required oninput="updateInvoiceTotals()">
+                        </div>
+                    </div>
+                    <div class="tax-display">
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS 9,5%</span>
+                            <span class="tax-value">Calcul automatique</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
+                        <i class="fas fa-times"></i> Supprimer
+                    </button>
+                </div>
+            `;
+            container.appendChild(line);
+            updateInvoiceTotals();
+        }
+
         function addDevisLine() {
             const container = document.getElementById('devisLines');
             if (!container) return;
@@ -2434,7 +2422,7 @@
                         </div>
                     </div>
                     <div class="tax-display">
-                        <div class="tax-item tax-tva">
+                        <div class="tax-item tax-tps">
                             <span class="tax-label">TPS 9,5%</span>
                             <span class="tax-value">Calcul automatique</span>
                         </div>
@@ -2448,12 +2436,92 @@
             updateDevisTotals();
         }
 
+        function addDepenseLine() {
+            const container = document.getElementById('depenseLines');
+            if (!container) return;
+            
+            const line = document.createElement('div');
+            line.className = 'depense-line';
+            line.innerHTML = `
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" placeholder="Description de la dépense" required>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Quantité</label>
+                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateDepenseTotals()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prix unitaire TTC</label>
+                            <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required oninput="updateDepenseTotals()">
+                        </div>
+                    </div>
+                    <div class="tax-display">
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS déductible 9,5%</span>
+                            <span class="tax-value">Calcul automatique</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeDepenseLine(this)">
+                        <i class="fas fa-times"></i> Supprimer
+                    </button>
+                </div>
+            `;
+            container.appendChild(line);
+            updateDepenseTotals();
+        }
+
+        function removeLine(button) {
+            const lines = document.querySelectorAll('.invoice-line');
+            if (lines.length > 1) {
+                button.closest('.invoice-line').remove();
+                updateInvoiceTotals();
+            }
+        }
+
         function removeDevisLine(button) {
             const lines = document.querySelectorAll('.devis-line');
             if (lines.length > 1) {
                 button.closest('.devis-line').remove();
                 updateDevisTotals();
             }
+        }
+
+        function removeDepenseLine(button) {
+            const lines = document.querySelectorAll('.depense-line');
+            if (lines.length > 1) {
+                button.closest('.depense-line').remove();
+                updateDepenseTotals();
+            }
+        }
+
+        // ==================== TOTALS CALCULATIONS ====================
+        function updateInvoiceTotals() {
+            let totalHT = 0;
+            
+            document.querySelectorAll('.invoice-line').forEach(line => {
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix HT"]');
+                
+                if (qtyInput && priceInput) {
+                    const qty = parseFloat(qtyInput.value) || 0;
+                    const price = parseFloat(priceInput.value) || 0;
+                    totalHT += qty * price;
+                }
+            });
+            
+            const tps = totalHT * (CONFIG.TPS_RATE / 100);
+            const totalTTC = totalHT + tps;
+            
+            const totalHTEl = document.getElementById('totalHT');
+            const totalTPSEl = document.getElementById('totalTPS');
+            const totalTTCEl = document.getElementById('totalTTC');
+            
+            if (totalHTEl) totalHTEl.textContent = formatCurrency(totalHT);
+            if (totalTPSEl) totalTPSEl.textContent = formatCurrency(tps);
+            if (totalTTCEl) totalTTCEl.textContent = formatCurrency(totalTTC);
         }
 
         function updateDevisTotals() {
@@ -2470,19 +2538,42 @@
                 }
             });
             
-            const tva = totalHT * (CONFIG.TVA_RATE / 100);
-            const css = totalHT * (CONFIG.CSS_RATE / 100);
-            const totalTTC = totalHT + tva + css;
+            const tps = totalHT * (CONFIG.TPS_RATE / 100);
+            const totalTTC = totalHT + tps;
             
             const totalHTEl = document.getElementById('devisTotalHT');
-            const totalTVAEl = document.getElementById('devisTotalTVA');
-            const totalCSSEl = document.getElementById('devisTotalCSS');
+            const totalTPSEl = document.getElementById('devisTotalTPS');
             const totalTTCEl = document.getElementById('devisTotalTTC');
             
             if (totalHTEl) totalHTEl.textContent = formatCurrency(totalHT);
-            if (totalTVAEl) totalTVAEl.textContent = formatCurrency(tva);
-            if (totalCSSEl) totalCSSEl.textContent = formatCurrency(css);
+            if (totalTPSEl) totalTPSEl.textContent = formatCurrency(tps);
             if (totalTTCEl) totalTTCEl.textContent = formatCurrency(totalTTC);
+        }
+
+        function updateDepenseTotals() {
+            let totalTTC = 0;
+            
+            document.querySelectorAll('.depense-line').forEach(line => {
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix TTC"]');
+                
+                if (qtyInput && priceInput) {
+                    const qty = parseFloat(qtyInput.value) || 0;
+                    const price = parseFloat(priceInput.value) || 0;
+                    totalTTC += qty * price;
+                }
+            });
+            
+            const totalHT = totalTTC / (1 + (CONFIG.TPS_RATE / 100));
+            const tps = totalTTC - totalHT;
+            
+            const depenseTotalTTCEl = document.getElementById('depenseTotalTTC');
+            const depenseTotalHTEl = document.getElementById('depenseTotalHT');
+            const depenseTotalTPSEl = document.getElementById('depenseTotalTPS');
+            
+            if (depenseTotalTTCEl) depenseTotalTTCEl.textContent = formatCurrency(totalTTC);
+            if (depenseTotalHTEl) depenseTotalHTEl.textContent = formatCurrency(totalHT);
+            if (depenseTotalTPSEl) depenseTotalTPSEl.textContent = formatCurrency(tps);
         }
 
         function updateDevisValidityDate() {
@@ -2495,6 +2586,90 @@
                 const startDate = dateInput.value;
                 validUntilInput.value = addDays(startDate, days);
             }
+        }
+
+        // ==================== SAVE FUNCTIONS ====================
+        function saveInvoice(event) {
+            event.preventDefault();
+            
+            const clientName = document.getElementById('clientName').value;
+            const clientNIF = document.getElementById('clientNIF').value;
+            const clientAddress = document.getElementById('clientAddress').value;
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const invoiceDate = document.getElementById('invoiceDate').value;
+            const invoiceDueDate = document.getElementById('invoiceDueDate').value;
+            const notes = document.getElementById('invoiceNotes').value;
+            
+            const lines = [];
+            document.querySelectorAll('.invoice-line').forEach(line => {
+                const description = line.querySelector('input[placeholder="Produit ou service"]').value;
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix HT"]');
+                
+                const quantity = parseFloat(qtyInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
+                
+                if (description && quantity > 0 && price > 0) {
+                    const lineHT = quantity * price;
+                    const lineTPS = lineHT * (CONFIG.TPS_RATE / 100);
+                    
+                    lines.push({
+                        description,
+                        quantity,
+                        price,
+                        totalHT: lineHT,
+                        tps: lineTPS,
+                        totalTTC: lineHT + lineTPS
+                    });
+                }
+            });
+            
+            if (lines.length === 0) {
+                showNotification('Ajoutez au moins une ligne', 'error');
+                return;
+            }
+            
+            const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
+            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
+            const totalTTC = totalHT + totalTPS;
+            
+            const invoice = {
+                id: appState.invoices.length > 0 ? Math.max(...appState.invoices.map(i => i.id)) + 1 : 1,
+                number: invoiceNumber,
+                clientName: clientName,
+                clientAddress: clientAddress || '',
+                clientNIF: clientNIF || '',
+                date: invoiceDate,
+                dueDate: invoiceDueDate,
+                status: 'en attente',
+                notes: notes,
+                totalHT: totalHT,
+                totalTPS: totalTPS,
+                totalTTC: totalTTC,
+                lines: lines,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.invoices.push(invoice);
+            saveData();
+            
+            hideModal('newInvoiceModal');
+            renderInvoicesList();
+            updateDashboard();
+            
+            // Reset form
+            const invoiceForm = document.getElementById('invoiceForm');
+            if (invoiceForm) invoiceForm.reset();
+            
+            const today = new Date().toISOString().split('T')[0];
+            const invoiceDateInput = document.getElementById('invoiceDate');
+            const invoiceDueDateInput = document.getElementById('invoiceDueDate');
+            if (invoiceDateInput) invoiceDateInput.value = today;
+            if (invoiceDueDateInput) invoiceDueDateInput.value = addDays(today, 30);
+            
+            generateInvoiceNumber();
+            
+            showNotification('Facture créée avec succès', 'success');
         }
 
         function saveDevis(event) {
@@ -2523,7 +2698,7 @@
                 
                 if (description && quantity > 0 && price > 0) {
                     const lineHT = quantity * price;
-                    const lineTVA = lineHT * (CONFIG.TPS_RATE / 100);
+                    const lineTPS = lineHT * (CONFIG.TPS_RATE / 100);
                     
                     lines.push({
                         description,
@@ -2542,7 +2717,7 @@
             }
             
             const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
-            const totalTVA = lines.reduce((sum, line) => sum + line.tps, 0);
+            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
             const totalTTC = totalHT + totalTPS;
             
             const devis = {
@@ -2560,7 +2735,7 @@
                 conditions: conditions,
                 notes: notes,
                 totalHT: totalHT,
-                totalTVA: totalTPS,
+                totalTPS: totalTPS,
                 totalTTC: totalTTC,
                 lines: lines,
                 createdAt: new Date().toISOString(),
@@ -2590,6 +2765,178 @@
             generateDevisNumber();
             
             showNotification('Devis créé avec succès', 'success');
+        }
+
+        function saveDepense(event) {
+            event.preventDefault();
+            
+            const beneficiaire = document.getElementById('depenseBeneficiaire').value;
+            const depenseNumber = document.getElementById('depenseNumber').value;
+            const depenseType = document.getElementById('depenseType').value;
+            const depenseDate = document.getElementById('depenseDate').value;
+            const depensePaymentDate = document.getElementById('depensePaymentDate').value;
+            const paymentMode = document.getElementById('depensePaymentMode').value;
+            const compteId = parseInt(document.getElementById('depenseCompte').value);
+            const notes = document.getElementById('depenseNotes').value;
+            
+            const compte = appState.comptes.find(c => c.id === compteId);
+            if (!compte) {
+                showNotification('Veuillez sélectionner un compte', 'error');
+                return;
+            }
+            
+            const lines = [];
+            document.querySelectorAll('.depense-line').forEach(line => {
+                const description = line.querySelector('input[placeholder="Description de la dépense"]').value;
+                const qtyInput = line.querySelector('input[placeholder="Qté"]');
+                const priceInput = line.querySelector('input[placeholder="Prix TTC"]');
+                
+                const quantity = parseFloat(qtyInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
+                
+                if (description && quantity > 0 && price > 0) {
+                    const lineTTC = quantity * price;
+                    const lineHT = lineTTC / (1 + (CONFIG.TPS_RATE / 100));
+                    const lineTPS = lineTTC - lineHT;
+                    
+                    lines.push({
+                        description,
+                        quantity,
+                        price,
+                        totalTTC: lineTTC,
+                        totalHT: lineHT,
+                        tps: lineTPS
+                    });
+                }
+            });
+            
+            if (lines.length === 0) {
+                showNotification('Ajoutez au moins une ligne', 'error');
+                return;
+            }
+            
+            const totalTTC = lines.reduce((sum, line) => sum + line.totalTTC, 0);
+            const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
+            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
+            
+            const depense = {
+                id: appState.depenses.length > 0 ? Math.max(...appState.depenses.map(d => d.id)) + 1 : 1,
+                number: depenseNumber,
+                beneficiaire: beneficiaire,
+                type: depenseType,
+                date: depenseDate,
+                paymentDate: depensePaymentDate,
+                paymentMode: paymentMode,
+                compteId: compteId,
+                compteName: compte.libelle,
+                status: 'payée',
+                notes: notes,
+                totalHT: totalHT,
+                totalTPS: totalTPS,
+                totalTTC: totalTTC,
+                lines: lines,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.depenses.push(depense);
+            saveData();
+            
+            createEcritureForDepense(depense);
+            
+            hideModal('newDepenseModal');
+            renderDepensesList();
+            updateDashboard();
+            
+            // Reset form
+            const depenseForm = document.getElementById('depenseForm');
+            if (depenseForm) depenseForm.reset();
+            
+            const today = new Date().toISOString().split('T')[0];
+            const depenseDateInput = document.getElementById('depenseDate');
+            const depensePaymentDateInput = document.getElementById('depensePaymentDate');
+            if (depenseDateInput) depenseDateInput.value = today;
+            if (depensePaymentDateInput) depensePaymentDateInput.value = today;
+            
+            generateDepenseNumber();
+            
+            showNotification('Dépense enregistrée avec succès', 'success');
+        }
+
+        function createEcritureForDepense(depense) {
+            const ecriture = {
+                id: appState.ecritures.length > 0 ? Math.max(...appState.ecritures.map(e => e.id)) + 1 : 1,
+                date: depense.date,
+                reference: depense.number,
+                libelle: `Dépense: ${depense.beneficiaire}`,
+                compteDebit: depense.compteId,
+                compteCredit: null,
+                montant: depense.totalHT,
+                tps: depense.totalTPS,
+                type: 'depense',
+                sourceId: depense.id,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.ecritures.push(ecriture);
+            saveData();
+        }
+
+        // ==================== RENDER FUNCTIONS ====================
+        function renderInvoicesList(filter = '') {
+            const container = document.getElementById('invoicesList');
+            if (!container) return;
+            
+            let filtered = appState.invoices;
+            if (filter) {
+                filtered = filtered.filter(invoice => 
+                    invoice.number.toLowerCase().includes(filter.toLowerCase()) ||
+                    invoice.clientName.toLowerCase().includes(filter.toLowerCase())
+                );
+            }
+            
+            container.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucune facture trouvée</div>';
+                return;
+            }
+            
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(invoice => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-title">${invoice.number}</div>
+                        <div class="list-item-subtitle">${invoice.clientName} • ${formatDate(invoice.date)}</div>
+                        <div class="d-flex align-center gap-1 mt-1">
+                            <span class="badge ${getStatusBadgeClass(invoice.status)}">
+                                ${invoice.status}
+                            </span>
+                            <span class="text-muted">Échéance: ${formatDate(invoice.dueDate)}</span>
+                        </div>
+                        <div class="tax-display mt-1">
+                            <div class="tax-item">
+                                <span class="tax-label">HT:</span>
+                                <span class="tax-value">${formatCurrency(invoice.totalHT)}</span>
+                            </div>
+                            <div class="tax-item tax-tps">
+                                <span class="tax-label">TPS:</span>
+                                <span class="tax-value">${formatCurrency(invoice.totalTPS)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-center gap-1">
+                        <div class="text-center">
+                            <div class="list-item-title">${formatCurrency(invoice.totalTTC)}</div>
+                            <div class="list-item-subtitle">TTC</div>
+                        </div>
+                        <button class="btn btn-icon" onclick="viewInvoice(${invoice.id})">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
         }
 
         function renderDevisList(filter = '', statusFilter = appState.currentDevisFilter) {
@@ -2657,7 +3004,6 @@
                                 <span class="tax-label">TPS:</span>
                                 <span class="tax-value">${formatCurrency(devis.totalTPS)}</span>
                             </div>
-                           
                         </div>
                     </div>
                     <div class="d-flex flex-column align-center gap-1">
@@ -2684,221 +3030,62 @@
             });
         }
 
-        function filterDevis(query) {
-            renderDevisList(query, appState.currentDevisFilter);
-        }
-
-        function filterDevisByStatus(status) {
-            appState.currentDevisFilter = status;
+        function renderDepensesList(filter = '') {
+            const container = document.getElementById('depensesList');
+            if (!container) return;
             
-            // Mettre à jour les boutons de filtre
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.includes(getDevisStatusLabel(status)) || 
-                    (status === 'all' && btn.textContent === 'Tous')) {
-                    btn.classList.add('active');
-                }
-            });
+            let filtered = appState.depenses;
+            if (filter) {
+                filtered = filtered.filter(depense => 
+                    depense.number.toLowerCase().includes(filter.toLowerCase()) ||
+                    depense.beneficiaire.toLowerCase().includes(filter.toLowerCase()) ||
+                    depense.type.toLowerCase().includes(filter.toLowerCase())
+                );
+            }
             
-            renderDevisList('', status);
-        }
-
-        function viewDevis(devisId) {
-            const devis = appState.devis.find(d => d.id === devisId);
-            if (!devis) return;
+            container.innerHTML = '';
             
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>${devis.number}</h3>
-                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="mb-2">
-                                <strong>Informations du devis</strong>
-                                <div class="mt-1">
-                                    <div><strong>Client:</strong> ${devis.clientName}</div>
-                                    ${devis.clientNIF ? `<div><strong>NIF:</strong> ${devis.clientNIF}</div>` : ''}
-                                    ${devis.clientEmail ? `<div><strong>Email:</strong> ${devis.clientEmail}</div>` : ''}
-                                    ${devis.clientPhone ? `<div><strong>Téléphone:</strong> ${devis.clientPhone}</div>` : ''}
-                                    <div><strong>Objet:</strong> ${devis.subject}</div>
-                                    <div><strong>Date:</strong> ${formatDate(devis.date)}</div>
-                                    <div><strong>Validité:</strong> ${formatDate(devis.validUntil)}</div>
-                                    <div><strong>Statut:</strong> <span class="badge ${getDevisStatusBadgeClass(devis.status)}">${getDevisStatusLabel(devis.status)}</span></div>
-                                    ${devis.notes ? `<div><strong>Notes:</strong> ${devis.notes}</div>` : ''}
-                                </div>
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center p-3">Aucune dépense trouvée</div>';
+                return;
+            }
+            
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(depense => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-title">${depense.number}</div>
+                        <div class="list-item-subtitle">${depense.beneficiaire} • ${formatDate(depense.date)}</div>
+                        <div class="d-flex align-center gap-1 mt-1">
+                            <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">
+                                ${getDepenseTypeLabel(depense.type)}
+                            </span>
+                            <span class="text-muted">Mode: ${getPaymentModeLabel(depense.paymentMode)}</span>
+                        </div>
+                        <div class="tax-display mt-1">
+                            <div class="tax-item">
+                                <span class="tax-label">HT:</span>
+                                <span class="tax-value">${formatCurrency(depense.totalHT)}</span>
                             </div>
-                            
-                            <div class="mb-2">
-                                <strong>Détails</strong>
-                                <div class="table-responsive mt-1">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Description</th>
-                                                <th>Qté</th>
-                                                <th>Prix HT</th>
-                                                <th>Total HT</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${devis.lines.map(line => `
-                                                <tr>
-                                                    <td>${line.description}</td>
-                                                    <td>${line.quantity}</td>
-                                                    <td>${formatCurrency(line.price)}</td>
-                                                    <td>${formatCurrency(line.totalHT)}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="tax-item tax-tps">
+                                <span class="tax-label">TPS déd.:</span>
+                                <span class="tax-value">${formatCurrency(depense.totalTPS)}</span>
                             </div>
-                            
-                            <div class="tax-display">
-                                <div class="tax-item">
-                                    <span class="tax-label">Total HT:</span>
-                                    <span class="tax-value">${formatCurrency(devis.totalHT)}</span>
-                                </div>
-                                <div class="tax-item tax-tps">
-                                    <span class="tax-label">TPS 9,5%:</span>
-                                    <span class="tax-value">${formatCurrency(devis.totalTPS)}</span>
-                                </div>
-                                
-                                <div class="tax-item total devis-total">
-                                    <span class="tax-label">Total TTC:</span>
-                                    <span class="tax-value text-devis">${formatCurrency(devis.totalTTC)}</span>
-                                </div>
-                            </div>
-                            
-                            ${devis.conditions ? `
-                            <div class="mt-2">
-                                <strong>Conditions générales</strong>
-                                <div class="validity-period mt-1">
-                                    ${devis.conditions.split('\n').map(line => `<div>${line}</div>`).join('')}
-                                </div>
-                            </div>
-                            ` : ''}
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-devis" onclick="generateDevisPDF(${devis.id})">
-                            <i class="fas fa-file-pdf"></i> Télécharger PDF
-                        </button>
-                        ${devis.status === 'en cours' ? `
-                            <button class="btn btn-success" onclick="acceptDevis(${devis.id})">
-                                <i class="fas fa-check"></i> Accepter
-                            </button>
-                            <button class="btn btn-danger" onclick="refuseDevis(${devis.id})">
-                                <i class="fas fa-times"></i> Refuser
-                            </button>
-                            <button class="btn btn-primary" onclick="convertDevisToInvoice(${devis.id})">
-                                <i class="fas fa-file-invoice-dollar"></i> Convertir en Facture
-                            </button>
-                        ` : ''}
-                        <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">
-                            Fermer
+                    <div class="d-flex flex-column align-center gap-1">
+                        <div class="text-center">
+                            <div class="list-item-title text-danger">${formatCurrency(depense.totalTTC)}</div>
+                            <div class="list-item-subtitle">TTC</div>
+                        </div>
+                        <button class="btn btn-icon" onclick="viewDepense(${depense.id})">
+                            <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-
-        function acceptDevis(devisId) {
-            const devis = appState.devis.find(d => d.id === devisId);
-            if (devis) {
-                devis.status = 'accepté';
-                devis.acceptedAt = new Date().toISOString();
-                saveData();
-                renderDevisList();
-                renderRecentDevis();
-                renderDevisToConvert();
-                updateDevisStats();
-                showNotification('Devis accepté avec succès', 'success');
-                
-                // Fermer les modals ouverts
-                document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.remove());
-            }
-        }
-
-        function refuseDevis(devisId) {
-            if (confirm('Êtes-vous sûr de vouloir refuser ce devis ?')) {
-                const devis = appState.devis.find(d => d.id === devisId);
-                if (devis) {
-                    devis.status = 'refusé';
-                    devis.refusedAt = new Date().toISOString();
-                    saveData();
-                    renderDevisList();
-                    renderRecentDevis();
-                    renderDevisToConvert();
-                    updateDevisStats();
-                    showNotification('Devis refusé', 'success');
-                    
-                    // Fermer les modals ouverts
-                    document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.remove());
-                }
-            }
-        }
-
-        function convertDevisToInvoice(devisId) {
-            const devis = appState.devis.find(d => d.id === devisId);
-            if (!devis) return;
-            
-            // Préremplir le formulaire de facture avec les données du devis
-            document.getElementById('clientName').value = devis.clientName;
-            document.getElementById('clientNIF').value = devis.clientNIF || '';
-            document.getElementById('clientAddress').value = devis.clientAddress || '';
-            
-            // Générer un nouveau numéro de facture
-            generateInvoiceNumber();
-            
-            // Préremplir les notes avec une référence au devis
-            document.getElementById('invoiceNotes').value = `Facture générée à partir du devis ${devis.number}\n${devis.notes || ''}`;
-            
-            // Préremplir les lignes
-            const linesContainer = document.getElementById('invoiceLines');
-            linesContainer.innerHTML = '';
-            
-            devis.lines.forEach((line, index) => {
-                if (index === 0) {
-                    // Utiliser la ligne existante
-                    const firstLine = linesContainer.querySelector('.invoice-line');
-                    firstLine.querySelector('input[placeholder="Produit ou service"]').value = line.description;
-                    firstLine.querySelector('input[placeholder="Qté"]').value = line.quantity;
-                    firstLine.querySelector('input[placeholder="Prix HT"]').value = line.price;
-                } else {
-                    // Ajouter de nouvelles lignes
-                    addLine();
-                    const newLine = linesContainer.querySelector('.invoice-line:last-child');
-                    newLine.querySelector('input[placeholder="Produit ou service"]').value = line.description;
-                    newLine.querySelector('input[placeholder="Qté"]').value = line.quantity;
-                    newLine.querySelector('input[placeholder="Prix HT"]').value = line.price;
-                }
+                `;
+                container.appendChild(item);
             });
-            
-            // Mettre à jour les totaux
-            updateInvoiceTotals();
-            
-            // Marquer le devis comme converti
-            devis.convertedToInvoice = true;
-            devis.status = 'facturé';
-            devis.convertedAt = new Date().toISOString();
-            saveData();
-            
-            // Fermer le modal du devis
-            document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.remove());
-            
-            // Ouvrir le modal de facture
-            showModal('newInvoiceModal');
-            
-            showNotification('Devis converti en facture. Veuillez finaliser la facture.', 'success');
         }
 
         function renderRecentDevis() {
@@ -2976,6 +3163,517 @@
             });
         }
 
+        // ==================== VIEW FUNCTIONS ====================
+        function viewInvoice(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (!invoice) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>${invoice.number}</h3>
+                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="mb-2">
+                                <strong>Informations</strong>
+                                <div class="mt-1">
+                                    <div><strong>Client:</strong> ${invoice.clientName}</div>
+                                    ${invoice.clientNIF ? `<div><strong>NIF:</strong> ${invoice.clientNIF}</div>` : ''}
+                                    <div><strong>Date:</strong> ${formatDate(invoice.date)}</div>
+                                    <div><strong>Échéance:</strong> ${formatDate(invoice.dueDate)}</div>
+                                    <div><strong>Statut:</strong> <span class="badge ${getStatusBadgeClass(invoice.status)}">${invoice.status}</span></div>
+                                    ${invoice.notes ? `<div><strong>Notes:</strong> ${invoice.notes}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Détails</strong>
+                                <div class="table-responsive mt-1">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Qté</th>
+                                                <th>Prix HT</th>
+                                                <th>Total HT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${invoice.lines.map(line => `
+                                                <tr>
+                                                    <td>${line.description}</td>
+                                                    <td>${line.quantity}</td>
+                                                    <td>${formatCurrency(line.price)}</td>
+                                                    <td>${formatCurrency(line.totalHT)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tax-display">
+                                <div class="tax-item">
+                                    <span class="tax-label">Total HT:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalHT)}</span>
+                                </div>
+                                <div class="tax-item tax-tps">
+                                    <span class="tax-label">TPS 9,5%:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalTPS)}</span>
+                                </div>
+                                <div class="tax-item total">
+                                    <span class="tax-label">Total TTC:</span>
+                                    <span class="tax-value">${formatCurrency(invoice.totalTTC)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="generatePDF(${invoice.id})">
+                            <i class="fas fa-file-pdf"></i> Télécharger PDF
+                        </button>
+                        <button class="btn btn-success" onclick="markInvoiceAsPaid(${invoice.id})">
+                            <i class="fas fa-check"></i> Marquer Payée
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteInvoice(${invoice.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function viewDevis(devisId) {
+            const devis = appState.devis.find(d => d.id === devisId);
+            if (!devis) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>${devis.number}</h3>
+                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="mb-2">
+                                <strong>Informations du devis</strong>
+                                <div class="mt-1">
+                                    <div><strong>Client:</strong> ${devis.clientName}</div>
+                                    ${devis.clientNIF ? `<div><strong>NIF:</strong> ${devis.clientNIF}</div>` : ''}
+                                    ${devis.clientEmail ? `<div><strong>Email:</strong> ${devis.clientEmail}</div>` : ''}
+                                    ${devis.clientPhone ? `<div><strong>Téléphone:</strong> ${devis.clientPhone}</div>` : ''}
+                                    <div><strong>Objet:</strong> ${devis.subject}</div>
+                                    <div><strong>Date:</strong> ${formatDate(devis.date)}</div>
+                                    <div><strong>Validité:</strong> ${formatDate(devis.validUntil)}</div>
+                                    <div><strong>Statut:</strong> <span class="badge ${getDevisStatusBadgeClass(devis.status)}">${getDevisStatusLabel(devis.status)}</span></div>
+                                    ${devis.notes ? `<div><strong>Notes:</strong> ${devis.notes}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Détails</strong>
+                                <div class="table-responsive mt-1">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Qté</th>
+                                                <th>Prix HT</th>
+                                                <th>Total HT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${devis.lines.map(line => `
+                                                <tr>
+                                                    <td>${line.description}</td>
+                                                    <td>${line.quantity}</td>
+                                                    <td>${formatCurrency(line.price)}</td>
+                                                    <td>${formatCurrency(line.totalHT)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tax-display">
+                                <div class="tax-item">
+                                    <span class="tax-label">Total HT:</span>
+                                    <span class="tax-value">${formatCurrency(devis.totalHT)}</span>
+                                </div>
+                                <div class="tax-item tax-tps">
+                                    <span class="tax-label">TPS 9,5%:</span>
+                                    <span class="tax-value">${formatCurrency(devis.totalTPS)}</span>
+                                </div>
+                                <div class="tax-item total devis-total">
+                                    <span class="tax-label">Total TTC:</span>
+                                    <span class="tax-value text-devis">${formatCurrency(devis.totalTTC)}</span>
+                                </div>
+                            </div>
+                            
+                            ${devis.conditions ? `
+                            <div class="mt-2">
+                                <strong>Conditions générales</strong>
+                                <div class="validity-period mt-1">
+                                    ${devis.conditions.split('\n').map(line => `<div>${line}</div>`).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-devis" onclick="generateDevisPDF(${devis.id})">
+                            <i class="fas fa-file-pdf"></i> Télécharger PDF
+                        </button>
+                        ${devis.status === 'en cours' ? `
+                            <button class="btn btn-success" onclick="acceptDevis(${devis.id})">
+                                <i class="fas fa-check"></i> Accepter
+                            </button>
+                            <button class="btn btn-danger" onclick="refuseDevis(${devis.id})">
+                                <i class="fas fa-times"></i> Refuser
+                            </button>
+                            <button class="btn btn-primary" onclick="convertDevisToInvoice(${devis.id})">
+                                <i class="fas fa-file-invoice-dollar"></i> Convertir en Facture
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function viewDepense(depenseId) {
+            const depense = appState.depenses.find(d => d.id === depenseId);
+            if (!depense) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>${depense.number}</h3>
+                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="mb-2">
+                                <strong>Informations</strong>
+                                <div class="mt-1">
+                                    <div><strong>Bénéficiaire:</strong> ${depense.beneficiaire}</div>
+                                    <div><strong>Type:</strong> <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">${getDepenseTypeLabel(depense.type)}</span></div>
+                                    <div><strong>Date:</strong> ${formatDate(depense.date)}</div>
+                                    <div><strong>Paiement:</strong> ${formatDate(depense.paymentDate)} (${getPaymentModeLabel(depense.paymentMode)})</div>
+                                    <div><strong>Compte:</strong> ${depense.compteName}</div>
+                                    ${depense.notes ? `<div><strong>Notes:</strong> ${depense.notes}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Détails</strong>
+                                <div class="table-responsive mt-1">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Qté</th>
+                                                <th>Prix TTC</th>
+                                                <th>Total TTC</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${depense.lines.map(line => `
+                                                <tr>
+                                                    <td>${line.description}</td>
+                                                    <td>${line.quantity}</td>
+                                                    <td>${formatCurrency(line.price)}</td>
+                                                    <td>${formatCurrency(line.totalTTC)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tax-display">
+                                <div class="tax-item">
+                                    <span class="tax-label">Total TTC:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalTTC)}</span>
+                                </div>
+                                <div class="tax-item tax-tps">
+                                    <span class="tax-label">TPS déductible 9,5%:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalTPS)}</span>
+                                </div>
+                                <div class="tax-item total">
+                                    <span class="tax-label">Total HT:</span>
+                                    <span class="tax-value">${formatCurrency(depense.totalHT)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" onclick="deleteDepense(${depense.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // ==================== ACTION FUNCTIONS ====================
+        function acceptDevis(devisId) {
+            const devis = appState.devis.find(d => d.id === devisId);
+            if (devis) {
+                devis.status = 'accepté';
+                devis.acceptedAt = new Date().toISOString();
+                saveData();
+                renderDevisList();
+                renderRecentDevis();
+                renderDevisToConvert();
+                updateDevisStats();
+                showNotification('Devis accepté avec succès', 'success');
+                
+                // Fermer les modals ouverts
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.remove());
+            }
+        }
+
+        function refuseDevis(devisId) {
+            if (confirm('Êtes-vous sûr de vouloir refuser ce devis ?')) {
+                const devis = appState.devis.find(d => d.id === devisId);
+                if (devis) {
+                    devis.status = 'refusé';
+                    devis.refusedAt = new Date().toISOString();
+                    saveData();
+                    renderDevisList();
+                    renderRecentDevis();
+                    renderDevisToConvert();
+                    updateDevisStats();
+                    showNotification('Devis refusé', 'success');
+                    
+                    // Fermer les modals ouverts
+                    document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.remove());
+                }
+            }
+        }
+
+        function convertDevisToInvoice(devisId) {
+            const devis = appState.devis.find(d => d.id === devisId);
+            if (!devis) return;
+            
+            // Préremplir le formulaire de facture avec les données du devis
+            document.getElementById('clientName').value = devis.clientName;
+            document.getElementById('clientNIF').value = devis.clientNIF || '';
+            document.getElementById('clientAddress').value = devis.clientAddress || '';
+            
+            // Générer un nouveau numéro de facture
+            generateInvoiceNumber();
+            
+            // Préremplir les notes avec une référence au devis
+            document.getElementById('invoiceNotes').value = `Facture générée à partir du devis ${devis.number}\n${devis.notes || ''}`;
+            
+            // Préremplir les lignes
+            const linesContainer = document.getElementById('invoiceLines');
+            linesContainer.innerHTML = '';
+            
+            devis.lines.forEach((line, index) => {
+                if (index === 0) {
+                    // Utiliser la ligne existante
+                    const firstLine = linesContainer.querySelector('.invoice-line');
+                    if (firstLine) {
+                        firstLine.querySelector('input[placeholder="Produit ou service"]').value = line.description;
+                        firstLine.querySelector('input[placeholder="Qté"]').value = line.quantity;
+                        firstLine.querySelector('input[placeholder="Prix HT"]').value = line.price;
+                    } else {
+                        // Si pas de ligne existante, en créer une
+                        addLine();
+                        const newLine = linesContainer.querySelector('.invoice-line:last-child');
+                        newLine.querySelector('input[placeholder="Produit ou service"]').value = line.description;
+                        newLine.querySelector('input[placeholder="Qté"]').value = line.quantity;
+                        newLine.querySelector('input[placeholder="Prix HT"]').value = line.price;
+                    }
+                } else {
+                    // Ajouter de nouvelles lignes
+                    addLine();
+                    const newLine = linesContainer.querySelector('.invoice-line:last-child');
+                    newLine.querySelector('input[placeholder="Produit ou service"]').value = line.description;
+                    newLine.querySelector('input[placeholder="Qté"]').value = line.quantity;
+                    newLine.querySelector('input[placeholder="Prix HT"]').value = line.price;
+                }
+            });
+            
+            // Mettre à jour les totaux
+            updateInvoiceTotals();
+            
+            // Marquer le devis comme converti
+            devis.convertedToInvoice = true;
+            devis.status = 'facturé';
+            devis.convertedAt = new Date().toISOString();
+            saveData();
+            
+            // Fermer le modal du devis
+            document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.remove());
+            
+            // Ouvrir le modal de facture
+            showModal('newInvoiceModal');
+            
+            showNotification('Devis converti en facture. Veuillez finaliser la facture.', 'success');
+        }
+
+        function markInvoiceAsPaid(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (invoice) {
+                invoice.status = 'payée';
+                saveData();
+                renderInvoicesList();
+                updateDashboard();
+                showNotification('Facture marquée comme payée', 'success');
+                document.querySelector('.modal-overlay.active').remove();
+            }
+        }
+
+        function deleteInvoice(invoiceId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) {
+                const index = appState.invoices.findIndex(i => i.id === invoiceId);
+                if (index !== -1) {
+                    appState.invoices.splice(index, 1);
+                    saveData();
+                    renderInvoicesList();
+                    updateDashboard();
+                    showNotification('Facture supprimée', 'success');
+                    const modal = document.querySelector('.modal-overlay.active');
+                    if (modal) modal.remove();
+                }
+            }
+        }
+
+        function deleteDepense(depenseId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
+                const index = appState.depenses.findIndex(d => d.id === depenseId);
+                if (index !== -1) {
+                    appState.depenses.splice(index, 1);
+                    
+                    const ecritureIndex = appState.ecritures.findIndex(e => 
+                        e.type === 'depense' && e.sourceId === depenseId
+                    );
+                    if (ecritureIndex !== -1) {
+                        appState.ecritures.splice(ecritureIndex, 1);
+                    }
+                    
+                    saveData();
+                    renderDepensesList();
+                    updateDashboard();
+                    showNotification('Dépense supprimée', 'success');
+                    const modal = document.querySelector('.modal-overlay.active');
+                    if (modal) modal.remove();
+                }
+            }
+        }
+
+        // ==================== FILTER FUNCTIONS ====================
+        function filterInvoices(query) {
+            renderInvoicesList(query);
+        }
+
+        function filterDevis(query) {
+            renderDevisList(query, appState.currentDevisFilter);
+        }
+
+        function filterDevisByStatus(status) {
+            appState.currentDevisFilter = status;
+            
+            // Mettre à jour les boutons de filtre
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(getDevisStatusLabel(status)) || 
+                    (status === 'all' && btn.textContent === 'Tous')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            renderDevisList('', status);
+        }
+
+        function filterDepenses(query) {
+            renderDepensesList(query);
+        }
+
+        // ==================== STATS FUNCTIONS ====================
+        function updateDashboard() {
+            // Chiffre d'affaires
+            const totalCA = appState.invoices
+                .filter(inv => inv.status === 'payée')
+                .reduce((sum, inv) => sum + inv.totalTTC, 0);
+            const totalCAEl = document.getElementById('totalCA');
+            if (totalCAEl) totalCAEl.textContent = formatCurrency(totalCA);
+            
+            // Totaux recettes/dépenses
+            const totalRecettes = appState.invoices
+                .filter(inv => inv.status === 'payée')
+                .reduce((sum, inv) => sum + inv.totalTTC, 0);
+            
+            const totalDepenses = appState.depenses
+                .reduce((sum, dep) => sum + dep.totalTTC, 0);
+            
+            const totalRecettesEl = document.getElementById('totalRecettes');
+            const totalDepensesEl = document.getElementById('totalDepenses');
+            if (totalRecettesEl) totalRecettesEl.textContent = formatCurrency(totalRecettes);
+            if (totalDepensesEl) totalDepensesEl.textContent = formatCurrency(totalDepenses);
+            
+            // Mettre à jour les statistiques des devis
+            updateDevisStats();
+        }
+
+        function updateDashboardDepenses() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const depensesMois = appState.depenses
+                .filter(dep => {
+                    const depDate = new Date(dep.date);
+                    return depDate.getMonth() === currentMonth && 
+                           depDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, dep) => sum + dep.totalTTC, 0);
+            
+            const tpsDeductible = appState.depenses
+                .filter(dep => {
+                    const depDate = new Date(dep.date);
+                    return depDate.getMonth() === currentMonth && 
+                           depDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, dep) => sum + dep.totalTPS, 0);
+            
+            const depenseCount = appState.depenses.length;
+            
+            const totalDepensesMoisEl = document.getElementById('totalDepensesMois');
+            const totalTPSDeductibleEl = document.getElementById('totalTPSDeductible');
+            const depenseCountEl = document.getElementById('depenseCount');
+            
+            if (totalDepensesMoisEl) totalDepensesMoisEl.textContent = formatCurrency(depensesMois);
+            if (totalTPSDeductibleEl) totalTPSDeductibleEl.textContent = formatCurrency(tpsDeductible);
+            if (depenseCountEl) depenseCountEl.textContent = depenseCount;
+        }
+
         function updateDevisStats() {
             const totalDevis = appState.devis.length;
             const devisAccepte = appState.devis.filter(d => d.status === 'accepté').length;
@@ -2984,21 +3682,140 @@
             
             const tauxConversion = totalDevis > 0 ? Math.round((devisFacture / totalDevis) * 100) : 0;
             
-            document.getElementById('totalDevisCount').textContent = totalDevis;
-            document.getElementById('devisAccepteCount').textContent = devisAccepte;
-            document.getElementById('devisEnCoursCount').textContent = devisEnCours;
-            document.getElementById('tauxConversion').textContent = `${tauxConversion}%`;
+            const totalDevisCountEl = document.getElementById('totalDevisCount');
+            const devisAccepteCountEl = document.getElementById('devisAccepteCount');
+            const devisEnCoursCountEl = document.getElementById('devisEnCoursCount');
+            const tauxConversionEl = document.getElementById('tauxConversion');
+            
+            if (totalDevisCountEl) totalDevisCountEl.textContent = totalDevis;
+            if (devisAccepteCountEl) devisAccepteCountEl.textContent = devisAccepte;
+            if (devisEnCoursCountEl) devisEnCoursCountEl.textContent = devisEnCours;
+            if (tauxConversionEl) tauxConversionEl.textContent = `${tauxConversion}%`;
             
             // Mettre à jour le dashboard
-            document.getElementById('totalDevis').textContent = totalDevis;
+            const totalDevisEl = document.getElementById('totalDevis');
+            if (totalDevisEl) totalDevisEl.textContent = totalDevis;
             
             const valeurDevisEnCours = appState.devis
                 .filter(d => d.status === 'en cours')
                 .reduce((sum, d) => sum + d.totalTTC, 0);
-            document.getElementById('valeurDevisEnCours').textContent = formatCurrency(valeurDevisEnCours);
+            const valeurDevisEnCoursEl = document.getElementById('valeurDevisEnCours');
+            if (valeurDevisEnCoursEl) valeurDevisEnCoursEl.textContent = formatCurrency(valeurDevisEnCours);
         }
 
-        // ==================== PDF GENERATION FOR DEVIS ====================
+        // ==================== PDF FUNCTIONS ====================
+        function generatePDF(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (!invoice) {
+                showNotification('Facture introuvable', 'error');
+                return;
+            }
+            
+            appState.currentInvoicePDF = invoice;
+            
+            const pdfContent = document.getElementById('pdfContent');
+            const settings = appState.settings;
+            
+            const htmlContent = `
+                <div class="pdf-header">
+                    <div>
+                        <div style="font-size: 28px; font-weight: bold; color: #1E3A8A;">ELITE PRESTATIONS</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">PRESTATIONS MULTISERVICES & LOCATION DE MATERIELS</div>
+                        <div style="margin-top: 10px;">
+                            <div><strong>Siège social:</strong> Libreville, Gabon</div>
+                            <div><strong>NIF:</strong> 299086A</div>
+                            <div><strong>RCCM:</strong> RG LBV2018A4570</div>
+                            <div><strong>Tél:</strong> +241 62 39 11 21 / +241 77 02 30 04</div>
+                            <div><strong>Email:</strong> eliteprestationspourvous@gmail.com</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: bold; color: #1E3A8A;">FACTURE</div>
+                        <div class="pdf-invoice-number">${invoice.number}</div>
+                        <div><strong>Date:</strong> ${formatDate(invoice.date)}</div>
+                        <div><strong>Échéance:</strong> ${formatDate(invoice.dueDate)}</div>
+                    </div>
+                </div>
+                
+                <div class="pdf-section">
+                    <div style="margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <h3 style="color: #1E3A8A; margin-bottom: 10px; border-bottom: 2px solid #1E3A8A; padding-bottom: 5px;">CLIENT</h3>
+                        <div><strong>${invoice.clientName}</strong></div>
+                        ${invoice.clientAddress ? `<div><strong>Adresse:</strong> ${invoice.clientAddress}</div>` : ''}
+                        ${invoice.clientNIF ? `<div><strong>NIF:</strong> ${invoice.clientNIF}</div>` : ''}
+                    </div>
+                </div>
+                
+                <div class="pdf-section">
+                    <h3 style="color: #1E3A8A; margin-bottom: 15px; border-bottom: 2px solid #1E3A8A; padding-bottom: 5px;">DÉTAILS DE LA FACTURE</h3>
+                    <table class="pdf-table">
+                        <thead>
+                            <tr>
+                                <th style="background: #1E3A8A; color: white;">Description</th>
+                                <th style="background: #1E3A8A; color: white; text-align: center;">Qté</th>
+                                <th style="background: #1E3A8A; color: white; text-align: right;">Prix HT</th>
+                                <th style="background: #1E3A8A; color: white; text-align: right;">Total HT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${invoice.lines.map(line => `
+                                <tr>
+                                    <td>${line.description}</td>
+                                    <td style="text-align: center;">${line.quantity}</td>
+                                    <td style="text-align: right;">${formatCurrency(line.price)}</td>
+                                    <td style="text-align: right;">${formatCurrency(line.totalHT)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pdf-section" style="max-width: 300px; margin-left: auto;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #1E3A8A;">
+                        <h4 style="color: #1E3A8A; margin-bottom: 15px; text-align: center;">TOTAL FACTURE</h4>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Total HT:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalHT)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #0EA5E9;">
+                            <span>TPS 9,5%:</span>
+                            <span style="font-weight: bold;">${formatCurrency(invoice.totalTPS)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 10px; border-top: 2px solid #1E3A8A; font-size: 18px; font-weight: bold;">
+                            <span>TOTAL TTC:</span>
+                            <span style="color: #1E3A8A;">${formatCurrency(invoice.totalTTC)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${invoice.notes ? `
+                <div class="pdf-section">
+                    <h3 style="color: #1E3A8A; margin-bottom: 10px; border-bottom: 2px solid #1E3A8A; padding-bottom: 5px;">NOTES</h3>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        ${invoice.notes}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="pdf-footer">
+                    <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #1E3A8A;">
+                        <div style="font-weight: bold; color: #1E3A8A; margin-bottom: 10px;">ELITE PRESTATIONS</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Prestations multiservices & Location de matériels</div>
+                        <div style="font-size: 11px; color: #888;">
+                            Libreville, Gabon | NIF: 299086A | RCCM: RG LBV2018A4570<br>
+                            Tél: +241 62 39 11 21 / +241 77 02 30 04 | Email: eliteprestationspourvous@gmail.com
+                        </div>
+                        <div style="margin-top: 15px; font-size: 10px; color: #999;">
+                            Facture générée le ${formatDate(new Date().toISOString())} avec Financia Pro Gabon
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            pdfContent.innerHTML = htmlContent;
+            showPDFPreview();
+        }
+
         function generateDevisPDF(devisId) {
             const devis = appState.devis.find(d => d.id === devisId);
             if (!devis) {
@@ -3009,7 +3826,6 @@
             appState.currentDevisPDF = devis;
             
             const pdfContent = document.getElementById('devisPdfContent');
-            const settings = appState.settings;
             
             // Vérifier la validité
             const today = new Date();
@@ -3074,7 +3890,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${devis.lines.map((line, index) => `
+                            ${devis.lines.map(line => `
                                 <tr>
                                     <td>${line.description}</td>
                                     <td style="text-align: center;">${line.quantity}</td>
@@ -3094,12 +3910,8 @@
                             <span style="font-weight: bold;">${formatCurrency(devis.totalHT)}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #0EA5E9;">
-                            <span>TVA 18%:</span>
-                            <span style="font-weight: bold;">${formatCurrency(devis.totalTVA)}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #F59E0B;">
-                            <span>CSS 1%:</span>
-                            <span style="font-weight: bold;">${formatCurrency(devis.totalCSS)}</span>
+                            <span>TPS 9,5%:</span>
+                            <span style="font-weight: bold;">${formatCurrency(devis.totalTPS)}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 10px; border-top: 2px solid #8B5CF6; font-size: 18px; font-weight: bold;">
                             <span>TOTAL TTC:</span>
@@ -3145,14 +3957,199 @@
             showDevisPDFPreview();
         }
 
+        function showPDFPreview() {
+            document.getElementById('pdfPreview').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
         function showDevisPDFPreview() {
             document.getElementById('devisPdfPreview').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
+        function closePDFPreview() {
+            document.getElementById('pdfPreview').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
         function closeDevisPDFPreview() {
             document.getElementById('devisPdfPreview').classList.remove('active');
             document.body.style.overflow = 'auto';
+        }
+
+        function generatePDFFromPreview() {
+            const invoice = appState.currentInvoicePDF;
+            if (!invoice) {
+                showNotification('Aucune facture à télécharger', 'error');
+                return;
+            }
+            
+            if (typeof window.jspdf === 'undefined') {
+                showNotification('Erreur: jsPDF non chargé. Veuillez vérifier votre connexion internet.', 'error');
+                return;
+            }
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // En-tête
+                doc.setFontSize(22);
+                doc.setTextColor(30, 58, 138);
+                doc.text('ELITE PRESTATIONS', 20, 20);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(102, 102, 102);
+                doc.text('PRESTATIONS MULTISERVICES & LOCATION DE MATERIELS', 20, 28);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Siège social: Libreville, Gabon', 20, 36);
+                doc.text('NIF: 299086A', 20, 40);
+                doc.text('RCCM: RG LBV2018A4570', 20, 44);
+                doc.text('Tél: +241 62 39 11 21 / +241 77 02 30 04', 20, 48);
+                doc.text('Email: eliteprestationspourvous@gmail.com', 20, 52);
+                
+                // Titre facture
+                doc.setFontSize(24);
+                doc.setTextColor(30, 58, 138);
+                doc.text('FACTURE', 150, 20, { align: 'right' });
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`N°: ${invoice.number}`, 150, 30, { align: 'right' });
+                doc.text(`Date: ${formatDate(invoice.date)}`, 150, 34, { align: 'right' });
+                doc.text(`Échéance: ${formatDate(invoice.dueDate)}`, 150, 38, { align: 'right' });
+                
+                // Client
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('CLIENT', 20, 65);
+                
+                doc.setDrawColor(30, 58, 138);
+                doc.line(20, 67, 50, 67);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(invoice.clientName, 20, 75);
+                
+                let clientY = 79;
+                if (invoice.clientAddress) {
+                    doc.text(`Adresse: ${invoice.clientAddress}`, 20, clientY);
+                    clientY += 4;
+                }
+                if (invoice.clientNIF) {
+                    doc.text(`NIF: ${invoice.clientNIF}`, 20, clientY);
+                    clientY += 4;
+                }
+                
+                // Tableau des produits
+                const tableTop = clientY + 10;
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('DÉTAILS DE LA FACTURE', 20, tableTop);
+                
+                doc.setDrawColor(30, 58, 138);
+                doc.line(20, tableTop + 2, 80, tableTop + 2);
+                
+                // En-têtes du tableau avec fond coloré
+                doc.setFillColor(30, 58, 138);
+                doc.rect(20, tableTop + 8, 170, 8, 'F');
+                
+                doc.setFontSize(10);
+                doc.setTextColor(255, 255, 255);
+                doc.text('Description', 22, tableTop + 13);
+                doc.text('Qté', 120, tableTop + 13, { align: 'center' });
+                doc.text('Prix HT', 140, tableTop + 13, { align: 'right' });
+                doc.text('Total HT', 170, tableTop + 13, { align: 'right' });
+                
+                // Produits
+                let productY = tableTop + 23;
+                invoice.lines.forEach(line => {
+                    if (productY > 250) {
+                        doc.addPage();
+                        productY = 20;
+                    }
+                    
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(line.description, 22, productY);
+                    doc.text(line.quantity.toString(), 120, productY, { align: 'center' });
+                    doc.text(formatCurrency(line.price), 140, productY, { align: 'right' });
+                    doc.text(formatCurrency(line.totalHT), 170, productY, { align: 'right' });
+                    productY += 8;
+                });
+                
+                // Totaux
+                const totalsY = productY + 10;
+                
+                doc.setDrawColor(200, 200, 200);
+                doc.line(120, totalsY - 5, 190, totalsY - 5);
+                
+                doc.text('Total HT:', 120, totalsY, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalHT), 190, totalsY, { align: 'right' });
+                
+                doc.setTextColor(14, 165, 233);
+                doc.text('TPS 9,5%:', 120, totalsY + 6, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalTPS), 190, totalsY + 6, { align: 'right' });
+                
+                doc.setDrawColor(30, 58, 138);
+                doc.line(120, totalsY + 12, 190, totalsY + 12);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('TOTAL TTC:', 120, totalsY + 20, { align: 'right' });
+                doc.text(formatCurrency(invoice.totalTTC), 190, totalsY + 20, { align: 'right' });
+                
+                // Notes
+                if (invoice.notes && invoice.notes.trim() !== '') {
+                    const notesY = totalsY + 30;
+                    doc.setFontSize(11);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('NOTES:', 20, notesY);
+                    
+                    doc.setDrawColor(30, 58, 138);
+                    doc.line(20, notesY + 2, 40, notesY + 2);
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    const splitNotes = doc.splitTextToSize(invoice.notes, 170);
+                    doc.text(splitNotes, 20, notesY + 10);
+                }
+                
+                // Pied de page
+                const pageHeight = doc.internal.pageSize.height;
+                
+                // Ligne de séparation
+                doc.setDrawColor(30, 58, 138);
+                doc.line(20, pageHeight - 40, 190, pageHeight - 40);
+                
+                // Informations de l'entreprise
+                doc.setFontSize(12);
+                doc.setTextColor(30, 58, 138);
+                doc.text('ELITE PRESTATIONS', 105, pageHeight - 35, { align: 'center' });
+                
+                doc.setFontSize(9);
+                doc.setTextColor(102, 102, 102);
+                doc.text('Prestations multiservices & Location de matériels', 105, pageHeight - 30, { align: 'center' });
+                
+                doc.setFontSize(8);
+                doc.setTextColor(136, 136, 136);
+                doc.text('Libreville, Gabon | NIF: 299086A | RCCM: RG LBV2018A4570', 105, pageHeight - 25, { align: 'center' });
+                doc.text('Tél: +241 62 39 11 21 / +241 77 02 30 04 | Email: eliteprestationspourvous@gmail.com', 105, pageHeight - 21, { align: 'center' });
+                
+                // Date de génération
+                doc.setFontSize(7);
+                doc.setTextColor(153, 153, 153);
+                doc.text(`Facture générée le ${formatDate(new Date().toISOString())} avec Financia Pro Gabon`, 105, pageHeight - 15, { align: 'center' });
+                
+                // Sauvegarder le PDF
+                doc.save(`${invoice.number}.pdf`);
+                showNotification('PDF téléchargé avec succès', 'success');
+            } catch (error) {
+                console.error('Erreur lors de la génération du PDF:', error);
+                showNotification('Erreur lors de la génération du PDF', 'error');
+            }
         }
 
         function generateDevisPDFFromPreview() {
@@ -3275,13 +4272,9 @@
                 doc.text('Prix HT', 140, tableTop + 13, { align: 'right' });
                 doc.text('Total HT', 170, tableTop + 13, { align: 'right' });
                 
-                // Ligne sous l'en-tête
-                doc.setDrawColor(255, 255, 255);
-                doc.line(20, tableTop + 16, 190, tableTop + 16);
-                
                 // Produits
                 let productY = tableTop + 23;
-                devis.lines.forEach((line, index) => {
+                devis.lines.forEach(line => {
                     if (productY > 250) {
                         doc.addPage();
                         productY = 20;
@@ -3296,7 +4289,7 @@
                 });
                 
                 // Totaux
-                const totalsY = Math.max(productY + 10, 180);
+                const totalsY = productY + 10;
                 
                 doc.setDrawColor(200, 200, 200);
                 doc.line(120, totalsY - 5, 190, totalsY - 5);
@@ -3305,24 +4298,20 @@
                 doc.text(formatCurrency(devis.totalHT), 190, totalsY, { align: 'right' });
                 
                 doc.setTextColor(14, 165, 233);
-                doc.text('TVA 18%:', 120, totalsY + 6, { align: 'right' });
-                doc.text(formatCurrency(devis.totalTVA), 190, totalsY + 6, { align: 'right' });
-                
-                doc.setTextColor(245, 158, 11);
-                doc.text('CSS 1%:', 120, totalsY + 12, { align: 'right' });
-                doc.text(formatCurrency(devis.totalCSS), 190, totalsY + 12, { align: 'right' });
+                doc.text('TPS 9,5%:', 120, totalsY + 6, { align: 'right' });
+                doc.text(formatCurrency(devis.totalTPS), 190, totalsY + 6, { align: 'right' });
                 
                 doc.setDrawColor(139, 92, 246);
-                doc.line(120, totalsY + 18, 190, totalsY + 18);
+                doc.line(120, totalsY + 12, 190, totalsY + 12);
                 
                 doc.setFontSize(12);
                 doc.setTextColor(139, 92, 246);
-                doc.text('TOTAL TTC:', 120, totalsY + 26, { align: 'right' });
-                doc.text(formatCurrency(devis.totalTTC), 190, totalsY + 26, { align: 'right' });
+                doc.text('TOTAL TTC:', 120, totalsY + 20, { align: 'right' });
+                doc.text(formatCurrency(devis.totalTTC), 190, totalsY + 20, { align: 'right' });
                 
                 // Conditions générales
                 if (devis.conditions && devis.conditions.trim() !== '') {
-                    const conditionsY = totalsY + 40;
+                    const conditionsY = totalsY + 30;
                     doc.setFontSize(11);
                     doc.setTextColor(139, 92, 246);
                     doc.text('CONDITIONS GÉNÉRALES:', 20, conditionsY);
@@ -3338,7 +4327,7 @@
                 
                 // Notes
                 if (devis.notes && devis.notes.trim() !== '') {
-                    const notesY = totalsY + (devis.conditions ? 70 : 40);
+                    const notesY = totalsY + (devis.conditions ? 60 : 30);
                     doc.setFontSize(11);
                     doc.setTextColor(139, 92, 246);
                     doc.text('NOTES:', 20, notesY);
@@ -3387,6 +4376,35 @@
             }
         }
 
+        function printPDF() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${appState.currentInvoicePDF?.number || 'Facture'}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 40px; }
+                            .header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+                            .title { font-size: 28px; font-weight: bold; color: #1E3A8A; }
+                            .client-info { margin-bottom: 30px; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                            th { background: #f5f5f5; font-weight: bold; }
+                            .totals { max-width: 300px; margin-left: auto; }
+                            .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        ${document.getElementById('pdfContent').innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+
         function printDevisPDF() {
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
@@ -3417,6 +4435,15 @@
         }
 
         // ==================== UTILITY FUNCTIONS ====================
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'payée': return 'badge-success';
+                case 'en attente': return 'badge-warning';
+                case 'impayée': return 'badge-danger';
+                default: return 'badge-primary';
+            }
+        }
+
         function getDevisStatusLabel(status) {
             const labels = {
                 'en cours': 'En cours',
@@ -3435,6 +4462,43 @@
                 case 'facturé': return 'badge-primary';
                 default: return 'badge-info';
             }
+        }
+
+        function getDepenseTypeLabel(type) {
+            const labels = {
+                'achat': 'Achat',
+                'service': 'Service',
+                'fonctionnement': 'Fonctionnement',
+                'investissement': 'Investissement',
+                'personnel': 'Personnel',
+                'impot': 'Impôt',
+                'autre': 'Autre'
+            };
+            return labels[type] || type;
+        }
+
+        function getDepenseTypeBadgeClass(type) {
+            const classes = {
+                'achat': 'badge-danger',
+                'service': 'badge-warning',
+                'fonctionnement': 'badge-primary',
+                'investissement': 'badge-success',
+                'personnel': 'badge-info',
+                'impot': 'badge-tps',
+                'autre': 'badge-muted'
+            };
+            return classes[type] || 'badge-primary';
+        }
+
+        function getPaymentModeLabel(mode) {
+            const labels = {
+                'especes': 'Espèces',
+                'banque': 'Banque',
+                'cheque': 'Chèque',
+                'mobile': 'Mobile Money',
+                'virement': 'Virement'
+            };
+            return labels[mode] || mode;
         }
 
         function formatDate(dateString) {
@@ -3490,815 +4554,6 @@
                 notification.style.transform = 'translateX(100%)';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
-        }
-
-        // ==================== EXISTING FUNCTIONS (conservées pour compatibilité) ====================
-        // Ces fonctions existaient déjà dans votre code original
-        function addLine() {
-            const container = document.getElementById('invoiceLines');
-            if (!container) return;
-            
-            const line = document.createElement('div');
-            line.className = 'invoice-line';
-            line.innerHTML = `
-                <div class="d-flex flex-column gap-1 mt-2">
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <input type="text" class="form-control" placeholder="Produit ou service" required>
-                    </div>
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Quantité</label>
-                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateInvoiceTotals()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Prix unitaire HT</label>
-                            <input type="number" class="form-control" placeholder="Prix HT" step="0.01" required oninput="updateInvoiceTotals()">
-                        </div>
-                    </div>
-                    <div class="tax-display">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TPS 9,5%</span>
-                            <span class="tax-value">Calcul automatique</span>
-                        </div>
-                       
-                    </div>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
-                        <i class="fas fa-times"></i> Supprimer
-                    </button>
-                </div>
-            `;
-            container.appendChild(line);
-            updateInvoiceTotals();
-        }
-
-        function addDepenseLine() {
-            const container = document.getElementById('depenseLines');
-            if (!container) return;
-            
-            const line = document.createElement('div');
-            line.className = 'depense-line';
-            line.innerHTML = `
-                <div class="d-flex flex-column gap-1 mt-2">
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <input type="text" class="form-control" placeholder="Description de la dépense" required>
-                    </div>
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Quantité</label>
-                            <input type="number" class="form-control" placeholder="Qté" step="0.01" required value="1" oninput="updateDepenseTotals()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Prix unitaire TTC</label>
-                            <input type="number" class="form-control" placeholder="Prix TTC" step="0.01" required oninput="updateDepenseTotals()">
-                        </div>
-                    </div>
-                    <div class="tax-display">
-                        <div class="tax-item tax-tps">
-                            <span class="tax-label">TPS déductible 9,5%</span>
-                            <span class="tax-value">Calcul automatique</span>
-                        </div>
-                       
-                    </div>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="removeDepenseLine(this)">
-                        <i class="fas fa-times"></i> Supprimer
-                    </button>
-                </div>
-            `;
-            container.appendChild(line);
-            updateDepenseTotals();
-        }
-
-        function removeLine(button) {
-            const lines = document.querySelectorAll('.invoice-line');
-            if (lines.length > 1) {
-                button.closest('.invoice-line').remove();
-                updateInvoiceTotals();
-            }
-        }
-
-        function removeDepenseLine(button) {
-            const lines = document.querySelectorAll('.depense-line');
-            if (lines.length > 1) {
-                button.closest('.depense-line').remove();
-                updateDepenseTotals();
-            }
-        }
-
-        function updateInvoiceTotals() {
-            let totalHT = 0;
-            
-            document.querySelectorAll('.invoice-line').forEach(line => {
-                const qtyInput = line.querySelector('input[placeholder="Qté"]');
-                const priceInput = line.querySelector('input[placeholder="Prix HT"]');
-                
-                if (qtyInput && priceInput) {
-                    const qty = parseFloat(qtyInput.value) || 0;
-                    const price = parseFloat(priceInput.value) || 0;
-                    totalHT += qty * price;
-                }
-            });
-            
-            const tps = totalHT * (CONFIG.TPS_RATE / 100);
-            const totalTTC = totalHT + tps;
-            
-            const totalHTEl = document.getElementById('totalHT');
-            const totalTPSEl = document.getElementById('totalTPS');
-            const totalTTCEl = document.getElementById('totalTTC');
-            
-            if (totalHTEl) totalHTEl.textContent = formatCurrency(totalHT);
-            if (totalTPSEl) totalTPSEl.textContent = formatCurrency(tps);
-            if (totalTTCEl) totalTTCEl.textContent = formatCurrency(totalTTC);
-        }
-
-        function updateDepenseTotals() {
-            let totalTTC = 0;
-            
-            document.querySelectorAll('.depense-line').forEach(line => {
-                const qtyInput = line.querySelector('input[placeholder="Qté"]');
-                const priceInput = line.querySelector('input[placeholder="Prix TTC"]');
-                
-                if (qtyInput && priceInput) {
-                    const qty = parseFloat(qtyInput.value) || 0;
-                    const price = parseFloat(priceInput.value) || 0;
-                    totalTTC += qty * price;
-                }
-            });
-            
-            const totalHT = totalTTC / (1 + (CONFIG.TPS_RATE) / 100);
-            const tps = totalHT * (CONFIG.TPS_RATE / 100);
-            
-            const depenseTotalTTCEl = document.getElementById('depenseTotalTTC');
-            const depenseTotalHTEl = document.getElementById('depenseTotalHT');
-            const depenseTotalTPSEl = document.getElementById('depenseTotalTPS');
-            
-            if (depenseTotalTTCEl) depenseTotalTTCEl.textContent = formatCurrency(totalTTC);
-            if (depenseTotalHTEl) depenseTotalHTEl.textContent = formatCurrency(totalHT);
-            if (depenseTotalTPSEl) depenseTotalTPSEl.textContent = formatCurrency(tps);
-        }
-
-        function saveInvoice(event) {
-            event.preventDefault();
-            
-            const clientName = document.getElementById('clientName').value;
-            const clientNIF = document.getElementById('clientNIF').value;
-            const clientAddress = document.getElementById('clientAddress').value;
-            const invoiceNumber = document.getElementById('invoiceNumber').value;
-            const invoiceDate = document.getElementById('invoiceDate').value;
-            const invoiceDueDate = document.getElementById('invoiceDueDate').value;
-            const notes = document.getElementById('invoiceNotes').value;
-            
-            const lines = [];
-            document.querySelectorAll('.invoice-line').forEach(line => {
-                const description = line.querySelector('input[placeholder="Produit ou service"]').value;
-                const qtyInput = line.querySelector('input[placeholder="Qté"]');
-                const priceInput = line.querySelector('input[placeholder="Prix HT"]');
-                
-                const quantity = parseFloat(qtyInput.value) || 0;
-                const price = parseFloat(priceInput.value) || 0;
-                
-                if (description && quantity > 0 && price > 0) {
-                    const lineHT = quantity * price;
-                    const lineTPS = lineHT * (CONFIG.TPS_RATE / 100);
-                    
-                    lines.push({
-                        description,
-                        quantity,
-                        price,
-                        totalHT: lineHT,
-                        tva: lineTPS,
-                        totalTTC: lineHT + lineTPS
-                    });
-                }
-            });
-            
-            if (lines.length === 0) {
-                showNotification('Ajoutez au moins une ligne', 'error');
-                return;
-            }
-            
-            const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
-            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
-            const totalTTC = totalHT + totalTPS;
-            
-            const invoice = {
-                id: appState.invoices.length > 0 ? Math.max(...appState.invoices.map(i => i.id)) + 1 : 1,
-                number: invoiceNumber,
-                clientName: clientName,
-                clientAddress: clientAddress || '',
-                clientNIF: clientNIF || '',
-                date: invoiceDate,
-                dueDate: invoiceDueDate,
-                status: 'en attente',
-                notes: notes,
-                totalHT: totalHT,
-                totalTPS: totalTPS,
-                totalTTC: totalTTC,
-                lines: lines,
-                createdAt: new Date().toISOString()
-            };
-            
-            appState.invoices.push(invoice);
-            saveData();
-            
-            hideModal('newInvoiceModal');
-            renderInvoicesList();
-            updateDashboard();
-            
-            // Reset form
-            const invoiceForm = document.getElementById('invoiceForm');
-            if (invoiceForm) invoiceForm.reset();
-            
-            const today = new Date().toISOString().split('T')[0];
-            const invoiceDateInput = document.getElementById('invoiceDate');
-            const invoiceDueDateInput = document.getElementById('invoiceDueDate');
-            if (invoiceDateInput) invoiceDateInput.value = today;
-            if (invoiceDueDateInput) invoiceDueDateInput.value = addDays(today, 30);
-            
-            generateInvoiceNumber();
-            
-            showNotification('Facture créée avec succès', 'success');
-        }
-
-        function saveDepense(event) {
-            event.preventDefault();
-            
-            const beneficiaire = document.getElementById('depenseBeneficiaire').value;
-            const depenseNumber = document.getElementById('depenseNumber').value;
-            const depenseType = document.getElementById('depenseType').value;
-            const depenseDate = document.getElementById('depenseDate').value;
-            const depensePaymentDate = document.getElementById('depensePaymentDate').value;
-            const paymentMode = document.getElementById('depensePaymentMode').value;
-            const compteId = parseInt(document.getElementById('depenseCompte').value);
-            const notes = document.getElementById('depenseNotes').value;
-            
-            const compte = appState.comptes.find(c => c.id === compteId);
-            if (!compte) {
-                showNotification('Veuillez sélectionner un compte', 'error');
-                return;
-            }
-            
-            const lines = [];
-            document.querySelectorAll('.depense-line').forEach(line => {
-                const description = line.querySelector('input[placeholder="Description de la dépense"]').value;
-                const qtyInput = line.querySelector('input[placeholder="Qté"]');
-                const priceInput = line.querySelector('input[placeholder="Prix TTC"]');
-                
-                const quantity = parseFloat(qtyInput.value) || 0;
-                const price = parseFloat(priceInput.value) || 0;
-                
-                if (description && quantity > 0 && price > 0) {
-                    const lineTTC = quantity * price;
-                    const lineHT = lineTTC / (1 + (CONFIG.TPS_RATE) / 100);
-                    const lineTPS = lineHT * (CONFIG.TPS_RATE / 100);
-                    
-                    lines.push({
-                        description,
-                        quantity,
-                        price,
-                        totalTTC: lineTTC,
-                        totalHT: lineHT,
-                        tps: lineTPS
-                    });
-                }
-            });
-            
-            if (lines.length === 0) {
-                showNotification('Ajoutez au moins une ligne', 'error');
-                return;
-            }
-            
-            const totalTTC = lines.reduce((sum, line) => sum + line.totalTTC, 0);
-            const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
-            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
-            
-            const depense = {
-                id: appState.depenses.length > 0 ? Math.max(...appState.depenses.map(d => d.id)) + 1 : 1,
-                number: depenseNumber,
-                beneficiaire: beneficiaire,
-                type: depenseType,
-                date: depenseDate,
-                paymentDate: depensePaymentDate,
-                paymentMode: paymentMode,
-                compteId: compteId,
-                compteName: compte.libelle,
-                status: 'payée',
-                notes: notes,
-                totalHT: totalHT,
-                totalTVA: totalTVA,
-                totalCSS: totalCSS,
-                totalTTC: totalTTC,
-                lines: lines,
-                createdAt: new Date().toISOString()
-            };
-            
-            appState.depenses.push(depense);
-            saveData();
-            
-            createEcritureForDepense(depense);
-            
-            hideModal('newDepenseModal');
-            renderDepensesList();
-            updateDashboard();
-            
-            // Reset form
-            const depenseForm = document.getElementById('depenseForm');
-            if (depenseForm) depenseForm.reset();
-            
-            const today = new Date().toISOString().split('T')[0];
-            const depenseDateInput = document.getElementById('depenseDate');
-            const depensePaymentDateInput = document.getElementById('depensePaymentDate');
-            if (depenseDateInput) depenseDateInput.value = today;
-            if (depensePaymentDateInput) depensePaymentDateInput.value = today;
-            
-            generateDepenseNumber();
-            
-            showNotification('Dépense enregistrée avec succès', 'success');
-        }
-
-        function createEcritureForDepense(depense) {
-            const ecriture = {
-                id: appState.ecritures.length > 0 ? Math.max(...appState.ecritures.map(e => e.id)) + 1 : 1,
-                date: depense.date,
-                reference: depense.number,
-                libelle: `Dépense: ${depense.beneficiaire}`,
-                compteDebit: depense.compteId,
-                compteCredit: null,
-                montant: depense.totalHT,
-                tva: depense.totalTVA,
-                css: depense.totalCSS,
-                type: 'depense',
-                sourceId: depense.id,
-                createdAt: new Date().toISOString()
-            };
-            
-            appState.ecritures.push(ecriture);
-            saveData();
-        }
-
-        function renderInvoicesList(filter = '') {
-            const container = document.getElementById('invoicesList');
-            if (!container) return;
-            
-            const filtered = appState.invoices.filter(invoice => 
-                invoice.number.toLowerCase().includes(filter.toLowerCase()) ||
-                invoice.clientName.toLowerCase().includes(filter.toLowerCase())
-            );
-            
-            container.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center p-3">Aucune facture trouvée</div>';
-                return;
-            }
-            
-            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(invoice => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.innerHTML = `
-                    <div class="list-item-content">
-                        <div class="list-item-title">${invoice.number}</div>
-                        <div class="list-item-subtitle">${invoice.clientName} • ${formatDate(invoice.date)}</div>
-                        <div class="d-flex align-center gap-1 mt-1">
-                            <span class="badge ${getStatusBadgeClass(invoice.status)}">
-                                ${invoice.status}
-                            </span>
-                            <span class="text-muted">Échéance: ${formatDate(invoice.dueDate)}</span>
-                        </div>
-                        <div class="tax-display mt-1">
-                            <div class="tax-item">
-                                <span class="tax-label">HT:</span>
-                                <span class="tax-value">${formatCurrency(invoice.totalHT)}</span>
-                            </div>
-                            <div class="tax-item tax-tva">
-                                <span class="tax-label">TVA:</span>
-                                <span class="tax-value">${formatCurrency(invoice.totalTVA)}</span>
-                            </div>
-                            <div class="tax-item tax-css">
-                                <span class="tax-label">CSS:</span>
-                                <span class="tax-value">${formatCurrency(invoice.totalCSS)}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column align-center gap-1">
-                        <div class="text-center">
-                            <div class="list-item-title">${formatCurrency(invoice.totalTTC)}</div>
-                            <div class="list-item-subtitle">TTC</div>
-                        </div>
-                        <button class="btn btn-icon" onclick="viewInvoice(${invoice.id})">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function renderDepensesList(filter = '') {
-            const container = document.getElementById('depensesList');
-            if (!container) return;
-            
-            const filtered = appState.depenses.filter(depense => 
-                depense.number.toLowerCase().includes(filter.toLowerCase()) ||
-                depense.beneficiaire.toLowerCase().includes(filter.toLowerCase()) ||
-                depense.type.toLowerCase().includes(filter.toLowerCase())
-            );
-            
-            container.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center p-3">Aucune dépense trouvée</div>';
-                return;
-            }
-            
-            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(depense => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.innerHTML = `
-                    <div class="list-item-content">
-                        <div class="list-item-title">${depense.number}</div>
-                        <div class="list-item-subtitle">${depense.beneficiaire} • ${formatDate(depense.date)}</div>
-                        <div class="d-flex align-center gap-1 mt-1">
-                            <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">
-                                ${getDepenseTypeLabel(depense.type)}
-                            </span>
-                            <span class="text-muted">Mode: ${getPaymentModeLabel(depense.paymentMode)}</span>
-                        </div>
-                        <div class="tax-display mt-1">
-                            <div class="tax-item">
-                                <span class="tax-label">HT:</span>
-                                <span class="tax-value">${formatCurrency(depense.totalHT)}</span>
-                            </div>
-                            <div class="tax-item tax-tva">
-                                <span class="tax-label">TVA déd.:</span>
-                                <span class="tax-value">${formatCurrency(depense.totalTVA)}</span>
-                            </div>
-                            <div class="tax-item tax-css">
-                                <span class="tax-label">CSS déd.:</span>
-                                <span class="tax-value">${formatCurrency(depense.totalCSS)}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column align-center gap-1">
-                        <div class="text-center">
-                            <div class="list-item-title text-danger">${formatCurrency(depense.totalTTC)}</div>
-                            <div class="list-item-subtitle">TTC</div>
-                        </div>
-                        <button class="btn btn-icon" onclick="viewDepense(${depense.id})">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function filterInvoices(query) {
-            renderInvoicesList(query);
-        }
-
-        function filterDepenses(query) {
-            renderDepensesList(query);
-        }
-
-        function viewInvoice(invoiceId) {
-            const invoice = appState.invoices.find(i => i.id === invoiceId);
-            if (!invoice) return;
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>${invoice.number}</h3>
-                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="mb-2">
-                                <strong>Informations</strong>
-                                <div class="mt-1">
-                                    <div><strong>Client:</strong> ${invoice.clientName}</div>
-                                    ${invoice.clientNIF ? `<div><strong>NIF:</strong> ${invoice.clientNIF}</div>` : ''}
-                                    <div><strong>Date:</strong> ${formatDate(invoice.date)}</div>
-                                    <div><strong>Échéance:</strong> ${formatDate(invoice.dueDate)}</div>
-                                    <div><strong>Statut:</strong> <span class="badge ${getStatusBadgeClass(invoice.status)}">${invoice.status}</span></div>
-                                    ${invoice.notes ? `<div><strong>Notes:</strong> ${invoice.notes}</div>` : ''}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-2">
-                                <strong>Détails</strong>
-                                <div class="table-responsive mt-1">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Description</th>
-                                                <th>Qté</th>
-                                                <th>Prix HT</th>
-                                                <th>Total HT</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${invoice.lines.map(line => `
-                                                <tr>
-                                                    <td>${line.description}</td>
-                                                    <td>${line.quantity}</td>
-                                                    <td>${formatCurrency(line.price)}</td>
-                                                    <td>${formatCurrency(line.totalHT)}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="tax-display">
-                                <div class="tax-item">
-                                    <span class="tax-label">Total HT:</span>
-                                    <span class="tax-value">${formatCurrency(invoice.totalHT)}</span>
-                                </div>
-                                <div class="tax-item tax-tva">
-                                    <span class="tax-label">TVA 18%:</span>
-                                    <span class="tax-value">${formatCurrency(invoice.totalTVA)}</span>
-                                </div>
-                                <div class="tax-item tax-css">
-                                    <span class="tax-label">CSS 1%:</span>
-                                    <span class="tax-value">${formatCurrency(invoice.totalCSS)}</span>
-                                </div>
-                                <div class="tax-item total">
-                                    <span class="tax-label">Total TTC:</span>
-                                    <span class="tax-value">${formatCurrency(invoice.totalTTC)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" onclick="generatePDF(${invoice.id})">
-                            <i class="fas fa-file-pdf"></i> Télécharger PDF
-                        </button>
-                        <button class="btn btn-success" onclick="markInvoiceAsPaid(${invoice.id})">
-                            <i class="fas fa-check"></i> Marquer Payée
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteInvoice(${invoice.id})">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-
-        function viewDepense(depenseId) {
-            const depense = appState.depenses.find(d => d.id === depenseId);
-            if (!depense) return;
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>${depense.number}</h3>
-                        <button class="btn btn-icon" onclick="this.closest('.modal-overlay').remove()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="mb-2">
-                                <strong>Informations</strong>
-                                <div class="mt-1">
-                                    <div><strong>Bénéficiaire:</strong> ${depense.beneficiaire}</div>
-                                    <div><strong>Type:</strong> <span class="badge ${getDepenseTypeBadgeClass(depense.type)}">${getDepenseTypeLabel(depense.type)}</span></div>
-                                    <div><strong>Date:</strong> ${formatDate(depense.date)}</div>
-                                    <div><strong>Paiement:</strong> ${formatDate(depense.paymentDate)} (${getPaymentModeLabel(depense.paymentMode)})</div>
-                                    <div><strong>Compte:</strong> ${depense.compteName}</div>
-                                    ${depense.notes ? `<div><strong>Notes:</strong> ${depense.notes}</div>` : ''}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-2">
-                                <strong>Détails</strong>
-                                <div class="table-responsive mt-1">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Description</th>
-                                                <th>Qté</th>
-                                                <th>Prix TTC</th>
-                                                <th>Total TTC</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${depense.lines.map(line => `
-                                                <tr>
-                                                    <td>${line.description}</td>
-                                                    <td>${line.quantity}</td>
-                                                    <td>${formatCurrency(line.price)}</td>
-                                                    <td>${formatCurrency(line.totalTTC)}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="tax-display">
-                                <div class="tax-item">
-                                    <span class="tax-label">Total TTC:</span>
-                                    <span class="tax-value">${formatCurrency(depense.totalTTC)}</span>
-                                </div>
-                                <div class="tax-item tax-tva">
-                                    <span class="tax-label">TVA déductible 18%:</span>
-                                    <span class="tax-value">${formatCurrency(depense.totalTVA)}</span>
-                                </div>
-                                <div class="tax-item tax-css">
-                                    <span class="tax-label">CSS déductible 1%:</span>
-                                    <span class="tax-value">${formatCurrency(depense.totalCSS)}</span>
-                                </div>
-                                <div class="tax-item total">
-                                    <span class="tax-label">Total HT:</span>
-                                    <span class="tax-value">${formatCurrency(depense.totalHT)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" onclick="deleteDepense(${depense.id})">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-
-        function markInvoiceAsPaid(invoiceId) {
-            const invoice = appState.invoices.find(i => i.id === invoiceId);
-            if (invoice) {
-                invoice.status = 'payée';
-                saveData();
-                renderInvoicesList();
-                updateDashboard();
-                showNotification('Facture marquée comme payée', 'success');
-                document.querySelector('.modal-overlay.active').remove();
-            }
-        }
-
-        function deleteInvoice(invoiceId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) {
-                const index = appState.invoices.findIndex(i => i.id === invoiceId);
-                if (index !== -1) {
-                    appState.invoices.splice(index, 1);
-                    saveData();
-                    renderInvoicesList();
-                    updateDashboard();
-                    showNotification('Facture supprimée', 'success');
-                    const modal = document.querySelector('.modal-overlay.active');
-                    if (modal) modal.remove();
-                }
-            }
-        }
-
-        function deleteDepense(depenseId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
-                const index = appState.depenses.findIndex(d => d.id === depenseId);
-                if (index !== -1) {
-                    appState.depenses.splice(index, 1);
-                    
-                    const ecritureIndex = appState.ecritures.findIndex(e => 
-                        e.type === 'depense' && e.sourceId === depenseId
-                    );
-                    if (ecritureIndex !== -1) {
-                        appState.ecritures.splice(ecritureIndex, 1);
-                    }
-                    
-                    saveData();
-                    renderDepensesList();
-                    updateDashboard();
-                    showNotification('Dépense supprimée', 'success');
-                    const modal = document.querySelector('.modal-overlay.active');
-                    if (modal) modal.remove();
-                }
-            }
-        }
-
-        function getStatusBadgeClass(status) {
-            switch(status) {
-                case 'payée': return 'badge-success';
-                case 'en attente': return 'badge-warning';
-                case 'impayée': return 'badge-danger';
-                default: return 'badge-primary';
-            }
-        }
-
-        function getDepenseTypeLabel(type) {
-            const labels = {
-                'achat': 'Achat',
-                'service': 'Service',
-                'fonctionnement': 'Fonctionnement',
-                'investissement': 'Investissement',
-                'personnel': 'Personnel',
-                'impot': 'Impôt',
-                'autre': 'Autre'
-            };
-            return labels[type] || type;
-        }
-
-        function getDepenseTypeBadgeClass(type) {
-            const classes = {
-                'achat': 'badge-danger',
-                'service': 'badge-warning',
-                'fonctionnement': 'badge-primary',
-                'investissement': 'badge-success',
-                'personnel': 'badge-info',
-                'impot': 'badge-tva',
-                'autre': 'badge-muted'
-            };
-            return classes[type] || 'badge-primary';
-        }
-
-        function getPaymentModeLabel(mode) {
-            const labels = {
-                'especes': 'Espèces',
-                'banque': 'Banque',
-                'cheque': 'Chèque',
-                'mobile': 'Mobile Money',
-                'virement': 'Virement'
-            };
-            return labels[mode] || mode;
-        }
-
-        function updateDashboard() {
-            // Chiffre d'affaires
-            const totalCA = appState.invoices
-                .filter(inv => inv.status === 'payée')
-                .reduce((sum, inv) => sum + inv.totalTTC, 0);
-            const totalCAEl = document.getElementById('totalCA');
-            if (totalCAEl) totalCAEl.textContent = formatCurrency(totalCA);
-            
-            // Nombre de factures
-            const factureCount = appState.invoices.length;
-            const totalFacturesEl = document.getElementById('totalFactures');
-            if (totalFacturesEl) totalFacturesEl.textContent = factureCount;
-            
-            // Totaux recettes/dépenses
-            const totalRecettes = appState.invoices
-                .filter(inv => inv.status === 'payée')
-                .reduce((sum, inv) => sum + inv.totalTTC, 0);
-            
-            const totalDepenses = appState.depenses
-                .reduce((sum, dep) => sum + dep.totalTTC, 0);
-            
-            const totalRecettesEl = document.getElementById('totalRecettes');
-            const totalDepensesEl = document.getElementById('totalDepenses');
-            if (totalRecettesEl) totalRecettesEl.textContent = formatCurrency(totalRecettes);
-            if (totalDepensesEl) totalDepensesEl.textContent = formatCurrency(totalDepenses);
-            
-            // Mettre à jour les statistiques des devis
-            updateDevisStats();
-        }
-
-        function updateDashboardDepenses() {
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            
-            const depensesMois = appState.depenses
-                .filter(dep => {
-                    const depDate = new Date(dep.date);
-                    return depDate.getMonth() === currentMonth && 
-                           depDate.getFullYear() === currentYear;
-                })
-                .reduce((sum, dep) => sum + dep.totalTTC, 0);
-            
-            const tvaDeductible = appState.depenses
-                .filter(dep => {
-                    const depDate = new Date(dep.date);
-                    return depDate.getMonth() === currentMonth && 
-                           depDate.getFullYear() === currentYear;
-                })
-                .reduce((sum, dep) => sum + dep.totalTVA, 0);
-            
-            const cssDeductible = appState.depenses
-                .filter(dep => {
-                    const depDate = new Date(dep.date);
-                    return depDate.getMonth() === currentMonth && 
-                           depDate.getFullYear() === currentYear;
-                })
-                .reduce((sum, dep) => sum + dep.totalCSS, 0);
-            
-            const totalDepensesMoisEl = document.getElementById('totalDepensesMois');
-            const totalTVADeductibleEl = document.getElementById('totalTVADeductible');
-            const totalCSSDeductibleEl = document.getElementById('totalCSSDeductible');
-            
-            if (totalDepensesMoisEl) totalDepensesMoisEl.textContent = formatCurrency(depensesMois);
-            if (totalTVADeductibleEl) totalTVADeductibleEl.textContent = formatCurrency(tvaDeductible);
-            if (totalCSSDeductibleEl) totalCSSDeductibleEl.textContent = formatCurrency(cssDeductible);
         }
 
         function showNotifications() {
