@@ -2087,8 +2087,7 @@
     <script>
         // ==================== CONFIGURATION ====================
         const CONFIG = {
-            TVA_RATE: 18,    // Taux TVA Gabon
-            CSS_RATE: 1,     // Taux CSS Gabon
+            TPS_RATE: 9.5,    // Taux TVA Gabon
             CURRENCY: 'FCFA',
             APP_NAME: 'Financia Pro Gabon',
             VERSION: '2.0.0',
@@ -2222,8 +2221,7 @@
                 companyPhone: '+241 62 39 11 21 / +241 77 02 30 04',
                 companyEmail: 'eliteprestationspourvous@gmail.com',
                 currency: CONFIG.CURRENCY,
-                taxTVA: CONFIG.TVA_RATE,
-                taxCSS: CONFIG.CSS_RATE,
+                taxTVA: CONFIG.TPS_RATE,
                 devisValidityDays: CONFIG.DEVIS_VALIDITY_DAYS,
                 createdAt: new Date().toISOString()
             };
@@ -2437,11 +2435,7 @@
                     </div>
                     <div class="tax-display">
                         <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA 18%</span>
-                            <span class="tax-value">Calcul automatique</span>
-                        </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS 1%</span>
+                            <span class="tax-label">TPS 9,5%</span>
                             <span class="tax-value">Calcul automatique</span>
                         </div>
                     </div>
@@ -2529,17 +2523,15 @@
                 
                 if (description && quantity > 0 && price > 0) {
                     const lineHT = quantity * price;
-                    const lineTVA = lineHT * (CONFIG.TVA_RATE / 100);
-                    const lineCSS = lineHT * (CONFIG.CSS_RATE / 100);
+                    const lineTVA = lineHT * (CONFIG.TPS_RATE / 100);
                     
                     lines.push({
                         description,
                         quantity,
                         price,
                         totalHT: lineHT,
-                        tva: lineTVA,
-                        css: lineCSS,
-                        totalTTC: lineHT + lineTVA + lineCSS
+                        tps: lineTPS,
+                        totalTTC: lineHT + lineTPS
                     });
                 }
             });
@@ -2550,9 +2542,8 @@
             }
             
             const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
-            const totalTVA = lines.reduce((sum, line) => sum + line.tva, 0);
-            const totalCSS = lines.reduce((sum, line) => sum + line.css, 0);
-            const totalTTC = totalHT + totalTVA + totalCSS;
+            const totalTVA = lines.reduce((sum, line) => sum + line.tps, 0);
+            const totalTTC = totalHT + totalTPS;
             
             const devis = {
                 id: appState.devis.length > 0 ? Math.max(...appState.devis.map(d => d.id)) + 1 : 1,
@@ -2569,8 +2560,7 @@
                 conditions: conditions,
                 notes: notes,
                 totalHT: totalHT,
-                totalTVA: totalTVA,
-                totalCSS: totalCSS,
+                totalTVA: totalTPS,
                 totalTTC: totalTTC,
                 lines: lines,
                 createdAt: new Date().toISOString(),
@@ -2663,14 +2653,11 @@
                                 <span class="tax-label">HT:</span>
                                 <span class="tax-value">${formatCurrency(devis.totalHT)}</span>
                             </div>
-                            <div class="tax-item tax-tva">
-                                <span class="tax-label">TVA:</span>
-                                <span class="tax-value">${formatCurrency(devis.totalTVA)}</span>
+                            <div class="tax-item tax-tps">
+                                <span class="tax-label">TPS:</span>
+                                <span class="tax-value">${formatCurrency(devis.totalTPS)}</span>
                             </div>
-                            <div class="tax-item tax-css">
-                                <span class="tax-label">CSS:</span>
-                                <span class="tax-value">${formatCurrency(devis.totalCSS)}</span>
-                            </div>
+                           
                         </div>
                     </div>
                     <div class="d-flex flex-column align-center gap-1">
@@ -2778,14 +2765,11 @@
                                     <span class="tax-label">Total HT:</span>
                                     <span class="tax-value">${formatCurrency(devis.totalHT)}</span>
                                 </div>
-                                <div class="tax-item tax-tva">
-                                    <span class="tax-label">TVA 18%:</span>
-                                    <span class="tax-value">${formatCurrency(devis.totalTVA)}</span>
+                                <div class="tax-item tax-tps">
+                                    <span class="tax-label">TPS 9,5%:</span>
+                                    <span class="tax-value">${formatCurrency(devis.totalTPS)}</span>
                                 </div>
-                                <div class="tax-item tax-css">
-                                    <span class="tax-label">CSS 1%:</span>
-                                    <span class="tax-value">${formatCurrency(devis.totalCSS)}</span>
-                                </div>
+                                
                                 <div class="tax-item total devis-total">
                                     <span class="tax-label">Total TTC:</span>
                                     <span class="tax-value text-devis">${formatCurrency(devis.totalTTC)}</span>
@@ -3534,13 +3518,10 @@
                     </div>
                     <div class="tax-display">
                         <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA 18%</span>
+                            <span class="tax-label">TPS 9,5%</span>
                             <span class="tax-value">Calcul automatique</span>
                         </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS 1%</span>
-                            <span class="tax-value">Calcul automatique</span>
-                        </div>
+                       
                     </div>
                     <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
                         <i class="fas fa-times"></i> Supprimer
@@ -3574,14 +3555,11 @@
                         </div>
                     </div>
                     <div class="tax-display">
-                        <div class="tax-item tax-tva">
-                            <span class="tax-label">TVA déductible 18%</span>
+                        <div class="tax-item tax-tps">
+                            <span class="tax-label">TPS déductible 9,5%</span>
                             <span class="tax-value">Calcul automatique</span>
                         </div>
-                        <div class="tax-item tax-css">
-                            <span class="tax-label">CSS déductible 1%</span>
-                            <span class="tax-value">Calcul automatique</span>
-                        </div>
+                       
                     </div>
                     <button type="button" class="btn btn-danger btn-sm" onclick="removeDepenseLine(this)">
                         <i class="fas fa-times"></i> Supprimer
@@ -3622,18 +3600,15 @@
                 }
             });
             
-            const tva = totalHT * (CONFIG.TVA_RATE / 100);
-            const css = totalHT * (CONFIG.CSS_RATE / 100);
-            const totalTTC = totalHT + tva + css;
+            const tps = totalHT * (CONFIG.TPS_RATE / 100);
+            const totalTTC = totalHT + tps;
             
             const totalHTEl = document.getElementById('totalHT');
-            const totalTVAEl = document.getElementById('totalTVA');
-            const totalCSSEl = document.getElementById('totalCSS');
+            const totalTPSEl = document.getElementById('totalTPS');
             const totalTTCEl = document.getElementById('totalTTC');
             
             if (totalHTEl) totalHTEl.textContent = formatCurrency(totalHT);
-            if (totalTVAEl) totalTVAEl.textContent = formatCurrency(tva);
-            if (totalCSSEl) totalCSSEl.textContent = formatCurrency(css);
+            if (totalTPSEl) totalTPSEl.textContent = formatCurrency(tps);
             if (totalTTCEl) totalTTCEl.textContent = formatCurrency(totalTTC);
         }
 
@@ -3651,19 +3626,16 @@
                 }
             });
             
-            const totalHT = totalTTC / (1 + (CONFIG.TVA_RATE + CONFIG.CSS_RATE) / 100);
-            const tva = totalHT * (CONFIG.TVA_RATE / 100);
-            const css = totalHT * (CONFIG.CSS_RATE / 100);
+            const totalHT = totalTTC / (1 + (CONFIG.TPS_RATE) / 100);
+            const tps = totalHT * (CONFIG.TPS_RATE / 100);
             
             const depenseTotalTTCEl = document.getElementById('depenseTotalTTC');
             const depenseTotalHTEl = document.getElementById('depenseTotalHT');
-            const depenseTotalTVAEl = document.getElementById('depenseTotalTVA');
-            const depenseTotalCSSEl = document.getElementById('depenseTotalCSS');
+            const depenseTotalTPSEl = document.getElementById('depenseTotalTPS');
             
             if (depenseTotalTTCEl) depenseTotalTTCEl.textContent = formatCurrency(totalTTC);
             if (depenseTotalHTEl) depenseTotalHTEl.textContent = formatCurrency(totalHT);
-            if (depenseTotalTVAEl) depenseTotalTVAEl.textContent = formatCurrency(tva);
-            if (depenseTotalCSSEl) depenseTotalCSSEl.textContent = formatCurrency(css);
+            if (depenseTotalTPSEl) depenseTotalTPSEl.textContent = formatCurrency(tps);
         }
 
         function saveInvoice(event) {
@@ -3688,17 +3660,15 @@
                 
                 if (description && quantity > 0 && price > 0) {
                     const lineHT = quantity * price;
-                    const lineTVA = lineHT * (CONFIG.TVA_RATE / 100);
-                    const lineCSS = lineHT * (CONFIG.CSS_RATE / 100);
+                    const lineTPS = lineHT * (CONFIG.TPS_RATE / 100);
                     
                     lines.push({
                         description,
                         quantity,
                         price,
                         totalHT: lineHT,
-                        tva: lineTVA,
-                        css: lineCSS,
-                        totalTTC: lineHT + lineTVA + lineCSS
+                        tva: lineTPS,
+                        totalTTC: lineHT + lineTPS
                     });
                 }
             });
@@ -3709,9 +3679,8 @@
             }
             
             const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
-            const totalTVA = lines.reduce((sum, line) => sum + line.tva, 0);
-            const totalCSS = lines.reduce((sum, line) => sum + line.css, 0);
-            const totalTTC = totalHT + totalTVA + totalCSS;
+            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
+            const totalTTC = totalHT + totalTPS;
             
             const invoice = {
                 id: appState.invoices.length > 0 ? Math.max(...appState.invoices.map(i => i.id)) + 1 : 1,
@@ -3724,8 +3693,7 @@
                 status: 'en attente',
                 notes: notes,
                 totalHT: totalHT,
-                totalTVA: totalTVA,
-                totalCSS: totalCSS,
+                totalTPS: totalTPS,
                 totalTTC: totalTTC,
                 lines: lines,
                 createdAt: new Date().toISOString()
@@ -3782,9 +3750,8 @@
                 
                 if (description && quantity > 0 && price > 0) {
                     const lineTTC = quantity * price;
-                    const lineHT = lineTTC / (1 + (CONFIG.TVA_RATE + CONFIG.CSS_RATE) / 100);
-                    const lineTVA = lineHT * (CONFIG.TVA_RATE / 100);
-                    const lineCSS = lineHT * (CONFIG.CSS_RATE / 100);
+                    const lineHT = lineTTC / (1 + (CONFIG.TPS_RATE) / 100);
+                    const lineTPS = lineHT * (CONFIG.TPS_RATE / 100);
                     
                     lines.push({
                         description,
@@ -3792,8 +3759,7 @@
                         price,
                         totalTTC: lineTTC,
                         totalHT: lineHT,
-                        tva: lineTVA,
-                        css: lineCSS
+                        tps: lineTPS
                     });
                 }
             });
@@ -3805,8 +3771,7 @@
             
             const totalTTC = lines.reduce((sum, line) => sum + line.totalTTC, 0);
             const totalHT = lines.reduce((sum, line) => sum + line.totalHT, 0);
-            const totalTVA = lines.reduce((sum, line) => sum + line.tva, 0);
-            const totalCSS = lines.reduce((sum, line) => sum + line.css, 0);
+            const totalTPS = lines.reduce((sum, line) => sum + line.tps, 0);
             
             const depense = {
                 id: appState.depenses.length > 0 ? Math.max(...appState.depenses.map(d => d.id)) + 1 : 1,
